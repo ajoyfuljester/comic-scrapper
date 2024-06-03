@@ -17,6 +17,22 @@ class DownloadWidget(QtWidgets.QWidget):
 
 
 
+class ComicTableWidgetItemSet():
+    def __init__(self, entry):
+
+        self.cellData = []
+
+        self.cellData.append(entry['title'])
+        self.cellData.append(entry['status'])
+        self.cellData.append(entry['releaseDate'])
+        self.cellData.append(entry['latest'])
+
+        self.cellWidgets = [QtWidgets.QTableWidgetItem(cell) for cell in cellData]
+
+
+        
+
+
 
 app = QtWidgets.QApplication([])
 
