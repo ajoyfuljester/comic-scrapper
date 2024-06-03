@@ -9,7 +9,7 @@ class DownloadWidget(QtWidgets.QWidget):
         
         self.search = QtWidgets.QLineEdit()
         self.results = QtWidgets.QTableWidget()
-        self.results.setColumnCount(5)
+        self.results.setColumnCount(4)
 
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.addWidget(self.search)
