@@ -1,21 +1,20 @@
 from PySide6 import QtCore, QtWidgets
-import sys
 import scrappingutils as su
 
-Flags = QtCore.Qt.ItemFlags
+Flags = QtCore.Qt.ItemFlag
 
 class DownloadWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         
         self.search = QtWidgets.QLineEdit()
+        self.search.returnPressed.connect(self.searchComics)
 
         self.results = QtWidgets.QTableWidget()
         self.results.setColumnCount(4)
         self.results.setHorizontalHeaderLabels(['Title', 'Status', 'Release Date', 'Latest Issue'])
 
 
-        tableWidth = self.results.width()
         self.results.setColumnWidth(0, 200)
         self.results.setColumnWidth(1, 70)
         self.results.setColumnWidth(2, 30)
@@ -24,10 +23,20 @@ class DownloadWidget(QtWidgets.QWidget):
 
 
 
-        self.layout = QtWidgets.QVBoxLayout(self)
-        self.layout.addWidget(self.search)
-        self.layout.addWidget(self.results)
+        self.VLayout = QtWidgets.QVBoxLayout(self)
+        self.VLayout.addWidget(self.search)
+        self.VLayout.addWidget(self.results)
 
+    def searchComics(self):
+        query = self.search.text()
+
+        entries = su.search(query)
+
+        entryWidgets = [ComicTableWidgetItemSet(entry) for entry in entries]
+        self.results.setRowCount(0)
+
+        for entryWidget in entryWidgets:
+            entryWidget.appendSelf(self.results)
 
 
 class ComicTableWidgetItemSet():
@@ -52,21 +61,11 @@ class ComicTableWidgetItemSet():
             target.setItem(lastRow, i, cell)
 
 
-        
-
-
-
 app = QtWidgets.QApplication([])
 
 widget = DownloadWidget()
 widget.resize(800, 600)
 
-searchResults = su.search()
-
-resultWidgets = [ComicTableWidgetItemSet(result) for result in searchResults] 
-
-for row in resultWidgets:
-    row.appendSelf(widget.results)
 
 widget.show()
 app.exec()
