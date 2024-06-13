@@ -1,4 +1,4 @@
-from PySide6 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets, QtGui
 import scrappingutils as su
 
 Flags = QtCore.Qt.ItemFlag
@@ -20,23 +20,41 @@ class DownloadWidget(QtWidgets.QWidget):
         self.results.setColumnWidth(2, 30)
         self.results.setColumnWidth(3, 400)
 
+        self.results.itemClicked.connect(self.handleItemClick)
+
+        self.comicData = []
+
+        self.coverPreview = QtWidgets.QLabel()
+        self.coverPixmap = QtGui.QPixmap()
+        self.coverPreview.setPixmap(self.coverPixmap)
 
 
-
-        self.VLayout = QtWidgets.QVBoxLayout(self)
-        self.VLayout.addWidget(self.search)
-        self.VLayout.addWidget(self.results)
+        self.GridLayout = QtWidgets.QGridLayout(self)
+        self.GridLayout.addWidget(self.search, 0, 0)
+        self.GridLayout.addWidget(self.results, 1, 0)
+        self.GridLayout.addWidget(self.coverPreview, 1, 1)
 
     def searchComics(self):
         query = self.search.text()
 
-        entries = su.search(query)
+        self.comicData = su.search(query)
 
-        entryWidgets = [ComicTableWidgetItemSet(entry) for entry in entries]
+        entryWidgets = [ComicTableWidgetItemSet(entry) for entry in self.comicData]
         self.results.setRowCount(0)
 
         for entryWidget in entryWidgets:
             entryWidget.appendSelf(self.results)
+
+    def loadPreview(self, data):
+        self.coverPixmap.loadFromData(data)
+        self.coverPreview.setPixmap(self.coverPixmap)
+
+    def handleItemClick(self, item):
+        row = item.row()
+        data = self.comicData[row]
+        data['image'] = data.get('image') or su.getImageBytes(data['imageURL'])
+
+        self.loadPreview(data['image'])
 
 
 class ComicTableWidgetItemSet():
