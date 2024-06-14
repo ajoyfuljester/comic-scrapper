@@ -29,10 +29,16 @@ class DownloadWidget(QtWidgets.QWidget):
         self.coverPreview.setPixmap(self.coverPixmap)
 
 
-        self.GridLayout = QtWidgets.QGridLayout(self)
-        self.GridLayout.addWidget(self.search, 0, 0)
-        self.GridLayout.addWidget(self.results, 1, 0)
-        self.GridLayout.addWidget(self.coverPreview, 1, 1)
+        self.gridLayout = QtWidgets.QGridLayout(self)
+        self.leftColumn = QtWidgets.QVBoxLayout()
+        self.rightColumn = QtWidgets.QVBoxLayout()
+        self.gridLayout.addLayout(self.leftColumn, 0, 0)
+        self.gridLayout.addLayout(self.rightColumn, 0, 1)
+
+        self.leftColumn.addWidget(self.search)
+        self.leftColumn.addWidget(self.results)
+
+        self.rightColumn.addWidget(self.coverPreview)
 
     def searchComics(self):
         query = self.search.text()
