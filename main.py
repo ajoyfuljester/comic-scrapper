@@ -24,21 +24,16 @@ class DownloadWidget(QtWidgets.QWidget):
 
         self.comicData = []
 
-        self.coverPreview = QtWidgets.QLabel()
-        self.coverPixmap = QtGui.QPixmap()
-        self.coverPreview.setPixmap(self.coverPixmap)
-
-
+        
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.leftColumn = QtWidgets.QVBoxLayout()
-        self.rightColumn = QtWidgets.QVBoxLayout()
+        self.rightGrid = QtWidgets.QGridLayout()
         self.gridLayout.addLayout(self.leftColumn, 0, 0)
-        self.gridLayout.addLayout(self.rightColumn, 0, 1)
+        self.gridLayout.addLayout(self.rightGrid, 0, 1)
 
         self.leftColumn.addWidget(self.search)
         self.leftColumn.addWidget(self.results)
-
-        self.rightColumn.addWidget(self.coverPreview)
+        
 
     def searchComics(self):
         query = self.search.text()
@@ -52,15 +47,18 @@ class DownloadWidget(QtWidgets.QWidget):
             entryWidget.appendSelf(self.results)
 
     def loadPreview(self, data):
-        self.coverPixmap.loadFromData(data)
-        self.coverPreview.setPixmap(self.coverPixmap)
+        self.preview = ComicPreview(data)
+        last = self.rightGrid.itemAtPosition(1, 0)
+        if last:
+            last.widget().deleteLater()
+        self.rightGrid.addWidget(self.preview, 1, 0)
+
 
     def handleItemClick(self, item):
         row = item.row()
         data = self.comicData[row]
-        data['image'] = data.get('image') or su.getImageBytes(data['imageURL'])
 
-        self.loadPreview(data['image'])
+        self.loadPreview(data)
 
 
 class ComicTableWidgetItemSet():
@@ -83,6 +81,42 @@ class ComicTableWidgetItemSet():
         target.setRowCount(lastRow + 1)
         for i, cell in enumerate(self.cellWidgets):
             target.setItem(lastRow, i, cell)
+
+
+class ComicPreview(QtWidgets.QWidget):
+    def __init__(self, info):
+        super().__init__()
+        
+        keys = list(info.keys())
+
+        coverLabel = QtWidgets.QLabel()
+
+
+        if 'imageURL' in keys or 'image' in keys:
+            info['image'] = info.get('image') or su.getImageBytes(info['imageURL'])
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(info['image'])
+            coverLabel.setPixmap(pixmap)
+            if 'imageURL' in keys:
+                keys.remove('imageURL')
+            if 'image' in keys:
+                keys.remove('image')
+
+
+
+        self.columnLayout = QtWidgets.QVBoxLayout(self)
+        self.columnLayout.addWidget(coverLabel)
+
+        self.formLayout = QtWidgets.QFormLayout()
+        self.columnLayout.addLayout(self.formLayout)
+        self.formLayout.setHorizontalSpacing(30)
+
+        for key in keys:
+            self.formLayout.addRow(key.upper(), QtWidgets.QLabel(info[key]))
+    
+        
+
+
 
 
 app = QtWidgets.QApplication([])
