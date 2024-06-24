@@ -5,13 +5,19 @@ import os
 
 
 
-def getSources(url='https://comixextra.com/the-sandman-1989/issue-1/full'):
+def getSources(url, max = None):
     response = requests.get(url)
 
     html = BeautifulSoup(response.text, 'html.parser')
     images = html.select('.chapter-container img')
+    imagesLen = len(images)
+    max = max or imagesLen
 
-    sources = [image['src'] for image in images]
+    sources = []
+    i = 0
+    while i < max and i < imagesLen:
+        sources.append(images[i]['src'])
+        i += 1
 
     return sources
 
@@ -49,8 +55,29 @@ def saveSources(sources, path='./', names=None):
     for i, source in enumerate(sources):
         saveSource(source, path, names[i])
 
+def getIssues(url, max = None):
+    html = BeautifulSoup(requests.get(url).text, 'html.parser')
 
-def search(keyword='The Sandman', url='https://comixextra.com/search', getImages=False):
+    rows = html.select('.episode-list tr')
+    rowsLen = len(rows)
+    max = max or rowsLen
+
+    issues = []
+    i = 0
+    while i < max and i < rowsLen:
+        issues.append({'name': rows[i].a.string, 'URL': rows[i].a['href']})
+        i += 1
+
+    return issues
+
+    
+
+def getAlternateImageURL(url, n = 1):
+    return getSources(getIssues(url)[-n]['URL'], 1)[0]
+
+
+def search(keyword='The Sandman', getAlternateImageURLs = False, getImages = False):
+    url = 'https://comixextra.com/search'
     keyword = keyword.replace(' ', '+')
     searchURL = url + '?keyword=' + keyword
     response = requests.get(searchURL)
@@ -61,16 +88,24 @@ def search(keyword='The Sandman', url='https://comixextra.com/search', getImages
 
     for rawEntry in rawEntries:
         details = rawEntry.select('.detail')
+        
 
+        
         entry = {
             'title': rawEntry.h3.string,
 
-            'releaseDate': details[2].string.split(': ')[1],
             'status': details[1].string.split(': ')[1],
+            'releaseDate': details[2].string.split(': ')[1],
             'latest': details[0].a.string,
 
+            'URL': rawEntry.h3.a['href'],
             'imageURL': rawEntry.img['src'],
         }
+
+
+        if getAlternateImageURLs and entry['imageURL'] == 'https://comixextra.com/images/sites/default.jpg':
+            entry['imageURL'] = getAlternateImageURL(entry['URL'])
+
 
         entries.append(entry)
     
