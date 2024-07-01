@@ -5,4 +5,4 @@ First time using pyside6 and beautiful soup
 i hope you have a nice life
 
 # TODO:
-change names from 'scrapping' to 'scraping', but i guess scrap is kinda cool
+- rename repository
