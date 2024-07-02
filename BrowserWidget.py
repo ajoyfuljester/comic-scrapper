@@ -3,7 +3,7 @@ import ScrapingUtils as SU
 from QtUtils import *
 from GenericWidgets import ComicPreview
 
-class DownloadWidget(QtWidgets.QWidget):
+class BrowserWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         
@@ -30,7 +30,7 @@ class DownloadWidget(QtWidgets.QWidget):
         self.rightGrid = QtWidgets.QGridLayout()
         self.gridLayout.addLayout(self.leftColumn, 0, 0)
         self.gridLayout.addLayout(self.rightGrid, 0, 1)
-        self.gridLayout.setColumnStretch(0, 1)
+        self.gridLayout.setColumnStretch(0, 3)
         self.gridLayout.setColumnStretch(1, 1)
 
         self.leftColumn.addWidget(self.search)
