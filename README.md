@@ -1,6 +1,9 @@
-# Comic Scrapper from comicextra.co, but also a comic manager right now it's not
+# Comic Scraper from comicextra.co, but also a reader or something
 
 First time using pyside6 and beautiful soup
+
+- pyside bad
+- beautiful soup good
 
 i hope you have a nice life
 
