@@ -72,6 +72,6 @@ class DescriptionWidget(QtWidgets.QWidget):
             valueLabel = QtWidgets.QLabel(v)
             valueLabel.setOpenExternalLinks(True)
             valueLabel.setWordWrap(True)
-            valueLabel.setTextInteractionFlags(TextInteractionFlags.TextSelectableByMouse | TextInteractionFlags.LinksAccessibleByMouse | TextInteractionFlags.LinksAccessibleByKeyboard)
+            valueLabel.setTextInteractionFlags(TextInteractionFlag.TextSelectableByMouse | TextInteractionFlag.LinksAccessibleByMouse | TextInteractionFlag.LinksAccessibleByKeyboard)
             self.formLayout.addRow(k.upper(), valueLabel)
 

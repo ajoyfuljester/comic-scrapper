@@ -86,7 +86,7 @@ class ComicTableWidgetItemSet():
 
         self.cellWidgets = [QtWidgets.QTableWidgetItem(cell) for cell in self.cellData]
         for cell in self.cellWidgets:
-            cell.setFlags(ItemFlags.ItemIsSelectable | ItemFlags.ItemIsEnabled)
+            cell.setFlags(ItemFlag.ItemIsSelectable | ItemFlag.ItemIsEnabled)
 
     
     def appendSelf(self, target):
