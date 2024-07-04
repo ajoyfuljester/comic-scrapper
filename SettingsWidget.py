@@ -1,20 +1,110 @@
 from PySide6 import QtWidgets
-import json
+from QtUtils import *
+import Utils
+
+
+widgetInputMap = {
+        'PATH_TO_COMIC_BOOKS': 'text',
+}
 
 
 class SettingsWidget(QtWidgets.QWidget):
+    defaultKeyStylesheet = 'color: black;'
+    defaultValueStylesheet = 'color: black; placeholder-text-color: green;'
+    changedKeyStylesheet = defaultKeyStylesheet + 'color: blue;'
+    changedValueStylesheet = defaultValueStylesheet + 'color: blue;'
     def __init__(self):
         super().__init__()
 
-        self.formLayout = QtWidgets.QFormLayout(self)
+        self.mainLayout = QtWidgets.QVBoxLayout(self)
+        self.formLayout = QtWidgets.QFormLayout()
+        self.mainLayout.addLayout(self.formLayout)
+        self.buttonLayout = QtWidgets.QHBoxLayout()
+        self.mainLayout.addLayout(self.buttonLayout)
 
         
-        with open('settings.json') as file:
-            config = json.loads(file.read())
+        self.config = Utils.loadConfig()
+
+        def generateEditor():
+            rowCount = self.formLayout.rowCount()
+            if rowCount != 0:
+                for i in range(rowCount):
+                    self.formLayout.removeRow(i)
+            for key, value in self.config.items():
+                inputType = widgetInputMap[key]
+                valueWidget = QtWidgets.QLabel(value)
+                if inputType == 'text':
+                    valueWidget = QtWidgets.QLineEdit()
+                    valueWidget.setText(value)
+                    valueWidget.setPlaceholderText(value)
+                else:
+                    raise Exception('Widget type not found!')
+                    
+            
+                keyWidget = QtWidgets.QLabel(key)
+                keyWidget.setStyleSheet(self.defaultKeyStylesheet)
+                valueWidget.setStyleSheet(self.defaultValueStylesheet)
+                valueWidget.textChanged.connect(self.highlightChangedRows)
+
+                self.formLayout.addRow(keyWidget, valueWidget)
+
+            self.highlightChangedRows()
 
         
-        for k, v in config.items():
-            print(k, v)
-            self.formLayout.addRow(k, QtWidgets.QLabel(v))
+        self.resetButton = QtWidgets.QPushButton('Reset')
+        self.resetButton.clicked.connect(generateEditor)
+        self.buttonLayout.addWidget(self.resetButton)
+        generateEditor()
 
-        print(self.formLayout.rowCount())
+        def saveConfig():
+            rowCount = self.formLayout.rowCount()
+            for i in range(rowCount):
+                key = self.formLayout.itemAt(i, ItemRole.LabelRole).widget().text()
+
+                valueWidget = self.formLayout.itemAt(i, ItemRole.FieldRole).widget()
+                value = None
+                
+                inputType = widgetInputMap[key]
+                if inputType == 'text':
+                    value = valueWidget.text()
+
+
+                self.config[key] = value
+
+
+            Utils.writeConfig(self.config)
+            self.highlightChangedRows()
+
+
+
+        self.saveButton = QtWidgets.QPushButton('Save')
+        self.saveButton.clicked.connect(lambda _: (saveConfig(), generateEditor()))
+        self.buttonLayout.addWidget(self.saveButton)
+
+    
+
+        
+
+    def highlightChangedRows(self):
+        rowCount = self.formLayout.rowCount()
+
+        for i in range(rowCount):
+            keyWidget = self.formLayout.itemAt(i, ItemRole.LabelRole).widget()
+            key = keyWidget.text()
+            valueWidget = self.formLayout.itemAt(i, ItemRole.FieldRole).widget()
+            value = None
+            
+            inputType = widgetInputMap[key]
+            if inputType == 'text':
+                value = valueWidget.text()
+            
+
+            if self.config[key] == value:
+                keyWidget.setStyleSheet(self.defaultKeyStylesheet)
+                valueWidget.setStyleSheet(self.defaultValueStylesheet)
+            else:
+                keyWidget.setStyleSheet(self.changedKeyStylesheet)
+                valueWidget.setStyleSheet(self.changedValueStylesheet)
+
+
+            
