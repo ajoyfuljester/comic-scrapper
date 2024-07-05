@@ -1,1 +1,4 @@
-{"PATH_TO_COMIC_BOOKS": "./comic-books/"}
+{
+    "PATH_TO_COMIC_BOOKS": "./comic-books/",
+    "CREATE_DIR_IF_DOES_NOT_EXIST": true
+}

@@ -5,6 +5,7 @@ import ConfigUtils
 
 widgetInputMap = {
         'PATH_TO_COMIC_BOOKS': 'text',
+        'CREATE_DIR_IF_DOES_NOT_EXIST': 'checkbox',
 }
 
 
@@ -28,23 +29,30 @@ class SettingsWidget(QtWidgets.QWidget):
         def generateEditor():
             rowCount = self.formLayout.rowCount()
             if rowCount != 0:
-                for i in range(rowCount):
+                for i in range(rowCount - 1, -1, -1): # not jumping indexes
+                    self.formLayout.itemAt(i, ItemRole.LabelRole).widget().deleteLater()
+                    self.formLayout.itemAt(i, ItemRole.FieldRole).widget().deleteLater()
                     self.formLayout.removeRow(i)
             for key, value in self.config.items():
                 inputType = widgetInputMap[key]
-                valueWidget = QtWidgets.QLabel(value)
-                if inputType == 'text':
-                    valueWidget = QtWidgets.QLineEdit()
-                    valueWidget.setText(value)
-                    valueWidget.setPlaceholderText(value)
-                else:
-                    raise Exception('Widget type not found!')
+                valueWidget = None
+                match inputType:
+                    case 'text':
+                        valueWidget = QtWidgets.QLineEdit()
+                        valueWidget.setText(value)
+                        valueWidget.setPlaceholderText(value)
+                        valueWidget.textChanged.connect(self.highlightChangedRows)
+                    case 'checkbox':
+                        valueWidget = QtWidgets.QCheckBox()
+                        valueWidget.setChecked(value)
+                        valueWidget.checkStateChanged.connect(self.highlightChangedRows)
+                    case _:
+                        raise Exception('Widget type not found!')
                     
             
                 keyWidget = QtWidgets.QLabel(key)
                 keyWidget.setStyleSheet(self.defaultKeyStylesheet)
                 valueWidget.setStyleSheet(self.defaultValueStylesheet)
-                valueWidget.textChanged.connect(self.highlightChangedRows)
 
                 self.formLayout.addRow(keyWidget, valueWidget)
 
@@ -56,18 +64,20 @@ class SettingsWidget(QtWidgets.QWidget):
         self.buttonLayout.addWidget(self.resetButton)
         generateEditor()
 
+        
+
+
+
+
+
         def saveConfig():
             rowCount = self.formLayout.rowCount()
             for i in range(rowCount):
                 key = self.formLayout.itemAt(i, ItemRole.LabelRole).widget().text()
 
                 valueWidget = self.formLayout.itemAt(i, ItemRole.FieldRole).widget()
-                value = None
+                value = self.getWidgetValue(valueWidget, widgetInputMap[key])
                 
-                inputType = widgetInputMap[key]
-                if inputType == 'text':
-                    value = valueWidget.text()
-
 
                 self.config[key] = value
 
@@ -92,11 +102,7 @@ class SettingsWidget(QtWidgets.QWidget):
             keyWidget = self.formLayout.itemAt(i, ItemRole.LabelRole).widget()
             key = keyWidget.text()
             valueWidget = self.formLayout.itemAt(i, ItemRole.FieldRole).widget()
-            value = None
-            
-            inputType = widgetInputMap[key]
-            if inputType == 'text':
-                value = valueWidget.text()
+            value = self.getWidgetValue(valueWidget, widgetInputMap[key])
             
 
             if self.config[key] == value:
@@ -108,3 +114,16 @@ class SettingsWidget(QtWidgets.QWidget):
 
 
             
+    def getWidgetValue(self, valueWidget, inputType):
+        value = None
+        match inputType:
+            case 'text':
+                value = valueWidget.text()
+            case 'checkbox':
+                value = valueWidget.isChecked()
+        
+        return value
+
+
+
+

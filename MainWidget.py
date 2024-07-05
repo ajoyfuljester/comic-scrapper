@@ -1,6 +1,7 @@
 from PySide6 import QtWidgets
 from BrowserWidget import BrowserWidget
 from SettingsWidget import SettingsWidget
+from LibraryWidget import LibraryWidget
 
 class MainWidget(QtWidgets.QTabWidget):
     def __init__(self):
@@ -13,5 +14,8 @@ class MainWidget(QtWidgets.QTabWidget):
 
         self.settingsWidget = SettingsWidget()
         self.addTab(self.settingsWidget, 'Settings')
+
+        self.libraryWidget = LibraryWidget()
+        self.addTab(self.libraryWidget, 'Library')
 
 
