@@ -1,6 +1,6 @@
 from PySide6 import QtWidgets
 from QtUtils import *
-import Utils
+import ConfigUtils
 
 
 widgetInputMap = {
@@ -23,7 +23,7 @@ class SettingsWidget(QtWidgets.QWidget):
         self.mainLayout.addLayout(self.buttonLayout)
 
         
-        self.config = Utils.loadConfig()
+        self.config = ConfigUtils.loadConfig()
 
         def generateEditor():
             rowCount = self.formLayout.rowCount()
@@ -72,13 +72,13 @@ class SettingsWidget(QtWidgets.QWidget):
                 self.config[key] = value
 
 
-            Utils.writeConfig(self.config)
+            ConfigUtils.writeConfig(self.config)
             self.highlightChangedRows()
 
 
 
         self.saveButton = QtWidgets.QPushButton('Save')
-        self.saveButton.clicked.connect(lambda _: (saveConfig(), generateEditor()))
+        self.saveButton.clicked.connect(lambda _: (saveConfig(), generateEditor())) # This is cursed i hate this thing, but i don't want 2 lines 
         self.buttonLayout.addWidget(self.saveButton)
 
     
