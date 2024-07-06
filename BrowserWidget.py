@@ -1,4 +1,5 @@
 from PySide6 import QtWidgets
+import LibraryUtils
 import ScrapingUtils as SU
 from QtUtils import *
 from GenericWidgets import ComicPreview
@@ -8,6 +9,7 @@ class BrowserWidget(QtWidgets.QWidget):
         super().__init__()
         
         self.search = QtWidgets.QLineEdit()
+        self.search.setPlaceholderText('Type here to search')
         self.search.returnPressed.connect(self.searchComics)
 
         self.results = QtWidgets.QTableWidget()
@@ -20,7 +22,7 @@ class BrowserWidget(QtWidgets.QWidget):
         tableHeader.setSectionResizeMode(3, ResizeMode.Stretch)
 
 
-        self.results.itemClicked.connect(self.handleItemClick)
+        self.results.itemSelectionChanged.connect(self.handleItemClick)
 
         self.comicData = []
 
@@ -35,6 +37,11 @@ class BrowserWidget(QtWidgets.QWidget):
 
         self.leftColumn.addWidget(self.search)
         self.leftColumn.addWidget(self.results)
+
+        self.addToLibraryButton = QtWidgets.QPushButton()
+        self.addToLibraryButton.setText('Add to library')
+        self.addToLibraryButton.clicked.connect(self.addSelectedToLibrary)
+        self.rightGrid.addWidget(self.addToLibraryButton, 0, 0)
 
 
     def searchComics(self):
@@ -67,12 +74,21 @@ class BrowserWidget(QtWidgets.QWidget):
 
 
 
-    def handleItemClick(self, item):
-        row = item.row()
-        data = self.comicData[row]
+    def handleItemClick(self):
+        indexes = self.results.selectedIndexes()
+        if len(indexes) > 0:
+            row = indexes[0].row()
+            data = self.comicData[row]
+            self.loadPreview(data)
+    
 
-        self.loadPreview(data)
-
+    def addSelectedToLibrary(self):
+        selectedIndexes = set([index.row() for index in self.results.selectedIndexes()])
+        selectedComicBooks = [self.comicData[i] for i in selectedIndexes]
+        for cb in selectedComicBooks:
+            LibraryUtils.addToLibrary(cb)
+        
+        
 
 class ComicTableWidgetItemSet():
     def __init__(self, entry):
