@@ -72,8 +72,8 @@ def getIssues(url, max = None):
 
     
 
-def getAlternateImageURL(url, n = 1):
-    return getSources(getIssues(url)[-n]['URL'], 1)[0]
+def getAlternateImageURL(url, n = 1, m = 0):
+    return getSources(getIssues(url)[-n]['URL'], m + 1)[m]
 
 
 def search(keyword='The Sandman', getAlternateImageURLs = False, getImages = False):
@@ -95,7 +95,7 @@ def search(keyword='The Sandman', getAlternateImageURLs = False, getImages = Fal
             'title': rawEntry.h3.string,
 
             'status': details[1].string.split(': ')[1],
-            'releaseDate': details[2].string.split(': ')[1],
+            'releaseYear': details[2].string.split(': ')[1],
             'latest': details[0].a.string,
 
             'URL': rawEntry.h3.a['href'],

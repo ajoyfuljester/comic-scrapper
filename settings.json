@@ -1,4 +1,3 @@
 {
-    "PATH_TO_LIBRARY": "./comic-books/",
-    "CREATE_LIBRARY_IF_DOES_NOT_EXIST": true
+    "PATH_TO_LIBRARY": "./comic-books/"
 }

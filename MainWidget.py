@@ -11,11 +11,8 @@ class MainWidget(QtWidgets.QTabWidget):
         self.addTab(self.browserWidget, 'Browser')
         self.browserWidget.search.setFocus()
 
-
-        self.settingsWidget = SettingsWidget()
-        self.addTab(self.settingsWidget, 'Settings')
-
         self.libraryWidget = LibraryWidget()
         self.addTab(self.libraryWidget, 'Library')
 
-
+        self.settingsWidget = SettingsWidget()
+        self.addTab(self.settingsWidget, 'Settings')

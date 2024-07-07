@@ -14,7 +14,7 @@ class BrowserWidget(QtWidgets.QWidget):
 
         self.results = QtWidgets.QTableWidget()
         self.results.setColumnCount(4)
-        self.results.setHorizontalHeaderLabels(['Title', 'Status', 'Release Date', 'Latest Issue'])
+        self.results.setHorizontalHeaderLabels(['Title', 'Status', 'Release Year', 'Latest Issue'])
         tableHeader = self.results.horizontalHeader()
         tableHeader.setSectionResizeMode(0, ResizeMode.ResizeToContents)
         tableHeader.setSectionResizeMode(1, ResizeMode.ResizeToContents)
@@ -96,7 +96,7 @@ class ComicTableWidgetItemSet():
         self.cellData = [
             entry['title'],
             entry['status'],
-            entry['releaseDate'],
+            entry['releaseYear'],
             entry['latest'],
         ]
 

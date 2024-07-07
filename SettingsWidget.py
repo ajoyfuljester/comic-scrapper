@@ -5,7 +5,7 @@ import ConfigUtils
 
 widgetInputMap = {
         'PATH_TO_LIBRARY': 'text',
-        'CREATE_LIBRARY_IF_DOES_NOT_EXIST': 'checkbox',
+        '': 'checkbox',
 }
 
 
