@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtGui
 import LibraryUtils
 import ScrapingUtils as SU
 from QtUtils import *
@@ -59,13 +59,8 @@ class BrowserWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.preview, 1, 1)
         self.preview.show()
 
-        size = self.preview.size()
-        descSize = self.preview.description.size()
-        margins = self.preview.columnLayout.contentsMargins()
-        descSize.setWidth(margins.left() + margins.right())
-        descSize.setHeight(descSize.height() + self.gridLayout.verticalSpacing() + margins.top() + margins.bottom())
-        size -= descSize
-
+        
+        size = self.preview.coverLabel.frameSize()
         self.preview.resizeCover(size)
 
 
@@ -87,6 +82,8 @@ class BrowserWidget(QtWidgets.QWidget):
         
 
 class ComicTableWidgetItemSet():
+    defaultBackground = 'white'
+    highlightBackground = 'lightgray'
     def __init__(self, entry):
 
         self.cellData = [
@@ -97,8 +94,10 @@ class ComicTableWidgetItemSet():
         ]
 
         self.cellWidgets = [QtWidgets.QTableWidgetItem(cell) for cell in self.cellData]
+        highlight = self.cellData[0] in LibraryUtils.comicBooks()
         for cell in self.cellWidgets:
             cell.setFlags(ItemFlag.ItemIsSelectable | ItemFlag.ItemIsEnabled)
+            cell.setBackground(QtGui.QBrush(self.highlightBackground if highlight else self.defaultBackground))
 
     
     def appendSelf(self, target):

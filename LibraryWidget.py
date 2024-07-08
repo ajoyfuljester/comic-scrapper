@@ -1,4 +1,5 @@
 from PySide6 import QtWidgets
+import GenericWidgets
 import LibraryUtils
 from QtUtils import *
 
@@ -11,6 +12,9 @@ class LibraryWidget(QtWidgets.QWidget):
 
 
         self.gridLayout = QtWidgets.QGridLayout(self)
+        self.gridLayout.setColumnStretch(0, 2)
+        self.gridLayout.setColumnStretch(1, 1)
+        self.gridLayout.setColumnStretch(2, 1)
 
         self.searchCriteriaInput = QtWidgets.QComboBox()
         self.searchCriteriaInput.addItem('Title')
@@ -38,6 +42,7 @@ class LibraryWidget(QtWidgets.QWidget):
         tableHeaders.setSectionResizeMode(1, ResizeMode.ResizeToContents)
         tableHeaders.setSectionResizeMode(2, ResizeMode.ResizeToContents)
         tableHeaders.setSectionResizeMode(3, ResizeMode.Stretch)
+        self.comicBookContainer.itemSelectionChanged.connect(self.showPreviewOnSelect)
         self.gridLayout.addWidget(self.comicBookContainer, 1, 0)
 
         self.refreshButton = QtWidgets.QPushButton()
@@ -47,6 +52,8 @@ class LibraryWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.refreshButton, 0, 2)
         
         self.refreshComicBooks()
+
+        self.loadedIssueLibraries = {}
 
     def insertComicBook(self, data):
         rowCount = self.comicBookContainer.rowCount()
@@ -81,3 +88,55 @@ class LibraryWidget(QtWidgets.QWidget):
         for cb in self.comicBooks:
             info = cb['info']
             self.insertComicBook([info['title'], info['status'], info['releaseYear'], info['latest']])
+
+    def showPreview(self, name):
+        last = self.gridLayout.itemAtPosition(1, 1)
+        if last:
+            last.widget().deleteLater()
+        self.issueLibrary = IssueLibraryWidget(name)
+        self.gridLayout.addWidget(self.issueLibrary, 1, 1, 1, 2)
+        self.issueLibrary.show()
+        
+        size = self.issueLibrary.preview.size()
+        margins = self.issueLibrary.gridLayout.contentsMargins()
+        gap = self.issueLibrary.preview.childLayout.spacing()
+        descriptionSize = self.issueLibrary.preview.description.size()
+
+        size.setHeight(size.height() - margins.top() - margins.bottom())
+        size.setWidth(size.width() - margins.left() - margins.right() - descriptionSize.width() - gap)
+        size = self.issueLibrary.preview.coverLabel.frameSize() # what is this magic???? I will still commit these calculations to document my suffering
+
+        self.issueLibrary.preview.resizeCover(size)
+        # i hate this, it's not perfect, but it's good enough
+
+    def showPreviewOnSelect(self):
+        first = self.comicBookContainer.selectedIndexes()[0].row()
+        self.showPreview(self.comicBookContainer.item(first, 0).text())
+
+class IssueLibraryWidget(QtWidgets.QWidget):
+    def __init__(self, name):
+        super().__init__()
+
+        self.gridLayout = QtWidgets.QGridLayout(self)
+        self.gridLayout.setRowStretch(0, 1)
+        self.gridLayout.setRowStretch(1, 1)
+
+
+        self.issueContainer = QtWidgets.QTableWidget()
+        self.gridLayout.addWidget(self.issueContainer)
+
+        details = LibraryUtils.comicBookInfo(name)
+        self.preview = GenericWidgets.ComicPreview(details['info'], False)
+        self.gridLayout.addWidget(self.preview)
+
+
+
+
+
+
+
+
+
+
+
+

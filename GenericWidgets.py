@@ -5,7 +5,7 @@ import re
 
 
 class ComicPreview(QtWidgets.QWidget):
-    def __init__(self, info):
+    def __init__(self, info, verticalLayout = True):
         super().__init__()
 
 
@@ -33,8 +33,12 @@ class ComicPreview(QtWidgets.QWidget):
 
 
 
-        self.columnLayout = QtWidgets.QVBoxLayout(self)
-        self.columnLayout.addWidget(self.coverLabel)
+        if verticalLayout:
+            self.childLayout = QtWidgets.QVBoxLayout(self)
+        else:
+            self.childLayout = QtWidgets.QHBoxLayout(self)
+
+        self.childLayout.addWidget(self.coverLabel)
 
 
         d = {}
@@ -44,7 +48,7 @@ class ComicPreview(QtWidgets.QWidget):
 
 
         self.description = DescriptionWidget(d)
-        self.columnLayout.addWidget(self.description)
+        self.childLayout.addWidget(self.description)
 
 
 

@@ -1,3 +1,4 @@
 {
-    "PATH_TO_LIBRARY": "./comic-books/"
+    "PATH_TO_LIBRARY": "./comic-books/",
+    "MAXIMIZE_WINDOW_ON_LAUNCH": false
 }
