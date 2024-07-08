@@ -11,11 +11,11 @@ def createLibraryIfDoesNotExist():
         os.mkdir(pathToLibrary)
 
 
-def comicBooks():
+def getComicBooks():
     return next(os.walk(ConfigUtils.loadConfig()['PATH_TO_LIBRARY']), [None, []])[1]
 
 
-def comicBookInfo(name):
+def getComicBookInfo(name):
     config = ConfigUtils.loadConfig()
     path = os.path.join(config['PATH_TO_LIBRARY'], name, 'data.json')
 
@@ -23,19 +23,17 @@ def comicBookInfo(name):
         return json.loads(file.read())
 
 blackListedKeys = ['image']
-def sanitizeData(data):
+def truncateData(data, blacklist = blackListedKeys):
     importantData = {}
 
     for key in data.keys():
-        if key not in blackListedKeys:
+        if key not in blacklist:
             importantData[key] = data[key]
 
     return importantData
 
-def constructDataFile(data):
+def constructDataJSON(data):
     return json.dumps(data, indent=4)
-
-    
 
 
 
@@ -47,10 +45,10 @@ def addToLibrary(data):
     path = os.path.join(pathToLibrary, data['title'])
     os.mkdir(path)
     with open(os.path.join(path, 'data.json'), 'w') as file:
-        file.write(constructDataFile({'info': sanitizeData(data)}))
+        file.write(constructDataJSON({'info': truncateData(data)}))
 
 
-def comicBookIssues(name):
+def getComicBookIssues(name):
     config = ConfigUtils.loadConfig()
 
     path = os.path.join(config['PATH_TO_LIBRARY'], name)
@@ -59,7 +57,7 @@ def comicBookIssues(name):
 
 
 
-def issuePaths(name, number):
+def getIssuePaths(name, number):
     config = ConfigUtils.loadConfig()
 
     path = os.path.join(config['PATH_TO_LIBRARY'], name, number)

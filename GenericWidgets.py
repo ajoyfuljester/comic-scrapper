@@ -4,7 +4,7 @@ from QtUtils import *
 import re
 
 
-class ComicPreview(QtWidgets.QWidget):
+class ComicPreviewWidget(QtWidgets.QWidget):
     def __init__(self, info, verticalLayout = True):
         super().__init__()
 

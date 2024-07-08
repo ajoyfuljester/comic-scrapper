@@ -6,12 +6,12 @@ config = ConfigUtils.loadConfig()
 
 app = QtWidgets.QApplication()
 
-widget = MainWidget()
-widget.resize(800, 600)
+mainWidget = MainWidget()
+mainWidget.resize(800, 600)
 
 if config['MAXIMIZE_WINDOW_ON_LAUNCH']:
-    widget.showMaximized()
+    mainWidget.showMaximized()
 else:
-    widget.show()
+    mainWidget.show()
 
 app.exec()

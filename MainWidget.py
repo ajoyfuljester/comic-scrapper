@@ -9,7 +9,7 @@ class MainWidget(QtWidgets.QTabWidget):
 
         self.browserWidget = BrowserWidget()
         self.addTab(self.browserWidget, 'Browser')
-        self.browserWidget.search.setFocus()
+        self.browserWidget.searchInput.setFocus()
 
         self.libraryWidget = LibraryWidget()
         self.addTab(self.libraryWidget, 'Library')

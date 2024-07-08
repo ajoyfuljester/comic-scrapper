@@ -26,71 +26,65 @@ class SettingsWidget(QtWidgets.QWidget):
         
         self.config = ConfigUtils.loadConfig()
 
-        def generateEditor():
-            rowCount = self.formLayout.rowCount()
-            if rowCount != 0:
-                for i in range(rowCount - 1, -1, -1): # not jumping indexes
-                    self.formLayout.itemAt(i, ItemRole.LabelRole).widget().deleteLater()
-                    self.formLayout.itemAt(i, ItemRole.FieldRole).widget().deleteLater()
-                    self.formLayout.removeRow(i)
-            for key, value in self.config.items():
-                inputType = widgetInputMap[key]
-                valueWidget = None
-                match inputType:
-                    case 'text':
-                        valueWidget = QtWidgets.QLineEdit()
-                        valueWidget.setText(value)
-                        valueWidget.setPlaceholderText(value)
-                        valueWidget.textChanged.connect(self.highlightChangedRows)
-                    case 'checkbox':
-                        valueWidget = QtWidgets.QCheckBox()
-                        valueWidget.setChecked(value)
-                        valueWidget.checkStateChanged.connect(self.highlightChangedRows)
-                    case _:
-                        raise Exception('Widget type not found!')
-                    
-            
-                keyWidget = QtWidgets.QLabel(key)
-                keyWidget.setStyleSheet(self.defaultKeyStylesheet)
-                valueWidget.setStyleSheet(self.defaultValueStylesheet)
-
-                self.formLayout.addRow(keyWidget, valueWidget)
-
-            self.highlightChangedRows()
-
         
         self.resetButton = QtWidgets.QPushButton('Reset')
-        self.resetButton.clicked.connect(generateEditor)
+        self.resetButton.clicked.connect(self.generateEditor)
         self.buttonLayout.addWidget(self.resetButton)
-        generateEditor()
+        self.generateEditor()
 
-        
-
-
-
-
-
-        def saveConfig():
-            rowCount = self.formLayout.rowCount()
-            for i in range(rowCount):
-                key = self.formLayout.itemAt(i, ItemRole.LabelRole).widget().text()
-
-                valueWidget = self.formLayout.itemAt(i, ItemRole.FieldRole).widget()
-                value = self.getWidgetValue(valueWidget, widgetInputMap[key])
-                
-
-                self.config[key] = value
-
-
-            ConfigUtils.writeConfig(self.config)
-            self.highlightChangedRows()
-
-
-
-        self.saveButton = QtWidgets.QPushButton('Save')
-        self.saveButton.clicked.connect(lambda _: (saveConfig(), generateEditor())) # This is cursed i hate this thing, but i don't want 2 lines 
+        self.saveButton = QtWidgets.QPushButton()
+        self.saveButton.setText('Save')
+        self.saveButton.clicked.connect(lambda _: (self.saveConfig(), self.generateEditor())) # This is cursed i hate this thing, but i don't want 2 lines 
         self.buttonLayout.addWidget(self.saveButton)
 
+
+    def generateEditor(self):
+        rowCount = self.formLayout.rowCount()
+        if rowCount != 0:
+            for i in range(rowCount - 1, -1, -1): # not jumping indexes
+                self.formLayout.itemAt(i, ItemRole.LabelRole).widget().deleteLater()
+                self.formLayout.itemAt(i, ItemRole.FieldRole).widget().deleteLater()
+                self.formLayout.removeRow(i)
+        for key, value in self.config.items():
+            inputType = widgetInputMap[key]
+            valueWidget = None
+            match inputType:
+                case 'text':
+                    valueWidget = QtWidgets.QLineEdit()
+                    valueWidget.setText(value)
+                    valueWidget.setPlaceholderText(value)
+                    valueWidget.textChanged.connect(self.highlightChangedRows)
+                case 'checkbox':
+                    valueWidget = QtWidgets.QCheckBox()
+                    valueWidget.setChecked(value)
+                    valueWidget.checkStateChanged.connect(self.highlightChangedRows)
+                case _:
+                    raise Exception('Widget type not found!')
+
+
+            keyWidget = QtWidgets.QLabel(key)
+            keyWidget.setStyleSheet(self.defaultKeyStylesheet)
+            valueWidget.setStyleSheet(self.defaultValueStylesheet)
+
+            self.formLayout.addRow(keyWidget, valueWidget)
+
+        self.highlightChangedRows()
+
+
+    def saveConfig(self):
+        rowCount = self.formLayout.rowCount()
+        for i in range(rowCount):
+            key = self.formLayout.itemAt(i, ItemRole.LabelRole).widget().text()
+
+            valueWidget = self.formLayout.itemAt(i, ItemRole.FieldRole).widget()
+            value = self.getWidgetValue(valueWidget, widgetInputMap[key])
+
+
+            self.config[key] = value
+
+
+        ConfigUtils.writeConfig(self.config)
+        self.highlightChangedRows()
     
 
         

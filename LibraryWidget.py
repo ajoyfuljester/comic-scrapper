@@ -42,7 +42,7 @@ class LibraryWidget(QtWidgets.QWidget):
         tableHeaders.setSectionResizeMode(1, ResizeMode.ResizeToContents)
         tableHeaders.setSectionResizeMode(2, ResizeMode.ResizeToContents)
         tableHeaders.setSectionResizeMode(3, ResizeMode.Stretch)
-        self.comicBookContainer.itemSelectionChanged.connect(self.showPreviewOnSelect)
+        self.comicBookContainer.itemSelectionChanged.connect(self.handleSelectionChanged)
         self.gridLayout.addWidget(self.comicBookContainer, 1, 0)
 
         self.refreshButton = QtWidgets.QPushButton()
@@ -52,8 +52,6 @@ class LibraryWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.refreshButton, 0, 2)
         
         self.refreshComicBooks()
-
-        self.loadedIssueLibraries = {}
 
     def insertComicBook(self, data):
         rowCount = self.comicBookContainer.rowCount()
@@ -83,7 +81,7 @@ class LibraryWidget(QtWidgets.QWidget):
 
     def refreshComicBooks(self):
         self.comicBookContainer.setRowCount(0)
-        self.comicBooks = [LibraryUtils.comicBookInfo(cb) for cb in LibraryUtils.comicBooks()]
+        self.comicBooks = [LibraryUtils.getComicBookInfo(cb) for cb in LibraryUtils.getComicBooks()]
 
         for cb in self.comicBooks:
             info = cb['info']
@@ -97,19 +95,11 @@ class LibraryWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.issueLibrary, 1, 1, 1, 2)
         self.issueLibrary.show()
         
-        size = self.issueLibrary.preview.size()
-        margins = self.issueLibrary.gridLayout.contentsMargins()
-        gap = self.issueLibrary.preview.childLayout.spacing()
-        descriptionSize = self.issueLibrary.preview.description.size()
-
-        size.setHeight(size.height() - margins.top() - margins.bottom())
-        size.setWidth(size.width() - margins.left() - margins.right() - descriptionSize.width() - gap)
-        size = self.issueLibrary.preview.coverLabel.frameSize() # what is this magic???? I will still commit these calculations to document my suffering
+        size = self.issueLibrary.preview.coverLabel.frameSize()
 
         self.issueLibrary.preview.resizeCover(size)
-        # i hate this, it's not perfect, but it's good enough
 
-    def showPreviewOnSelect(self):
+    def handleSelectionChanged(self):
         first = self.comicBookContainer.selectedIndexes()[0].row()
         self.showPreview(self.comicBookContainer.item(first, 0).text())
 
@@ -125,18 +115,6 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.issueContainer = QtWidgets.QTableWidget()
         self.gridLayout.addWidget(self.issueContainer)
 
-        details = LibraryUtils.comicBookInfo(name)
-        self.preview = GenericWidgets.ComicPreview(details['info'], False)
+        details = LibraryUtils.getComicBookInfo(name)
+        self.preview = GenericWidgets.ComicPreviewWidget(details['info'], False)
         self.gridLayout.addWidget(self.preview)
-
-
-
-
-
-
-
-
-
-
-
-
