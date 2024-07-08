@@ -28,20 +28,16 @@ class BrowserWidget(QtWidgets.QWidget):
 
         
         self.gridLayout = QtWidgets.QGridLayout(self)
-        self.leftColumn = QtWidgets.QVBoxLayout()
-        self.rightGrid = QtWidgets.QGridLayout()
-        self.gridLayout.addLayout(self.leftColumn, 0, 0)
-        self.gridLayout.addLayout(self.rightGrid, 0, 1)
         self.gridLayout.setColumnStretch(0, 3)
         self.gridLayout.setColumnStretch(1, 1)
 
-        self.leftColumn.addWidget(self.search)
-        self.leftColumn.addWidget(self.results)
+        self.gridLayout.addWidget(self.search, 0, 0)
+        self.gridLayout.addWidget(self.results, 1, 0)
 
         self.addToLibraryButton = QtWidgets.QPushButton()
         self.addToLibraryButton.setText('Add to library')
         self.addToLibraryButton.clicked.connect(self.addSelectedToLibrary)
-        self.rightGrid.addWidget(self.addToLibraryButton, 0, 0)
+        self.gridLayout.addWidget(self.addToLibraryButton, 0, 1)
 
 
     def searchComics(self):
@@ -57,17 +53,17 @@ class BrowserWidget(QtWidgets.QWidget):
 
     def loadPreview(self, data):
         self.preview = ComicPreview(data)
-        last = self.rightGrid.itemAtPosition(1, 0)
+        last = self.gridLayout.itemAtPosition(1, 1)
         if last:
             last.widget().deleteLater()
-        self.rightGrid.addWidget(self.preview, 1, 0)
+        self.gridLayout.addWidget(self.preview, 1, 1)
         self.preview.show()
 
         size = self.preview.size()
         descSize = self.preview.description.size()
         margins = self.preview.columnLayout.contentsMargins()
         descSize.setWidth(margins.left() + margins.right())
-        descSize.setHeight(descSize.height() + self.rightGrid.verticalSpacing() + margins.top() + margins.bottom())
+        descSize.setHeight(descSize.height() + self.gridLayout.verticalSpacing() + margins.top() + margins.bottom())
         size -= descSize
 
         self.preview.resizeCover(size)
@@ -110,4 +106,3 @@ class ComicTableWidgetItemSet():
         target.setRowCount(lastRow + 1)
         for i, cell in enumerate(self.cellWidgets):
             target.setItem(lastRow, i, cell)
-
