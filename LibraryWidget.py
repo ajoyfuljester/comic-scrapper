@@ -2,6 +2,7 @@ from PySide6 import QtWidgets
 import GenericWidgets
 import LibraryUtils
 from QtUtils import *
+import ScrapingUtils as SU
 
 
 class LibraryWidget(QtWidgets.QWidget):
@@ -106,6 +107,7 @@ class LibraryWidget(QtWidgets.QWidget):
 class IssueLibraryWidget(QtWidgets.QWidget):
     def __init__(self, name):
         super().__init__()
+        self.name = name
 
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setRowStretch(0, 1)
@@ -113,8 +115,30 @@ class IssueLibraryWidget(QtWidgets.QWidget):
 
 
         self.issueContainer = QtWidgets.QTableWidget()
+        self.issueContainer.setColumnCount(2)
+        self.issueContainer.setHorizontalHeaderLabels(['Title', 'URL'])
+        tableHeaders = self.issueContainer.horizontalHeader()
+        tableHeaders.setSectionResizeMode(0, ResizeMode.ResizeToContents)
+        tableHeaders.setSectionResizeMode(1, ResizeMode.Stretch)
         self.gridLayout.addWidget(self.issueContainer)
 
-        details = LibraryUtils.getComicBookInfo(name)
-        self.preview = GenericWidgets.ComicPreviewWidget(details['info'], False)
+        self.details = LibraryUtils.getComicBookInfo(name)
+        self.preview = GenericWidgets.ComicPreviewWidget(self.details['info'], False)
         self.gridLayout.addWidget(self.preview)
+
+        self.refreshIssues()
+
+    def insertIssue(self, data):
+        rowCount = self.issueContainer.rowCount()
+
+        self.issueContainer.setRowCount(rowCount + 1)
+        for i, value in enumerate(data):
+            cell = QtWidgets.QTableWidgetItem(value)
+            cell.setFlags(ItemFlag.ItemIsSelectable | ItemFlag.ItemIsEnabled)
+            self.issueContainer.setItem(rowCount, i, cell)
+
+    def refreshIssues(self):
+        self.issueContainer.setRowCount(0)
+        issues = SU.getIssues(self.details['info']['URL'])
+        for issue in issues:
+            self.insertIssue(issue.values())
