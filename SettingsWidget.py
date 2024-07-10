@@ -6,6 +6,7 @@ import ConfigUtils
 widgetInputMap = {
         'PATH_TO_LIBRARY': 'text',
         'MAXIMIZE_WINDOW_ON_LAUNCH': 'checkbox',
+        'INVERT_ISSUE_ORDER': 'checkbox',
 }
 
 

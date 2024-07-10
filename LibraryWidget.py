@@ -1,4 +1,5 @@
 from PySide6 import QtWidgets
+import ConfigUtils
 import GenericWidgets
 import LibraryUtils
 from QtUtils import *
@@ -101,8 +102,9 @@ class LibraryWidget(QtWidgets.QWidget):
         self.issueLibrary.preview.resizeCover(size)
 
     def handleSelectionChanged(self):
-        first = self.comicBookContainer.selectedIndexes()[0].row()
-        self.showPreview(self.comicBookContainer.item(first, 0).text())
+        first = self.comicBookContainer.selectedIndexes()
+        if len(first) > 0:
+            self.showPreview(self.comicBookContainer.item(first[0].row(), 0).text())
 
 class IssueLibraryWidget(QtWidgets.QWidget):
     def __init__(self, name):
@@ -138,7 +140,11 @@ class IssueLibraryWidget(QtWidgets.QWidget):
             self.issueContainer.setItem(rowCount, i, cell)
 
     def refreshIssues(self):
+        config = ConfigUtils.loadConfig()
         self.issueContainer.setRowCount(0)
         issues = SU.getIssues(self.details['info']['URL'])
+        
+        if config['INVERT_ISSUE_ORDER']:
+            issues.reverse()
         for issue in issues:
             self.insertIssue(issue.values())
