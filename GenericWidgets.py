@@ -1,5 +1,5 @@
 from PySide6 import QtWidgets, QtGui
-import ScrapingUtils as SU
+import ScrapingUtils
 from QtUtils import *
 import re
 
@@ -22,7 +22,7 @@ class ComicPreviewWidget(QtWidgets.QWidget):
             #coverLabel.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Ignored, QtWidgets.QSizePolicy.Policy.Ignored))
 
 
-            info['image'] = info.get('image') or SU.getImageBytes(info['imageURL'])
+            info['image'] = info.get('image') or ScrapingUtils.getImageBytes(info['imageURL'])
             pixmap = QtGui.QPixmap()
             pixmap.loadFromData(info['image'])
             self.coverLabel.setPixmap(pixmap)

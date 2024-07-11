@@ -22,6 +22,7 @@ def getComicBookInfo(name):
     with open(path, 'r') as file:
         return json.loads(file.read())
 
+
 blackListedKeys = ['image']
 def truncateData(data, blacklist = blackListedKeys):
     importantData = {}
@@ -37,18 +38,19 @@ def constructDataJSON(data):
 
 
 
-def addToLibrary(data):
+def addToLibrary(info, issues):
     config = ConfigUtils.loadConfig()
 
     pathToLibrary = config['PATH_TO_LIBRARY']
 
-    path = os.path.join(pathToLibrary, data['title'])
-    os.mkdir(path)
+    path = os.path.join(pathToLibrary, info['title'])
+    if not os.path.exists(path):
+        os.mkdir(path)
     with open(os.path.join(path, 'data.json'), 'w') as file:
-        file.write(constructDataJSON({'info': truncateData(data)}))
+        file.write(constructDataJSON({'info': truncateData(info), 'issues': issues}))
 
 
-def getComicBookIssues(name):
+def getDownloadedComicBookIssues(name):
     config = ConfigUtils.loadConfig()
 
     path = os.path.join(config['PATH_TO_LIBRARY'], name)

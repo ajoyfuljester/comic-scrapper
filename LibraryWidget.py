@@ -3,7 +3,7 @@ import ConfigUtils
 import GenericWidgets
 import LibraryUtils
 from QtUtils import *
-import ScrapingUtils as SU
+import ScrapingUtils
 
 
 class LibraryWidget(QtWidgets.QWidget):
@@ -142,7 +142,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
     def refreshIssues(self):
         config = ConfigUtils.loadConfig()
         self.issueContainer.setRowCount(0)
-        issues = SU.getIssues(self.details['info']['URL'])
+        issues = self.details['issues']
         
         if config['INVERT_ISSUE_ORDER']:
             issues.reverse()

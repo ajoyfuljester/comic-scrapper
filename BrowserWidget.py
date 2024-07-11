@@ -1,6 +1,6 @@
 from PySide6 import QtWidgets, QtGui
 import LibraryUtils
-import ScrapingUtils as SU
+import ScrapingUtils
 from QtUtils import *
 from GenericWidgets import ComicPreviewWidget
 
@@ -43,7 +43,7 @@ class BrowserWidget(QtWidgets.QWidget):
     def searchComics(self):
         query = self.searchInput.text()
 
-        self.comicBookData = SU.search(query)
+        self.comicBookData = ScrapingUtils.search(query)
 
         rowWidgets = [ComicTableWidgetItemSet(entry) for entry in self.comicBookData]
         self.searchResultContainer.setRowCount(0)
@@ -76,8 +76,11 @@ class BrowserWidget(QtWidgets.QWidget):
     def addSelectedToLibrary(self):
         selectedIndexes = set([index.row() for index in self.searchResultContainer.selectedIndexes()])
         selectedComicBooks = [self.comicBookData[i] for i in selectedIndexes]
+
+        
         for cb in selectedComicBooks:
-            LibraryUtils.addToLibrary(cb)
+            issues = ScrapingUtils.getIssues(cb['URL'])
+            LibraryUtils.addToLibrary(cb, issues)
         
         
 
