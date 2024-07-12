@@ -3,6 +3,7 @@ import LibraryUtils
 import ScrapingUtils
 from QtUtils import *
 from GenericWidgets import ComicPreviewWidget
+import ConfigUtils
 
 class BrowserWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -86,8 +87,8 @@ class BrowserWidget(QtWidgets.QWidget):
 
 class ComicTableWidgetItemSet():
     defaultBackground = 'white'
-    highlightBackground = 'lightgray'
     def __init__(self, details):
+        self.highlightBackground = ConfigUtils.loadConfig()['COLOR_COMIC_BOOK_ALREADY_IN_LIBRARY']
 
         self.cellData = [
             details['title'],

@@ -7,6 +7,7 @@ widgetInputMap = {
         'PATH_TO_LIBRARY': 'text',
         'MAXIMIZE_WINDOW_ON_LAUNCH': 'checkbox',
         'INVERT_ISSUE_ORDER': 'checkbox',
+        'COLOR_COMIC_BOOK_ALREADY_IN_LIBRARY': 'text',
 }
 
 
@@ -41,11 +42,10 @@ class SettingsWidget(QtWidgets.QWidget):
 
     def generateEditor(self):
         rowCount = self.formLayout.rowCount()
-        if rowCount != 0:
-            for i in range(rowCount - 1, -1, -1): # not jumping indexes
-                self.formLayout.itemAt(i, ItemRole.LabelRole).widget().deleteLater()
-                self.formLayout.itemAt(i, ItemRole.FieldRole).widget().deleteLater()
-                self.formLayout.removeRow(i)
+        for i in range(rowCount - 1, -1, -1): # not jumping indexes
+            self.formLayout.itemAt(i, ItemRole.LabelRole).widget().deleteLater()
+            self.formLayout.itemAt(i, ItemRole.FieldRole).widget().deleteLater()
+            self.formLayout.removeRow(i)
         for key, value in self.config.items():
             inputType = widgetInputMap[key]
             valueWidget = None

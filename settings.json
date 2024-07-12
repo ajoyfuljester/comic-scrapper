@@ -1,5 +1,6 @@
 {
     "PATH_TO_LIBRARY": "./comic-books/",
     "MAXIMIZE_WINDOW_ON_LAUNCH": true,
-    "INVERT_ISSUE_ORDER": true
+    "INVERT_ISSUE_ORDER": true,
+    "COLOR_COMIC_BOOK_ALREADY_IN_LIBRARY": "#aaffaa"
 }
