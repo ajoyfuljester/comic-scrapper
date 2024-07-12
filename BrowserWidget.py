@@ -80,8 +80,7 @@ class BrowserWidget(QtWidgets.QWidget):
 
         
         for cb in selectedComicBooks:
-            issues = ScrapingUtils.getIssues(cb['URL'])
-            LibraryUtils.addToLibrary(cb, issues)
+            LibraryUtils.addToLibrary(cb['URL'])
         
         
 

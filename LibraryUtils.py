@@ -1,6 +1,7 @@
 import ConfigUtils
 import os
 import json
+import ScrapingUtils
 
 
 def createLibraryIfDoesNotExist():
@@ -38,16 +39,17 @@ def constructDataJSON(data):
 
 
 
-def addToLibrary(info, issues):
+def addToLibrary(url):
     config = ConfigUtils.loadConfig()
 
     pathToLibrary = config['PATH_TO_LIBRARY']
+    info = ScrapingUtils.getFullComicBookInfo(url)
 
-    path = os.path.join(pathToLibrary, info['title'])
+    path = os.path.join(pathToLibrary, info['info']['title'])
     if not os.path.exists(path):
         os.mkdir(path)
     with open(os.path.join(path, 'data.json'), 'w') as file:
-        file.write(constructDataJSON({'info': truncateData(info), 'issues': issues}))
+        file.write(constructDataJSON(info))
 
 
 def getDownloadedComicBookIssues(name):

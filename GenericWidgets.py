@@ -42,10 +42,16 @@ class ComicPreviewWidget(QtWidgets.QWidget):
 
 
         d = {}
+        hasGenres = 'genres' in keys
+
+        if hasGenres:
+            keys.remove('genres')
 
         for key in keys:
-            d[key] = info[key]
+            d[key] = str(info[key])
 
+        if hasGenres:
+            d['genres'] = ", ".join(['<a href="' + genre['URL'] + '">' + genre['name'] + '</a>' for genre in info['genres']])
 
         self.description = DescriptionWidget(d)
         self.childLayout.addWidget(self.description)

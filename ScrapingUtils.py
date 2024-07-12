@@ -70,6 +70,46 @@ def getIssues(url, max = None):
 
     return issues
 
+def getIssuesBS(html, max = None):
+    rows = html.select('.episode-list tr')
+    rowsLen = len(rows)
+    max = max or rowsLen
+
+    issues = []
+    i = 0
+    while i < max and i < rowsLen:
+        issues.append({'name': rows[i].a.string, 'URL': rows[i].a['href']})
+        i += 1
+
+    return issues
+
+
+def getFullComicBookInfo(url):
+    response = requests.get(url)
+    html = BeautifulSoup(response.text, 'html.parser')
+    details = html.select_one('.movie-detail')
+    table = details.select('dd')
+    issues = getIssuesBS(html)
+    
+    info = {
+        'info': {
+            'title': details.select_one('.title-1').text.strip(),
+            'author': table[3].text.strip(),
+            'status': table[0].text.strip(),
+            'releaseYear': table[2].text.strip(),
+            'latest': issues[-1]['name'],
+            'URL': url,
+            'imageURL': html.select_one('.movie-image').img['src'],
+            'numberOfIssues': len(issues),
+            'genres': [{'name': el.text, 'URL': el['href']} for el in table[4].select('a')],
+
+        },
+        'issues': issues,
+    }
+
+
+
+    return info
     
 
 def getAlternateImageURL(url, n = 1, m = 0):
@@ -114,5 +154,3 @@ def search(keyword='The Sandman', getAlternateImageURLs = False, getImages = Fal
             entry['image'] = getImageBytes(entry['imageURL'])
 
     return entries
-
-
