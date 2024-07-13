@@ -22,4 +22,9 @@ class HelpWidget(QtWidgets.QWidget):
         _ = QtWidgets.QLabel()
         color = self.config['COLOR_COMIC_BOOK_ALREADY_IN_LIBRARY']
         _.setStyleSheet(f'background-color: {color}')
-        self.formLayout.addRow('In Library', _)
+        self.formLayout.addRow('color of a comic book already in library', _)
+
+        _ = QtWidgets.QLabel()
+        color = self.config['COLOR_ISSUE_ALREADY_DOWNLOADED']
+        _.setStyleSheet(f'background-color: {color}')
+        self.formLayout.addRow('color of an issue already downloaded', _)

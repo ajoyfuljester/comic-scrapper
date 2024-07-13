@@ -3,7 +3,6 @@ import ConfigUtils
 import GenericWidgets
 import LibraryUtils
 from QtUtils import *
-import ScrapingUtils
 
 
 class LibraryWidget(QtWidgets.QWidget):
@@ -122,11 +121,16 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         tableHeaders = self.issueContainer.horizontalHeader()
         tableHeaders.setSectionResizeMode(0, ResizeMode.ResizeToContents)
         tableHeaders.setSectionResizeMode(1, ResizeMode.Stretch)
-        self.gridLayout.addWidget(self.issueContainer)
+        self.gridLayout.addWidget(self.issueContainer, 0, 0)
 
         self.details = LibraryUtils.getComicBookInfo(name)
         self.preview = GenericWidgets.ComicPreviewWidget(self.details['info'], False)
-        self.gridLayout.addWidget(self.preview)
+        self.gridLayout.addWidget(self.preview, 1, 0, 1, 2)
+
+        self.downloadButton = QtWidgets.QPushButton()
+        self.downloadButton.setText('Download')
+        self.downloadButton.clicked.connect(self.downloadSelected)
+        self.gridLayout.addWidget(self.downloadButton, 0, 1)
 
         self.refreshIssues()
 
@@ -148,3 +152,10 @@ class IssueLibraryWidget(QtWidgets.QWidget):
             issues.reverse()
         for issue in issues:
             self.insertIssue(issue.values())
+
+    def downloadSelected(self):
+        rows = set([i.row() for i in self.issueContainer.selectedIndexes()])
+        issuesDetails = [self.details['issues'][row] for row in rows]
+
+        for issue in issuesDetails:
+            LibraryUtils.downloadIssue(self.name, issue)

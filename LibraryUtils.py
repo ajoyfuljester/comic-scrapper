@@ -67,5 +67,13 @@ def getIssuePaths(name, number):
     path = os.path.join(config['PATH_TO_LIBRARY'], name, number)
 
     print('NOT RETURNING', path)
+    raise Exception('IDK what this function was supposed to be for')
 
 
+def downloadIssue(comicBookName, info, imageNames = None):
+    config = ConfigUtils.loadConfig()
+    url = info['URL']
+    if url[-5:] != '/full':
+        url += '/full'
+    sources = ScrapingUtils.getSources(url)
+    ScrapingUtils.saveSources(sources, os.path.join(config['PATH_TO_LIBRARY'], comicBookName, info['name']), imageNames)

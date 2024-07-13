@@ -38,7 +38,7 @@ def saveSource(source, path='./', name='_'):
         path += '/'
     os.makedirs(path, exist_ok=True)
     
-    filename = path + name
+    filename = path + str(name)
 
     with open(filename, 'wb') as file:
         file.write(getImageBytes(source))
@@ -46,11 +46,12 @@ def saveSource(source, path='./', name='_'):
 
 
 def saveSources(sources, path='./', names=None):
+    print(sources, path, names)
     if path[-1] != '/':
         path += '/'
 
     if names == None:
-        names = range(len(sources))
+        names = [str(i) + '.png' for i in range(len(sources))]
 
     for i, source in enumerate(sources):
         saveSource(source, path, names[i])
