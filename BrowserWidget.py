@@ -58,11 +58,6 @@ class BrowserWidget(QtWidgets.QWidget):
         if last:
             last.widget().deleteLater()
         self.gridLayout.addWidget(self.preview, 1, 1)
-        self.preview.show()
-
-        
-        size = self.preview.coverLabel.frameSize()
-        self.preview.resizeCover(size)
 
 
 

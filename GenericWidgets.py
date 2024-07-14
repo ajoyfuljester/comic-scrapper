@@ -14,18 +14,14 @@ class ComicPreviewWidget(QtWidgets.QWidget):
 
 
         if 'imageURL' in keys or 'image' in keys:
-            self.coverLabel = QtWidgets.QLabel()
+            info['image'] = info.get('image') or ScrapingUtils.getImageBytes(info['imageURL'])
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(info['image'])
+            self.coverLabel = ResizingLabel(pixmap)
             self.coverLabel.setAlignment(Alignment.AlignCenter)
 
             self.coverLabel.setMinimumSize(100, 100)
             self.coverLabel.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum))
-            #coverLabel.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Ignored, QtWidgets.QSizePolicy.Policy.Ignored))
-
-
-            info['image'] = info.get('image') or ScrapingUtils.getImageBytes(info['imageURL'])
-            pixmap = QtGui.QPixmap()
-            pixmap.loadFromData(info['image'])
-            self.coverLabel.setPixmap(pixmap)
             if 'imageURL' in keys:
                 keys.remove('imageURL')
             if 'image' in keys:
@@ -57,14 +53,6 @@ class ComicPreviewWidget(QtWidgets.QWidget):
         self.childLayout.addWidget(self.description)
 
 
-
-    
-        
-    def resizeCover(self, size):
-        pixmap = self.coverLabel.pixmap()
-        pixmap = pixmap.scaled(size, KeepAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation)
-        self.coverLabel.setPixmap(pixmap)
-
         
 
 class DescriptionWidget(QtWidgets.QWidget):
@@ -85,3 +73,13 @@ class DescriptionWidget(QtWidgets.QWidget):
             valueLabel.setTextInteractionFlags(TextInteractionFlag.TextSelectableByMouse | TextInteractionFlag.LinksAccessibleByMouse | TextInteractionFlag.LinksAccessibleByKeyboard)
             self.formLayout.addRow(k.upper(), valueLabel)
 
+class ResizingLabel(QtWidgets.QLabel):
+    def __init__(self, pixmap):
+        super().__init__()
+        self._pixmap = pixmap
+        self.setPixmap(self._pixmap)
+
+    def resizeEvent(self, event):
+        pixmap = self._pixmap
+        size = self.frameSize()
+        self.setPixmap(pixmap.scaled(size, KeepAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation))

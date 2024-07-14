@@ -3,6 +3,7 @@ from BrowserWidget import BrowserWidget
 from SettingsWidget import SettingsWidget
 from LibraryWidget import LibraryWidget
 from HelpWidget import HelpWidget
+from ReaderWidget import ReaderWidget
 
 class MainWidget(QtWidgets.QTabWidget):
     def __init__(self):
@@ -12,8 +13,12 @@ class MainWidget(QtWidgets.QTabWidget):
         self.addTab(self.browserWidget, 'Browser')
         self.browserWidget.searchInput.setFocus()
 
-        self.libraryWidget = LibraryWidget()
+        self.readerWidget = ReaderWidget()
+
+        self.libraryWidget = LibraryWidget(self.readerWidget)
         self.addTab(self.libraryWidget, 'Library')
+
+        self.addTab(self.readerWidget, 'Reader')
 
         self.settingsWidget = SettingsWidget()
         self.addTab(self.settingsWidget, 'Settings')
@@ -21,6 +26,7 @@ class MainWidget(QtWidgets.QTabWidget):
         self.helpWidget = HelpWidget()
         self.addTab(self.helpWidget, 'Help')
         self.currentChanged.connect(self.handleTabChange)
+
 
     def handleTabChange(self, i):
         text = self.tabText(i)

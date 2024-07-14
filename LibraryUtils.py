@@ -78,3 +78,9 @@ def downloadIssue(comicBookName, info, imageNames = None):
     ScrapingUtils.saveSources(sources, os.path.join(config['PATH_TO_LIBRARY'], comicBookName, info['name']), imageNames)
 
 
+def getIssuePages(comicBookName, issueName):
+    config = ConfigUtils.loadConfig()
+
+    path = os.path.join(config['PATH_TO_LIBRARY'], comicBookName, issueName)
+
+    return [os.path.join(path, p) for p in sorted(next(os.walk(path), [None, None, []])[2], key=lambda x: int(x[:-4]))]
