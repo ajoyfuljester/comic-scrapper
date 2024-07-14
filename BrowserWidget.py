@@ -96,11 +96,13 @@ class ComicTableWidgetItemSet():
             details['latest'],
         ]
 
+
         self.cellWidgets = [QtWidgets.QTableWidgetItem(cell) for cell in self.cellData]
         highlight = self.cellData[0] in LibraryUtils.getComicBooks()
+        brush = QtGui.QBrush(self.highlightBackground if highlight else self.defaultBackground)
         for cell in self.cellWidgets:
             cell.setFlags(ItemFlag.ItemIsSelectable | ItemFlag.ItemIsEnabled)
-            cell.setBackground(QtGui.QBrush(self.highlightBackground if highlight else self.defaultBackground))
+            cell.setBackground(brush)
 
     
     def appendSelf(self, target):

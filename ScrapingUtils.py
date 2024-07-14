@@ -46,7 +46,6 @@ def saveSource(source, path='./', name='_'):
 
 
 def saveSources(sources, path='./', names=None):
-    print(sources, path, names)
     if path[-1] != '/':
         path += '/'
 

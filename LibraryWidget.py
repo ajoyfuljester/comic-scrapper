@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtGui
 import ConfigUtils
 import GenericWidgets
 import LibraryUtils
@@ -106,9 +106,12 @@ class LibraryWidget(QtWidgets.QWidget):
             self.showPreview(self.comicBookContainer.item(first[0].row(), 0).text())
 
 class IssueLibraryWidget(QtWidgets.QWidget):
+    defaultBackground = 'white'
     def __init__(self, name):
         super().__init__()
         self.name = name
+
+        self.highlightBackground = ConfigUtils.loadConfig()['COLOR_ISSUE_ALREADY_DOWNLOADED']
 
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setRowStretch(0, 1)
@@ -127,6 +130,8 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.preview = GenericWidgets.ComicPreviewWidget(self.details['info'], False)
         self.gridLayout.addWidget(self.preview, 1, 0, 1, 2)
 
+        self.downloadedIssues = LibraryUtils.getDownloadedComicBookIssues(self.name)
+
         self.downloadButton = QtWidgets.QPushButton()
         self.downloadButton.setText('Download')
         self.downloadButton.clicked.connect(self.downloadSelected)
@@ -136,11 +141,15 @@ class IssueLibraryWidget(QtWidgets.QWidget):
 
     def insertIssue(self, data):
         rowCount = self.issueContainer.rowCount()
+        data = list(data)
 
         self.issueContainer.setRowCount(rowCount + 1)
+        highlight = data[0] in self.downloadedIssues
+        brush = QtGui.QBrush(self.highlightBackground if highlight else self.defaultBackground)
         for i, value in enumerate(data):
             cell = QtWidgets.QTableWidgetItem(value)
             cell.setFlags(ItemFlag.ItemIsSelectable | ItemFlag.ItemIsEnabled)
+            cell.setBackground(brush)
             self.issueContainer.setItem(rowCount, i, cell)
 
     def refreshIssues(self):
