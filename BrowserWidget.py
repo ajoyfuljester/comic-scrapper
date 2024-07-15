@@ -78,7 +78,6 @@ class BrowserWidget(QtWidgets.QWidget):
             LibraryUtils.addToLibrary(cb['URL'])
         
         
-
 class ComicTableWidgetItemSet():
     defaultBackground = 'white'
     def __init__(self, details):
