@@ -103,6 +103,7 @@ class LibraryWidget(QtWidgets.QWidget):
 
 class IssueLibraryWidget(QtWidgets.QWidget):
     defaultBackground = 'white'
+    invertingFlag = True
     def __init__(self, name, readingTarget):
         super().__init__()
         self.title = name
@@ -165,8 +166,9 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.issueContainer.setRowCount(0)
         issues = self.details['issues']
         
-        if config['INVERT_ISSUE_ORDER']:
+        if config['INVERT_ISSUE_ORDER'] and self.invertingFlag:
             issues.reverse()
+            self.invertingFlag = False
         for issue in issues:
             self.insertIssue(issue.values())
 
@@ -175,9 +177,9 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         issuesDetails = [self.details['issues'][row] for row in rows]
 
         for issue in issuesDetails:
-            LibraryUtils.downloadIssue(self.title, issue)
+            LibraryUtils.downloadIssueAsThread(self.title, issue, None, self.refreshIssues)
+            
 
-        self.refreshIssues()
 
 
     def readSelected(self):

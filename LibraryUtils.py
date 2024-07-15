@@ -2,6 +2,7 @@ import ConfigUtils
 import os
 import json
 import ScrapingUtils
+from threading import Thread
 
 
 def createLibraryIfDoesNotExist():
@@ -69,13 +70,18 @@ def getIssuePaths(name, number):
     raise Exception('IDK what this function was supposed to be for')
 
 
-def downloadIssue(title, info, imageNames = None):
+def downloadIssue(title, info, imageNames = None, after = lambda: None, afterArgs = []):
     config = ConfigUtils.loadConfig()
     url = info['URL']
     if url[-5:] != '/full':
         url += '/full'
     sources = ScrapingUtils.getSources(url)
     ScrapingUtils.saveSources(sources, os.path.join(config['PATH_TO_LIBRARY'], title, info['name']), imageNames)
+    after(*afterArgs)
+
+def downloadIssueAsThread(title, info, imageNames = None, after = lambda: None, afterArgs = []):
+    thread = Thread(target=downloadIssue, args=(title, info, imageNames, after, afterArgs))
+    thread.start()
 
 
 def getIssuePages(title, issue):
