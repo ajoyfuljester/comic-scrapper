@@ -36,16 +36,16 @@ class LibraryWidget(QtWidgets.QWidget):
         self.searchInput.returnPressed.connect(lambda: self.searchComicBooks(self.searchInput.text(), criteriaMap[self.searchCriteriaInput.currentText()]))
         self.gridLayout.addWidget(self.searchInput, 0, 0)
 
-        self.comicBookContainer = QtWidgets.QTableWidget()
-        self.comicBookContainer.setColumnCount(4)
-        self.comicBookContainer.setHorizontalHeaderLabels(['Title', 'Status', 'Release Year', 'Latest Issue'])
-        tableHeaders = self.comicBookContainer.horizontalHeader()
+        self.bookContainer = QtWidgets.QTableWidget()
+        self.bookContainer.setColumnCount(4)
+        self.bookContainer.setHorizontalHeaderLabels(['Title', 'Status', 'Release Year', 'Latest Issue'])
+        tableHeaders = self.bookContainer.horizontalHeader()
         tableHeaders.setSectionResizeMode(0, ResizeMode.ResizeToContents)
         tableHeaders.setSectionResizeMode(1, ResizeMode.ResizeToContents)
         tableHeaders.setSectionResizeMode(2, ResizeMode.ResizeToContents)
         tableHeaders.setSectionResizeMode(3, ResizeMode.Stretch)
-        self.comicBookContainer.itemSelectionChanged.connect(self.handleSelectionChanged)
-        self.gridLayout.addWidget(self.comicBookContainer, 1, 0)
+        self.bookContainer.itemSelectionChanged.connect(self.handleSelectionChanged)
+        self.gridLayout.addWidget(self.bookContainer, 1, 0)
 
         self.refreshButton = QtWidgets.QPushButton()
         self.refreshButton.setText('Refresh comic books')
@@ -56,18 +56,18 @@ class LibraryWidget(QtWidgets.QWidget):
         self.refreshComicBooks()
 
     def insertComicBook(self, data):
-        rowCount = self.comicBookContainer.rowCount()
+        rowCount = self.bookContainer.rowCount()
 
-        self.comicBookContainer.setRowCount(rowCount + 1)
+        self.bookContainer.setRowCount(rowCount + 1)
         for i, value in enumerate(data):
             cell = QtWidgets.QTableWidgetItem(value)
             cell.setFlags(ItemFlag.ItemIsSelectable | ItemFlag.ItemIsEnabled)
-            self.comicBookContainer.setItem(rowCount, i, cell)
+            self.bookContainer.setItem(rowCount, i, cell)
     
     def searchComicBooks(self, query, criteria): # maybe this function should be in LibraryUtils
-        self.comicBookContainer.setRowCount(0)
+        self.bookContainer.setRowCount(0)
         l = len(query)
-        sortedComicBooks = [[-1, cb] for cb in self.comicBooks]
+        sortedComicBooks = [[-1, cb] for cb in self.books]
         for i in range(1, l + 1):
             for cb in sortedComicBooks:
                 found = cb[1]['info'][criteria].find(query[:i])
@@ -82,10 +82,10 @@ class LibraryWidget(QtWidgets.QWidget):
 
 
     def refreshComicBooks(self):
-        self.comicBookContainer.setRowCount(0)
-        self.comicBooks = [LibraryUtils.getComicBookInfo(cb) for cb in LibraryUtils.getComicBooks()]
+        self.bookContainer.setRowCount(0)
+        self.books = [LibraryUtils.getComicBookInfo(cb) for cb in LibraryUtils.getComicBooks()]
 
-        for cb in self.comicBooks:
+        for cb in self.books:
             info = cb['info']
             self.insertComicBook([info['title'], info['status'], info['releaseYear'], info['latest']])
 
@@ -97,15 +97,15 @@ class LibraryWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.issueLibrary, 1, 1, 1, 2)
 
     def handleSelectionChanged(self):
-        first = self.comicBookContainer.selectedIndexes()
+        first = self.bookContainer.selectedIndexes()
         if len(first) > 0:
-            self.showPreview(self.comicBookContainer.item(first[0].row(), 0).text())
+            self.showPreview(self.bookContainer.item(first[0].row(), 0).text())
 
 class IssueLibraryWidget(QtWidgets.QWidget):
     defaultBackground = 'white'
     def __init__(self, name, readingTarget):
         super().__init__()
-        self.comicBookName = name
+        self.title = name
         self.readingTarget = readingTarget or self.parentWidget()
 
         self.highlightBackground = ConfigUtils.loadConfig()['COLOR_ISSUE_ALREADY_DOWNLOADED']
@@ -124,7 +124,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.issueContainer, 0, 0)
 
 
-        self.downloadedIssues = LibraryUtils.getDownloadedComicBookIssues(self.comicBookName)
+        self.downloadedIssues = LibraryUtils.getDownloadedComicBookIssues(self.title)
         self.details = LibraryUtils.getComicBookInfo(name)
         self.details['info']['numberOfDownloadedIssues'] = len(self.downloadedIssues)
         self.preview = GenericWidgets.ComicPreviewWidget(self.details['info'], False)
@@ -160,7 +160,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
             self.issueContainer.setItem(rowCount, i, cell)
 
     def refreshIssues(self):
-        self.downloadedIssues = LibraryUtils.getDownloadedComicBookIssues(self.comicBookName)
+        self.downloadedIssues = LibraryUtils.getDownloadedComicBookIssues(self.title)
         config = ConfigUtils.loadConfig()
         self.issueContainer.setRowCount(0)
         issues = self.details['issues']
@@ -175,7 +175,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         issuesDetails = [self.details['issues'][row] for row in rows]
 
         for issue in issuesDetails:
-            LibraryUtils.downloadIssue(self.comicBookName, issue)
+            LibraryUtils.downloadIssue(self.title, issue)
 
         self.refreshIssues()
 
@@ -187,4 +187,4 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         for issue in issuesDetails:
             issueName = issue['name']
             if issueName in self.downloadedIssues:
-                self.readingTarget.addReaderTab(self.comicBookName, issueName)
+                self.readingTarget.addReaderTab(self.title, issueName)

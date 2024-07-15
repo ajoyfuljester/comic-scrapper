@@ -25,7 +25,7 @@ class BrowserWidget(QtWidgets.QWidget):
 
         self.searchResultContainer.itemSelectionChanged.connect(self.handleSelectionChange)
 
-        self.comicBookData = []
+        self.bookData = []
 
         
         self.gridLayout = QtWidgets.QGridLayout(self)
@@ -44,9 +44,9 @@ class BrowserWidget(QtWidgets.QWidget):
     def searchComics(self):
         query = self.searchInput.text()
 
-        self.comicBookData = ScrapingUtils.search(query)
+        self.bookData = ScrapingUtils.search(query)
 
-        rowWidgets = [ComicTableWidgetItemSet(entry) for entry in self.comicBookData]
+        rowWidgets = [ComicTableWidgetItemSet(entry) for entry in self.bookData]
         self.searchResultContainer.setRowCount(0)
 
         for rowWidget in rowWidgets:
@@ -65,13 +65,13 @@ class BrowserWidget(QtWidgets.QWidget):
         indexes = self.searchResultContainer.selectedIndexes()
         if len(indexes) > 0:
             row = indexes[0].row()
-            data = self.comicBookData[row]
+            data = self.bookData[row]
             self.showPreview(data)
     
 
     def addSelectedToLibrary(self):
         selectedIndexes = set([index.row() for index in self.searchResultContainer.selectedIndexes()])
-        selectedComicBooks = [self.comicBookData[i] for i in selectedIndexes]
+        selectedComicBooks = [self.bookData[i] for i in selectedIndexes]
 
         
         for cb in selectedComicBooks:
@@ -82,7 +82,7 @@ class BrowserWidget(QtWidgets.QWidget):
 class ComicTableWidgetItemSet():
     defaultBackground = 'white'
     def __init__(self, details):
-        self.highlightBackground = ConfigUtils.loadConfig()['COLOR_COMIC_BOOK_ALREADY_IN_LIBRARY']
+        self.highlightBackground = ConfigUtils.loadConfig()['COLOR_BOOK_ALREADY_IN_LIBRARY']
 
         self.cellData = [
             details['title'],

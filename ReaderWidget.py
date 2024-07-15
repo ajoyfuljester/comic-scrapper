@@ -13,17 +13,19 @@ class ReaderWidget(QtWidgets.QTabWidget):
 
         self.tabCloseRequested.connect(self.removeTab)
 
-    def addReaderTab(self, comicBookName, issueName):
-        self.addTab(ReaderTab(comicBookName, issueName), issueName)
+    def addReaderTab(self, title, issue, page = 0):
+        tab = ReaderTab(title, issue)
+        tab.setPage(page)
+        self.addTab(tab, issue)
 
 class ReaderTab(QtWidgets.QWidget):
     bigFont = QtGui.QFont()
     bigFont.setPixelSize(12 * 2)
-    def __init__(self, comicBookName, issueName):
+    def __init__(self, title, issue):
         super().__init__()
 
-        self.comicBookName = comicBookName
-        self.issueName = issueName
+        self.title = title
+        self.issue = issue
 
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setColumnStretch(0, 3)
@@ -37,11 +39,13 @@ class ReaderTab(QtWidgets.QWidget):
         self.previousPageButton = QtWidgets.QPushButton()
         self.previousPageButton.setText('Previous page')
         self.previousPageButton.clicked.connect(self.previousPage)
+        self.previousPageButton.setShortcut(Key.Key_Left)
         self.buttonLayout.addWidget(self.previousPageButton)
 
         self.nextPageButton = QtWidgets.QPushButton()
         self.nextPageButton.setText('Next page')
         self.nextPageButton.clicked.connect(self.nextPage)
+        self.nextPageButton.setShortcut(Key.Key_Right)
         self.buttonLayout.addWidget(self.nextPageButton)
 
         self.detailsLayout = QtWidgets.QVBoxLayout()
@@ -52,14 +56,11 @@ class ReaderTab(QtWidgets.QWidget):
         self.pageNumberLabel.setAlignment(Alignment.AlignCenter)
         self.detailsLayout.addWidget(self.pageNumberLabel)
 
-        self.pages = LibraryUtils.getIssuePages(comicBookName, issueName)
+        self.pages = LibraryUtils.getIssuePages(self.title, self.issue)
         self.numberOfPages = len(self.pages)
 
         self.currentPageNumber = 0
         self.setPage(self.currentPageNumber)
-
-        self.nextPageButton.setShortcut(Key.Key_Right)
-        self.previousPageButton.setShortcut(Key.Key_Left)
 
     def setPage(self, number):
         if number >= self.numberOfPages or number < 0:

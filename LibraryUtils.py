@@ -69,18 +69,18 @@ def getIssuePaths(name, number):
     raise Exception('IDK what this function was supposed to be for')
 
 
-def downloadIssue(comicBookName, info, imageNames = None):
+def downloadIssue(title, info, imageNames = None):
     config = ConfigUtils.loadConfig()
     url = info['URL']
     if url[-5:] != '/full':
         url += '/full'
     sources = ScrapingUtils.getSources(url)
-    ScrapingUtils.saveSources(sources, os.path.join(config['PATH_TO_LIBRARY'], comicBookName, info['name']), imageNames)
+    ScrapingUtils.saveSources(sources, os.path.join(config['PATH_TO_LIBRARY'], title, info['name']), imageNames)
 
 
-def getIssuePages(comicBookName, issueName):
+def getIssuePages(title, issue):
     config = ConfigUtils.loadConfig()
 
-    path = os.path.join(config['PATH_TO_LIBRARY'], comicBookName, issueName)
+    path = os.path.join(config['PATH_TO_LIBRARY'], title, issue)
 
     return [os.path.join(path, p) for p in sorted(next(os.walk(path), [None, None, []])[2], key=lambda x: int(x[:-4]))]

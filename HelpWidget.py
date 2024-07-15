@@ -20,7 +20,7 @@ class HelpWidget(QtWidgets.QWidget):
         self.config = ConfigUtils.loadConfig()
 
         _ = QtWidgets.QLabel()
-        color = self.config['COLOR_COMIC_BOOK_ALREADY_IN_LIBRARY']
+        color = self.config['COLOR_BOOK_ALREADY_IN_LIBRARY']
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow('color of a comic book already in library', _)
 

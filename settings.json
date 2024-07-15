@@ -2,6 +2,7 @@
     "PATH_TO_LIBRARY": "./comic-books/",
     "MAXIMIZE_WINDOW_ON_LAUNCH": true,
     "INVERT_ISSUE_ORDER": true,
-    "COLOR_COMIC_BOOK_ALREADY_IN_LIBRARY": "#aaffaa",
-    "COLOR_ISSUE_ALREADY_DOWNLOADED": "#aaaaff"
+    "COLOR_BOOK_ALREADY_IN_LIBRARY": "#aaffaa",
+    "COLOR_ISSUE_ALREADY_DOWNLOADED": "#aaaaff",
+    "USE_SESSION": true
 }

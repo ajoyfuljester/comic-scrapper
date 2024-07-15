@@ -7,8 +7,9 @@ widgetInputMap = {
         'PATH_TO_LIBRARY': 'text',
         'MAXIMIZE_WINDOW_ON_LAUNCH': 'checkbox',
         'INVERT_ISSUE_ORDER': 'checkbox',
-        'COLOR_COMIC_BOOK_ALREADY_IN_LIBRARY': 'text',
+        'COLOR_BOOK_ALREADY_IN_LIBRARY': 'text',
         'COLOR_ISSUE_ALREADY_DOWNLOADED': 'text',
+        'USE_SESSION': 'checkbox',
 }
 
 
