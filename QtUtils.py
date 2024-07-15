@@ -6,3 +6,5 @@ ResizeMode = QtWidgets.QHeaderView.ResizeMode
 KeepAspectRatio = QtCore.Qt.AspectRatioMode.KeepAspectRatio
 TextInteractionFlag = QtCore.Qt.TextInteractionFlag
 ItemRole = QtWidgets.QFormLayout.ItemRole
+SizePolicy = QtWidgets.QSizePolicy
+Key = QtCore.Qt.Key

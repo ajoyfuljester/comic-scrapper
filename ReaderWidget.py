@@ -1,7 +1,7 @@
 from PySide6 import QtWidgets, QtGui
-
 from GenericWidgets import ResizingLabel
 import LibraryUtils
+from QtUtils import *
 
 
 
@@ -11,10 +11,14 @@ class ReaderWidget(QtWidgets.QTabWidget):
         self.setTabsClosable(True)
         self.setMovable(True)
 
+        self.tabCloseRequested.connect(self.removeTab)
+
     def addReaderTab(self, comicBookName, issueName):
         self.addTab(ReaderTab(comicBookName, issueName), issueName)
 
 class ReaderTab(QtWidgets.QWidget):
+    bigFont = QtGui.QFont()
+    bigFont.setPixelSize(12 * 2)
     def __init__(self, comicBookName, issueName):
         super().__init__()
 
@@ -22,19 +26,31 @@ class ReaderTab(QtWidgets.QWidget):
         self.issueName = issueName
 
         self.gridLayout = QtWidgets.QGridLayout(self)
+        self.gridLayout.setColumnStretch(0, 3)
+        self.gridLayout.setColumnStretch(1, 1)
+        self.gridLayout.setRowStretch(0, 3)
+        self.gridLayout.setRowStretch(1, 0)
         
-        self.buttonLayout = QtWidgets.QVBoxLayout()
-        self.gridLayout.addLayout(self.buttonLayout, 0, 1)
+        self.buttonLayout = QtWidgets.QHBoxLayout()
+        self.gridLayout.addLayout(self.buttonLayout, 1, 0, 1, 2)
+
+        self.previousPageButton = QtWidgets.QPushButton()
+        self.previousPageButton.setText('Previous page')
+        self.previousPageButton.clicked.connect(self.previousPage)
+        self.buttonLayout.addWidget(self.previousPageButton)
 
         self.nextPageButton = QtWidgets.QPushButton()
         self.nextPageButton.setText('Next page')
         self.nextPageButton.clicked.connect(self.nextPage)
         self.buttonLayout.addWidget(self.nextPageButton)
 
-        self.previousPageButton = QtWidgets.QPushButton()
-        self.previousPageButton.setText('Previous page')
-        self.previousPageButton.clicked.connect(self.previousPage)
-        self.buttonLayout.addWidget(self.previousPageButton)
+        self.detailsLayout = QtWidgets.QVBoxLayout()
+        self.gridLayout.addLayout(self.detailsLayout, 0, 1)
+
+        self.pageNumberLabel = QtWidgets.QLabel()
+        self.pageNumberLabel.setFont(self.bigFont)
+        self.pageNumberLabel.setAlignment(Alignment.AlignCenter)
+        self.detailsLayout.addWidget(self.pageNumberLabel)
 
         self.pages = LibraryUtils.getIssuePages(comicBookName, issueName)
         self.numberOfPages = len(self.pages)
@@ -42,9 +58,12 @@ class ReaderTab(QtWidgets.QWidget):
         self.currentPageNumber = 0
         self.setPage(self.currentPageNumber)
 
+        self.nextPageButton.setShortcut(Key.Key_Right)
+        self.previousPageButton.setShortcut(Key.Key_Left)
+
     def setPage(self, number):
         if number >= self.numberOfPages or number < 0:
-            return
+            return self.currentPageNumber
         last = self.gridLayout.itemAtPosition(0, 0)
         if last:
             last.widget().deleteLater()
@@ -52,7 +71,11 @@ class ReaderTab(QtWidgets.QWidget):
         pixmap.load(self.pages[number])
         self.currentPageNumber = number
         self.currentPage = ResizingLabel(pixmap)
+        self.currentPage.setAlignment(Alignment.AlignCenter)
         self.gridLayout.addWidget(self.currentPage, 0, 0)
+        self.pageNumberLabel.setText(f'Page {self.currentPageNumber + 1}/{self.numberOfPages}')
+
+        return self.currentPageNumber
 
     def nextPage(self):
         self.setPage(self.currentPageNumber + 1)

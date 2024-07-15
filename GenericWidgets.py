@@ -21,7 +21,7 @@ class ComicPreviewWidget(QtWidgets.QWidget):
             self.coverLabel.setAlignment(Alignment.AlignCenter)
 
             self.coverLabel.setMinimumSize(100, 100)
-            self.coverLabel.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum))
+            self.coverLabel.setSizePolicy(SizePolicy(SizePolicy.Policy.Minimum, SizePolicy.Policy.Minimum))
             if 'imageURL' in keys:
                 keys.remove('imageURL')
             if 'image' in keys:
@@ -54,6 +54,21 @@ class ComicPreviewWidget(QtWidgets.QWidget):
 
 
         
+def createSpaces(string):
+    if len(string) == 0 or string.isupper():
+        return string
+
+    spaces = []
+    i = 1
+    while i < len(string):
+        if string[i].isupper():
+            spaces.append(i)
+        i += 1
+
+    for i in reversed(spaces):
+        string = string[:i] + ' ' + string[i:]
+
+    return string
 
 class DescriptionWidget(QtWidgets.QWidget):
     def __init__(self, entries = {}):
@@ -71,7 +86,7 @@ class DescriptionWidget(QtWidgets.QWidget):
             valueLabel.setOpenExternalLinks(True)
             valueLabel.setWordWrap(True)
             valueLabel.setTextInteractionFlags(TextInteractionFlag.TextSelectableByMouse | TextInteractionFlag.LinksAccessibleByMouse | TextInteractionFlag.LinksAccessibleByKeyboard)
-            self.formLayout.addRow(k.upper(), valueLabel)
+            self.formLayout.addRow(createSpaces(k).upper(), valueLabel)
 
 class ResizingLabel(QtWidgets.QLabel):
     def __init__(self, pixmap):

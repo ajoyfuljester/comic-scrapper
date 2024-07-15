@@ -3,7 +3,6 @@ import ConfigUtils
 import GenericWidgets
 import LibraryUtils
 from QtUtils import *
-from ReaderWidget import ReaderWidget
 
 
 class LibraryWidget(QtWidgets.QWidget):
@@ -49,7 +48,7 @@ class LibraryWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.comicBookContainer, 1, 0)
 
         self.refreshButton = QtWidgets.QPushButton()
-        self.refreshButton.setText('Refresh List')
+        self.refreshButton.setText('Refresh comic books')
         self.refreshButton.clicked.connect(self.refreshComicBooks)
 
         self.gridLayout.addWidget(self.refreshButton, 0, 2)
@@ -131,7 +130,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.preview = GenericWidgets.ComicPreviewWidget(self.details['info'], False)
         self.gridLayout.addWidget(self.preview, 1, 0, 1, 2)
 
-        self.buttonLayout = QtWidgets.QVBoxLayout()
+        self.buttonLayout = QtWidgets.QHBoxLayout()
 
         self.downloadButton = QtWidgets.QPushButton()
         self.downloadButton.setText('Download')
@@ -143,7 +142,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.readButton.clicked.connect(self.readSelected)
         self.buttonLayout.addWidget(self.readButton)
 
-        self.gridLayout.addLayout(self.buttonLayout, 0, 1)
+        self.gridLayout.addLayout(self.buttonLayout, 2, 0)
 
         self.refreshIssues()
 
