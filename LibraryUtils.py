@@ -13,11 +13,13 @@ def createLibraryIfDoesNotExist():
         os.mkdir(pathToLibrary)
 
 
-def getComicBooks():
-    return next(os.walk(ConfigUtils.loadConfig()['PATH_TO_LIBRARY']), [None, []])[1]
+def getBooks():
+    config = ConfigUtils.loadConfig()
+    books = next(os.walk(config['PATH_TO_LIBRARY']), [None, []])[1]
+    return list(filter(lambda book: os.path.exists(os.path.join(config['PATH_TO_LIBRARY'], book, 'data.json')), books))
 
 
-def getComicBookInfo(name):
+def getBookInfo(name):
     config = ConfigUtils.loadConfig()
     path = os.path.join(config['PATH_TO_LIBRARY'], name, 'data.json')
 
@@ -51,6 +53,10 @@ def addToLibrary(url):
         os.mkdir(path)
     with open(os.path.join(path, 'data.json'), 'w') as file:
         file.write(constructDataJSON(info))
+    with open(os.path.join(path, 'progress.json'), 'w') as file:
+        for i in info['issues']:
+            i['isRead'] = False
+        file.write(constructDataJSON(info['issues']))
 
 
 def getDownloadedComicBookIssues(name):
@@ -90,3 +96,19 @@ def getIssuePages(title, issue):
     path = os.path.join(config['PATH_TO_LIBRARY'], title, issue)
 
     return [os.path.join(path, p) for p in sorted(next(os.walk(path), [None, None, []])[2], key=lambda x: int(x[:-4]))]
+
+def getReadingProgress(bookName):
+    config = ConfigUtils.loadConfig()
+    path = os.path.join(config['PATH_TO_LIBRARY'], bookName, 'progress.json')
+    with open(path, 'r') as file:
+        return json.loads(file.read())
+
+
+def markIssueReadingProgress(bookName, issueName, isRead = True):
+    config = ConfigUtils.loadConfig()
+    path = os.path.join(config['PATH_TO_LIBRARY'], bookName, 'progress.json')
+    progress = getReadingProgress(bookName)
+    index = [i['name'] for i in progress].index(issueName)
+    progress[index]['isRead'] = isRead
+    with open(path, 'w') as file:
+        file.write(json.dumps(progress))

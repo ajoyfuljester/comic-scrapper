@@ -49,11 +49,11 @@ class LibraryWidget(QtWidgets.QWidget):
 
         self.refreshButton = QtWidgets.QPushButton()
         self.refreshButton.setText('Refresh comic books')
-        self.refreshButton.clicked.connect(self.refreshComicBooks)
+        self.refreshButton.clicked.connect(self.refreshBooks)
 
         self.gridLayout.addWidget(self.refreshButton, 0, 2)
         
-        self.refreshComicBooks()
+        self.refreshBooks()
 
     def insertComicBook(self, data):
         rowCount = self.bookContainer.rowCount()
@@ -81,9 +81,9 @@ class LibraryWidget(QtWidgets.QWidget):
             self.insertComicBook([info['title'], info['status'], info['releaseYear'], info['latest']])
 
 
-    def refreshComicBooks(self):
+    def refreshBooks(self):
         self.bookContainer.setRowCount(0)
-        self.books = [LibraryUtils.getComicBookInfo(cb) for cb in LibraryUtils.getComicBooks()]
+        self.books = [LibraryUtils.getBookInfo(book) for book in LibraryUtils.getBooks()]
 
         for cb in self.books:
             info = cb['info']
@@ -103,13 +103,10 @@ class LibraryWidget(QtWidgets.QWidget):
 
 class IssueLibraryWidget(QtWidgets.QWidget):
     defaultBackground = 'white'
-    invertingFlag = True
-    def __init__(self, name, readingTarget):
+    def __init__(self, title, readingTarget):
         super().__init__()
-        self.title = name
+        self.title = title
         self.readingTarget = readingTarget or self.parentWidget()
-
-        self.highlightBackground = ConfigUtils.loadConfig()['COLOR_ISSUE_ALREADY_DOWNLOADED']
 
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setRowStretch(0, 1)
@@ -125,12 +122,6 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.issueContainer, 0, 0)
 
 
-        self.downloadedIssues = LibraryUtils.getDownloadedComicBookIssues(self.title)
-        self.details = LibraryUtils.getComicBookInfo(name)
-        self.details['info']['numberOfDownloadedIssues'] = len(self.downloadedIssues)
-        self.preview = GenericWidgets.ComicPreviewWidget(self.details['info'], False)
-        self.gridLayout.addWidget(self.preview, 1, 0, 1, 2)
-
         self.buttonLayout = QtWidgets.QHBoxLayout()
 
         self.downloadButton = QtWidgets.QPushButton()
@@ -143,43 +134,72 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.readButton.clicked.connect(self.readSelected)
         self.buttonLayout.addWidget(self.readButton)
 
+        self.markAsReadButton = QtWidgets.QPushButton()
+        self.markAsReadButton.setText('Mark as read')
+        self.markAsReadButton.clicked.connect(lambda: self.markSelected(True))
+        self.buttonLayout.addWidget(self.markAsReadButton)
+
+        self.markAsUnreadButton = QtWidgets.QPushButton()
+        self.markAsUnreadButton.setText('Mark as unread')
+        self.markAsUnreadButton.clicked.connect(lambda: self.markSelected(False))
+        self.buttonLayout.addWidget(self.markAsUnreadButton)
+
         self.gridLayout.addLayout(self.buttonLayout, 2, 0)
 
-        self.refreshIssues()
+        self.refresh()
 
     def insertIssue(self, data):
         rowCount = self.issueContainer.rowCount()
         data = list(data)
 
         self.issueContainer.setRowCount(rowCount + 1)
-        highlight = data[0] in self.downloadedIssues
-        brush = QtGui.QBrush(self.highlightBackground if highlight else self.defaultBackground)
+        isDownloaded = data[0] in self.downloadedIssues
+        index = [p['name'] for p in self.readingProgress].index(data[0])
+        isRead = self.readingProgress[index]['isRead']
+        config = ConfigUtils.loadConfig()
+        self.highlightDownloadedBackground = config['COLOR_ISSUE_ALREADY_DOWNLOADED']
+        self.highlightReadBackground = config['COLOR_ISSUE_ALREADY_READ']
+        self.highlightDownloadedAndReadBackground = config['COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ']
+        brush = QtGui.QBrush(self.defaultBackground)
+        if isDownloaded:
+            brush = QtGui.QBrush(self.highlightDownloadedBackground)
+        if isRead:
+            brush = QtGui.QBrush(self.highlightReadBackground)
+        if isDownloaded and isRead:
+            brush = QtGui.QBrush(self.highlightDownloadedAndReadBackground)
         for i, value in enumerate(data):
             cell = QtWidgets.QTableWidgetItem(value)
             cell.setFlags(ItemFlag.ItemIsSelectable | ItemFlag.ItemIsEnabled)
             cell.setBackground(brush)
             self.issueContainer.setItem(rowCount, i, cell)
 
-    def refreshIssues(self):
+    def refresh(self):
         self.downloadedIssues = LibraryUtils.getDownloadedComicBookIssues(self.title)
+        self.readingProgress = LibraryUtils.getReadingProgress(self.title)
+        self.details = LibraryUtils.getBookInfo(self.title)
+        self.details['info']['numberOfDownloadedIssues'] = len(self.downloadedIssues)
+        self.details['info']['numberOfReadIssues'] = len(list(filter(lambda p: p['isRead'], self.readingProgress)))
         config = ConfigUtils.loadConfig()
         self.issueContainer.setRowCount(0)
         issues = self.details['issues']
         
-        if config['INVERT_ISSUE_ORDER'] and self.invertingFlag:
+        if config['INVERT_ISSUE_ORDER']:
             issues.reverse()
-            self.invertingFlag = False
         for issue in issues:
             self.insertIssue(issue.values())
+
+        lastPreview = self.gridLayout.itemAtPosition(1, 0)
+        if lastPreview:
+            lastPreview.widget().deleteLater()
+        self.preview = GenericWidgets.ComicPreviewWidget(self.details['info'], False)
+        self.gridLayout.addWidget(self.preview, 1, 0)
 
     def downloadSelected(self):
         rows = set([i.row() for i in self.issueContainer.selectedIndexes()])
         issuesDetails = [self.details['issues'][row] for row in rows]
 
         for issue in issuesDetails:
-            LibraryUtils.downloadIssueAsThread(self.title, issue, None, self.refreshIssues)
-            
-
+            LibraryUtils.downloadIssueAsThread(self.title, issue, None, self.refresh)
 
 
     def readSelected(self):
@@ -190,3 +210,10 @@ class IssueLibraryWidget(QtWidgets.QWidget):
             issueName = issue['name']
             if issueName in self.downloadedIssues:
                 self.readingTarget.addReaderTab(self.title, issueName)
+
+    def markSelected(self, isRead = True):
+        rows = set([i.row() for i in self.issueContainer.selectedIndexes()])
+        issuesDetails = [self.details['issues'][row] for row in rows]
+        for issue in issuesDetails:
+            LibraryUtils.markIssueReadingProgress(self.title, issue['name'], isRead)
+        self.refresh()

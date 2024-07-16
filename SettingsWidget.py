@@ -10,6 +10,9 @@ widgetInputMap = {
         'COLOR_BOOK_ALREADY_IN_LIBRARY': 'text',
         'COLOR_ISSUE_ALREADY_DOWNLOADED': 'text',
         'USE_SESSION': 'checkbox',
+        'COLOR_ISSUE_ALREADY_READ': 'text',
+        'MARK_AS_AFTER_LAST_PAGE': 'checkbox',
+        'COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ': 'text',
 }
 
 

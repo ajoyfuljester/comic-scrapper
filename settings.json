@@ -3,6 +3,9 @@
     "MAXIMIZE_WINDOW_ON_LAUNCH": true,
     "INVERT_ISSUE_ORDER": true,
     "COLOR_BOOK_ALREADY_IN_LIBRARY": "#aaffaa",
-    "COLOR_ISSUE_ALREADY_DOWNLOADED": "#aaaaff",
-    "USE_SESSION": true
+    "COLOR_ISSUE_ALREADY_DOWNLOADED": "#aaffaa",
+    "COLOR_ISSUE_ALREADY_READ": "#aaaaff",
+    "COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ": "#aaffff",
+    "USE_SESSION": true,
+    "MARK_AS_AFTER_LAST_PAGE": true
 }

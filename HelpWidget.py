@@ -28,3 +28,8 @@ class HelpWidget(QtWidgets.QWidget):
         color = self.config['COLOR_ISSUE_ALREADY_DOWNLOADED']
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow('color of an issue already downloaded', _)
+
+        _ = QtWidgets.QLabel()
+        color = self.config['COLOR_ISSUE_ALREADY_READ']
+        _.setStyleSheet(f'background-color: {color}')
+        self.formLayout.addRow('color of an issue already read', _)
