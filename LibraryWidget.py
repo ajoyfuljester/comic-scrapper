@@ -103,6 +103,8 @@ class LibraryWidget(QtWidgets.QWidget):
 
 class IssueLibraryWidget(QtWidgets.QWidget):
     defaultBackground = 'white'
+
+    needsRefresh = QtCore.Signal()
     def __init__(self, title, readingTarget):
         super().__init__()
         self.title = title
@@ -144,7 +146,14 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.markAsUnreadButton.clicked.connect(lambda: self.markSelected(False))
         self.buttonLayout.addWidget(self.markAsUnreadButton)
 
+        self.deleteButton = QtWidgets.QPushButton()
+        self.deleteButton.setText('Delete')
+        self.deleteButton.clicked.connect(self.deleteSelected)
+        self.buttonLayout.addWidget(self.deleteButton)
+
         self.gridLayout.addLayout(self.buttonLayout, 2, 0)
+
+        self.needsRefresh.connect(self.refresh)
 
         self.refresh()
 
@@ -193,13 +202,14 @@ class IssueLibraryWidget(QtWidgets.QWidget):
             lastPreview.widget().deleteLater()
         self.preview = GenericWidgets.ComicPreviewWidget(self.details['info'], False)
         self.gridLayout.addWidget(self.preview, 1, 0)
+        self.preview.show()
 
     def downloadSelected(self):
         rows = set([i.row() for i in self.issueContainer.selectedIndexes()])
         issuesDetails = [self.details['issues'][row] for row in rows]
 
         for issue in issuesDetails:
-            LibraryUtils.downloadIssueAsThread(self.title, issue, None, self.refresh)
+            LibraryUtils.downloadIssueAsThread(self.title, issue, None, self.needsRefresh.emit)
 
 
     def readSelected(self):
@@ -216,4 +226,11 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         issuesDetails = [self.details['issues'][row] for row in rows]
         for issue in issuesDetails:
             LibraryUtils.markIssueReadingProgress(self.title, issue['name'], isRead)
+        self.refresh()
+
+    def deleteSelected(self):
+        rows = set([i.row() for i in self.issueContainer.selectedIndexes()])
+        issuesDetails = [self.details['issues'][row] for row in rows]
+        for issue in issuesDetails:
+            LibraryUtils.deleteIssue(self.title, issue['name'])
         self.refresh()

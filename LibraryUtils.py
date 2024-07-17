@@ -1,5 +1,6 @@
 import ConfigUtils
 import os
+import shutil
 import json
 import ScrapingUtils
 from threading import Thread
@@ -112,3 +113,10 @@ def markIssueReadingProgress(bookName, issueName, isRead = True):
     progress[index]['isRead'] = isRead
     with open(path, 'w') as file:
         file.write(json.dumps(progress))
+
+def deleteIssue(bookName, issueName):
+    config = ConfigUtils.loadConfig()
+    path = os.path.join(config['PATH_TO_LIBRARY'], bookName, issueName)
+    if not os.path.exists(path):
+        return
+    shutil.rmtree(path)
