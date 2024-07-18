@@ -14,16 +14,18 @@ class LibraryWidget(QtWidgets.QWidget):
 
 
         self.gridLayout = QtWidgets.QGridLayout(self)
-        self.gridLayout.setColumnStretch(0, 2)
+        self.gridLayout.setColumnStretch(0, 1)
         self.gridLayout.setColumnStretch(1, 1)
-        self.gridLayout.setColumnStretch(2, 1)
+
+        self.buttonLayout = QtWidgets.QHBoxLayout()
+        self.gridLayout.addLayout(self.buttonLayout, 0, 1)
 
         self.searchCriteriaInput = QtWidgets.QComboBox()
         self.searchCriteriaInput.addItem('Title')
         self.searchCriteriaInput.addItem('Status')
         self.searchCriteriaInput.addItem('Release Year')
         self.searchCriteriaInput.addItem('Latest Issue')
-        self.gridLayout.addWidget(self.searchCriteriaInput, 0, 1)
+        self.buttonLayout.addWidget(self.searchCriteriaInput)
         criteriaMap = {
             'Title': 'title',
             'Status': 'status',
@@ -48,10 +50,14 @@ class LibraryWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.bookContainer, 1, 0)
 
         self.refreshButton = QtWidgets.QPushButton()
-        self.refreshButton.setText('Refresh comic books')
+        self.refreshButton.setText('Refresh books')
         self.refreshButton.clicked.connect(self.refreshBooks)
+        self.buttonLayout.addWidget(self.refreshButton)
 
-        self.gridLayout.addWidget(self.refreshButton, 0, 2)
+        self.deleteButton = QtWidgets.QPushButton()
+        self.deleteButton.setText('Delete books')
+        self.deleteButton.clicked.connect(self.deleteSelected)
+        self.buttonLayout.addWidget(self.deleteButton)
         
         self.refreshBooks()
 
@@ -82,6 +88,7 @@ class LibraryWidget(QtWidgets.QWidget):
 
 
     def refreshBooks(self):
+        self.hidePreview()
         self.bookContainer.setRowCount(0)
         self.books = [LibraryUtils.getBookInfo(book) for book in LibraryUtils.getBooks()]
 
@@ -89,17 +96,30 @@ class LibraryWidget(QtWidgets.QWidget):
             info = cb['info']
             self.insertComicBook([info['title'], info['status'], info['releaseYear'], info['latest']])
 
+    def hidePreview(self):
+        last = self.gridLayout.itemAtPosition(1, 1)
+        if last:
+            last.widget().deleteLater()
+        self.issueLibrary = None
+
     def showPreview(self, name):
         last = self.gridLayout.itemAtPosition(1, 1)
         if last:
             last.widget().deleteLater()
         self.issueLibrary = IssueLibraryWidget(name, self.readingTarget)
-        self.gridLayout.addWidget(self.issueLibrary, 1, 1, 1, 2)
+        self.gridLayout.addWidget(self.issueLibrary, 1, 1)
 
     def handleSelectionChanged(self):
         first = self.bookContainer.selectedIndexes()
         if len(first) > 0:
             self.showPreview(self.bookContainer.item(first[0].row(), 0).text())
+
+    def deleteSelected(self):
+        rows = set([i.row() for i in self.bookContainer.selectedIndexes()])
+        bookDetails = [self.books[row] for row in rows]
+        for book in bookDetails:
+            LibraryUtils.deleteBook(book['info']['title'])
+            self.refreshBooks()
 
 class IssueLibraryWidget(QtWidgets.QWidget):
     defaultBackground = 'white'

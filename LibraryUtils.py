@@ -25,7 +25,9 @@ def getBookInfo(name):
     path = os.path.join(config['PATH_TO_LIBRARY'], name, 'data.json')
 
     with open(path, 'r') as file:
-        return json.loads(file.read())
+        data = json.loads(file.read())
+        data['info']['image'] = bytes.fromhex(data['info']['image'])
+        return data
 
 
 blackListedKeys = ['image']
@@ -119,4 +121,10 @@ def deleteIssue(bookName, issueName):
     path = os.path.join(config['PATH_TO_LIBRARY'], bookName, issueName)
     if not os.path.exists(path):
         return
+    shutil.rmtree(path)
+
+
+def deleteBook(bookName):
+    config = ConfigUtils.loadConfig()
+    path = os.path.join(config['PATH_TO_LIBRARY'], bookName)
     shutil.rmtree(path)

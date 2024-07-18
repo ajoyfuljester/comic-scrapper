@@ -91,6 +91,7 @@ def getFullComicBookInfo(url):
     table = details.select('dd')
     issues = getIssuesBS(html)
     
+    imageURL = html.select_one('.movie-image').img['src']
     info = {
         'info': {
             'title': details.select_one('.title-1').text.strip(),
@@ -99,7 +100,8 @@ def getFullComicBookInfo(url):
             'releaseYear': table[2].text.strip(),
             'latest': issues[-1]['name'],
             'URL': url,
-            'imageURL': html.select_one('.movie-image').img['src'],
+            'imageURL': imageURL,
+            'image': str(getImageBytes(imageURL).hex()),
             'numberOfIssues': len(issues),
             'genres': [{'name': el.text, 'URL': el['href']} for el in table[4].select('a')],
 
