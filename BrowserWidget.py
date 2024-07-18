@@ -92,7 +92,7 @@ class ComicTableWidgetItemSet():
 
 
         self.cellWidgets = [QtWidgets.QTableWidgetItem(cell) for cell in self.cellData]
-        highlight = self.cellData[0] in LibraryUtils.getBooks()
+        highlight = LibraryUtils.forceFilename(self.cellData[0]) in LibraryUtils.getBooks()
         brush = QtGui.QBrush(self.highlightBackground if highlight else self.defaultBackground)
         for cell in self.cellWidgets:
             cell.setFlags(ItemFlag.ItemIsSelectable | ItemFlag.ItemIsEnabled)

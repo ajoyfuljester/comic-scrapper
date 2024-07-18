@@ -182,7 +182,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         data = list(data)
 
         self.issueContainer.setRowCount(rowCount + 1)
-        isDownloaded = data[0] in self.downloadedIssues
+        isDownloaded = LibraryUtils.forceFilename(data[0]) in self.downloadedIssues
         index = [p['name'] for p in self.readingProgress].index(data[0])
         isRead = self.readingProgress[index]['isRead']
         config = ConfigUtils.loadConfig()
@@ -238,7 +238,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
 
         for issue in issuesDetails:
             issueName = issue['name']
-            if issueName in self.downloadedIssues:
+            if LibraryUtils.forceFilename(issueName) in self.downloadedIssues:
                 self.readingTarget.addReaderTab(self.title, issueName)
 
     def markSelected(self, isRead = True):

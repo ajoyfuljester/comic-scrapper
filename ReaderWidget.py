@@ -57,7 +57,7 @@ class ReaderTab(QtWidgets.QWidget):
         self.pageNumberLabel.setAlignment(Alignment.AlignCenter)
         self.detailsLayout.addWidget(self.pageNumberLabel)
 
-        self.pages = LibraryUtils.getIssuePages(self.title, self.issue)
+        self.pages = LibraryUtils.getIssuePagesPaths(self.title, self.issue)
         self.numberOfPages = len(self.pages)
 
         self.currentPageNumber = 0

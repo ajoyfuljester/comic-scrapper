@@ -5,6 +5,8 @@ import json
 import ScrapingUtils
 from threading import Thread
 
+def forceFilename(name):
+    return "".join([c if c not in r':?\/"*<>|' else "_" for c in name])
 
 def createLibraryIfDoesNotExist():
     config = ConfigUtils.loadConfig()
@@ -22,7 +24,7 @@ def getBooks():
 
 def getBookInfo(name):
     config = ConfigUtils.loadConfig()
-    path = os.path.join(config['PATH_TO_LIBRARY'], name, 'data.json')
+    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(name), 'data.json')
 
     with open(path, 'r') as file:
         data = json.loads(file.read())
@@ -51,7 +53,7 @@ def addToLibrary(url):
     pathToLibrary = config['PATH_TO_LIBRARY']
     info = ScrapingUtils.getFullComicBookInfo(url)
 
-    path = os.path.join(pathToLibrary, info['info']['title'])
+    path = os.path.join(pathToLibrary, forceFilename(info['info']['title']))
     if not os.path.exists(path):
         os.mkdir(path)
     with open(os.path.join(path, 'data.json'), 'w') as file:
@@ -65,18 +67,9 @@ def addToLibrary(url):
 def getDownloadedComicBookIssues(name):
     config = ConfigUtils.loadConfig()
 
-    path = os.path.join(config['PATH_TO_LIBRARY'], name)
+    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(name))
 
     return next(os.walk(path), [None, []])[1]
-
-
-
-def getIssuePaths(name, number):
-    config = ConfigUtils.loadConfig()
-
-    path = os.path.join(config['PATH_TO_LIBRARY'], name, number)
-
-    raise Exception('IDK what this function was supposed to be for')
 
 
 def downloadIssue(title, info, imageNames = None, after = lambda: None, afterArgs = []):
@@ -85,7 +78,7 @@ def downloadIssue(title, info, imageNames = None, after = lambda: None, afterArg
     if url[-5:] != '/full':
         url += '/full'
     sources = ScrapingUtils.getSources(url)
-    ScrapingUtils.saveSources(sources, os.path.join(config['PATH_TO_LIBRARY'], title, info['name']), imageNames)
+    ScrapingUtils.saveSources(sources, os.path.join(config['PATH_TO_LIBRARY'], forceFilename(title), forceFilename(info['name'])), imageNames)
     after(*afterArgs)
 
 def downloadIssueAsThread(title, info, imageNames = None, after = lambda: None, afterArgs = []):
@@ -93,23 +86,23 @@ def downloadIssueAsThread(title, info, imageNames = None, after = lambda: None, 
     thread.start()
 
 
-def getIssuePages(title, issue):
+def getIssuePagesPaths(title, issue):
     config = ConfigUtils.loadConfig()
 
-    path = os.path.join(config['PATH_TO_LIBRARY'], title, issue)
+    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(title), forceFilename(issue))
 
     return [os.path.join(path, p) for p in sorted(next(os.walk(path), [None, None, []])[2], key=lambda x: int(x[:-4]))]
 
 def getReadingProgress(bookName):
     config = ConfigUtils.loadConfig()
-    path = os.path.join(config['PATH_TO_LIBRARY'], bookName, 'progress.json')
+    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(bookName), 'progress.json')
     with open(path, 'r') as file:
         return json.loads(file.read())
 
 
 def markIssueReadingProgress(bookName, issueName, isRead = True):
     config = ConfigUtils.loadConfig()
-    path = os.path.join(config['PATH_TO_LIBRARY'], bookName, 'progress.json')
+    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(bookName), 'progress.json')
     progress = getReadingProgress(bookName)
     index = [i['name'] for i in progress].index(issueName)
     progress[index]['isRead'] = isRead
@@ -118,7 +111,7 @@ def markIssueReadingProgress(bookName, issueName, isRead = True):
 
 def deleteIssue(bookName, issueName):
     config = ConfigUtils.loadConfig()
-    path = os.path.join(config['PATH_TO_LIBRARY'], bookName, issueName)
+    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(bookName), forceFilename(issueName))
     if not os.path.exists(path):
         return
     shutil.rmtree(path)
@@ -126,5 +119,5 @@ def deleteIssue(bookName, issueName):
 
 def deleteBook(bookName):
     config = ConfigUtils.loadConfig()
-    path = os.path.join(config['PATH_TO_LIBRARY'], bookName)
+    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(bookName))
     shutil.rmtree(path)
