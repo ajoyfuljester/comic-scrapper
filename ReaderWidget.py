@@ -29,7 +29,7 @@ class ReaderTab(QtWidgets.QWidget):
         self.issue = issue
 
         self.gridLayout = QtWidgets.QGridLayout(self)
-        self.gridLayout.setColumnStretch(0, 3)
+        self.gridLayout.setColumnStretch(0, 4)
         self.gridLayout.setColumnStretch(1, 1)
         self.gridLayout.setRowStretch(0, 3)
         self.gridLayout.setRowStretch(1, 0)
@@ -49,16 +49,22 @@ class ReaderTab(QtWidgets.QWidget):
         self.nextPageButton.setShortcut(Key.Key_Right)
         self.buttonLayout.addWidget(self.nextPageButton)
 
-        self.detailsLayout = QtWidgets.QVBoxLayout()
+        self.detailsLayout = QtWidgets.QFormLayout()
+        self.detailsLayout.setFormAlignment(Alignment.AlignRight | Alignment.AlignBottom)
         self.gridLayout.addLayout(self.detailsLayout, 0, 1)
-
-        self.pageNumberLabel = QtWidgets.QLabel()
-        self.pageNumberLabel.setFont(self.bigFont)
-        self.pageNumberLabel.setAlignment(Alignment.AlignCenter)
-        self.detailsLayout.addWidget(self.pageNumberLabel)
 
         self.pages = LibraryUtils.getIssuePagesPaths(self.title, self.issue)
         self.numberOfPages = len(self.pages)
+
+        self.pageNumberInput = QtWidgets.QLineEdit()
+        self.pageNumberInput.setFont(self.bigFont)
+        self.pageNumberInput.setPlaceholderText('Page number')
+        self.pageNumberInput.setSizePolicy(SizePolicy.Policy.Minimum, SizePolicy.Policy.Minimum)
+        self.pageNumberInput.textEdited.connect(self.handlePageNumberInput)
+        self.numberOfPagesLabel = QtWidgets.QLabel()
+        self.numberOfPagesLabel.setText('/' + str(self.numberOfPages))
+        self.numberOfPagesLabel.setFont(self.bigFont)
+        self.detailsLayout.addRow(self.pageNumberInput, self.numberOfPagesLabel)
 
         self.currentPageNumber = 0
         self.setPage(self.currentPageNumber)
@@ -76,7 +82,7 @@ class ReaderTab(QtWidgets.QWidget):
         self.currentPage = ResizingLabel(pixmap)
         self.currentPage.setAlignment(Alignment.AlignCenter)
         self.gridLayout.addWidget(self.currentPage, 0, 0)
-        self.pageNumberLabel.setText(f'Page {self.currentPageNumber + 1}/{self.numberOfPages}')
+        self.pageNumberInput.setText(str(number + 1))
 
         if config['MARK_AS_AFTER_LAST_PAGE'] and self.currentPageNumber == self.numberOfPages - 1:
             LibraryUtils.markIssueReadingProgress(self.title, self.issue)
@@ -88,3 +94,11 @@ class ReaderTab(QtWidgets.QWidget):
 
     def previousPage(self):
         self.setPage(self.currentPageNumber - 1)
+
+    def handlePageNumberInput(self, text):
+        try:
+            i = int(text) - 1
+            return self.setPage(i)
+        except ValueError:
+            pass
+
