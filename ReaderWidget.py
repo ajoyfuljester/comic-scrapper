@@ -29,42 +29,33 @@ class ReaderTab(QtWidgets.QWidget):
         self.issue = issue
 
         self.gridLayout = QtWidgets.QGridLayout(self)
-        self.gridLayout.setColumnStretch(0, 4)
-        self.gridLayout.setColumnStretch(1, 1)
-        self.gridLayout.setRowStretch(0, 3)
-        self.gridLayout.setRowStretch(1, 0)
         
-        self.buttonLayout = QtWidgets.QHBoxLayout()
-        self.gridLayout.addLayout(self.buttonLayout, 1, 0, 1, 2)
+        self.bottomLayout = QtWidgets.QHBoxLayout()
+        self.gridLayout.addLayout(self.bottomLayout, 1, 0)
 
         self.previousPageButton = QtWidgets.QPushButton()
         self.previousPageButton.setText('Previous page')
         self.previousPageButton.clicked.connect(self.previousPage)
         self.previousPageButton.setShortcut(Key.Key_Left)
-        self.buttonLayout.addWidget(self.previousPageButton)
+        self.bottomLayout.addWidget(self.previousPageButton, 1)
 
-        self.nextPageButton = QtWidgets.QPushButton()
-        self.nextPageButton.setText('Next page')
-        self.nextPageButton.clicked.connect(self.nextPage)
-        self.nextPageButton.setShortcut(Key.Key_Right)
-        self.buttonLayout.addWidget(self.nextPageButton)
-
-        self.detailsLayout = QtWidgets.QFormLayout()
-        self.detailsLayout.setFormAlignment(Alignment.AlignRight | Alignment.AlignBottom)
-        self.gridLayout.addLayout(self.detailsLayout, 0, 1)
 
         self.pages = LibraryUtils.getIssuePagesPaths(self.title, self.issue)
         self.numberOfPages = len(self.pages)
 
         self.pageNumberInput = QtWidgets.QLineEdit()
-        self.pageNumberInput.setFont(self.bigFont)
         self.pageNumberInput.setPlaceholderText('Page number')
-        self.pageNumberInput.setSizePolicy(SizePolicy.Policy.Minimum, SizePolicy.Policy.Minimum)
         self.pageNumberInput.textEdited.connect(self.handlePageNumberInput)
         self.numberOfPagesLabel = QtWidgets.QLabel()
         self.numberOfPagesLabel.setText('/' + str(self.numberOfPages))
-        self.numberOfPagesLabel.setFont(self.bigFont)
-        self.detailsLayout.addRow(self.pageNumberInput, self.numberOfPagesLabel)
+        self.bottomLayout.addWidget(self.pageNumberInput, 0)
+        self.bottomLayout.addWidget(self.numberOfPagesLabel, 0)
+
+        self.nextPageButton = QtWidgets.QPushButton()
+        self.nextPageButton.setText('Next page')
+        self.nextPageButton.clicked.connect(self.nextPage)
+        self.nextPageButton.setShortcut(Key.Key_Right)
+        self.bottomLayout.addWidget(self.nextPageButton, 1)
 
         self.currentPageNumber = 0
         self.setPage(self.currentPageNumber)
