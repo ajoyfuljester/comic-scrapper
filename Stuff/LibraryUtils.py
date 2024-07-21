@@ -1,8 +1,8 @@
-import ConfigUtils
+from . import ConfigUtils
 import os
 import shutil
 import json
-import ScrapingUtils
+from . import ScrapingUtils
 from threading import Thread
 
 def forceFilename(name):

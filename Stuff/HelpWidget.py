@@ -1,6 +1,6 @@
 from PySide6 import QtWidgets
-from QtUtils import *
-import ConfigUtils
+from .QtUtils import *
+from . import ConfigUtils
 
 
 class HelpWidget(QtWidgets.QWidget):

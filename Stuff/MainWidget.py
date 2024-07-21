@@ -1,9 +1,9 @@
 from PySide6 import QtWidgets
-from BrowserWidget import BrowserWidget
-from SettingsWidget import SettingsWidget
-from LibraryWidget import LibraryWidget
-from HelpWidget import HelpWidget
-from ReaderWidget import ReaderWidget
+from .BrowserWidget import BrowserWidget
+from .SettingsWidget import SettingsWidget
+from .LibraryWidget import LibraryWidget
+from .HelpWidget import HelpWidget
+from .ReaderWidget import ReaderWidget
 
 class MainWidget(QtWidgets.QTabWidget):
     def __init__(self):

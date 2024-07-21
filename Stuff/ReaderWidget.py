@@ -1,8 +1,8 @@
 from PySide6 import QtWidgets, QtGui
-import ConfigUtils
-from GenericWidgets import ResizingLabel
-import LibraryUtils
-from QtUtils import *
+from . import ConfigUtils
+from .GenericWidgets import ResizingLabel
+from . import LibraryUtils
+from .QtUtils import *
 
 
 

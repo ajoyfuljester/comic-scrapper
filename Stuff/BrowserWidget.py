@@ -1,9 +1,9 @@
 from PySide6 import QtWidgets, QtGui
-import LibraryUtils
-import ScrapingUtils
-from QtUtils import *
-from GenericWidgets import ComicPreviewWidget
-import ConfigUtils
+from . import LibraryUtils
+from . import ScrapingUtils
+from .QtUtils import *
+from .GenericWidgets import ComicPreviewWidget
+from . import ConfigUtils
 
 class BrowserWidget(QtWidgets.QWidget):
     def __init__(self):

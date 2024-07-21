@@ -1,8 +1,8 @@
 from PySide6 import QtWidgets, QtGui
-import ConfigUtils
-import GenericWidgets
-import LibraryUtils
-from QtUtils import *
+from . import ConfigUtils
+from . import GenericWidgets
+from . import LibraryUtils
+from .QtUtils import *
 
 
 class LibraryWidget(QtWidgets.QWidget):

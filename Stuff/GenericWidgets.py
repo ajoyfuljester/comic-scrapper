@@ -1,6 +1,6 @@
 from PySide6 import QtWidgets, QtGui
-import ScrapingUtils
-from QtUtils import *
+from . import ScrapingUtils
+from .QtUtils import *
 import re
 
 
