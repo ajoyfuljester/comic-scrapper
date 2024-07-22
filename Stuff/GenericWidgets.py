@@ -82,11 +82,15 @@ class DescriptionWidget(QtWidgets.QWidget):
         for k, v in entries.items():
             if linkPattern.match(v):
                 v = f'<a href="{v}">{v}</a>'
-            valueLabel = QtWidgets.QLabel(v)
+            valueLabel = DefaultLabel(v)
             valueLabel.setOpenExternalLinks(True)
             valueLabel.setWordWrap(True)
-            valueLabel.setTextInteractionFlags(TextInteractionFlag.TextSelectableByMouse | TextInteractionFlag.LinksAccessibleByMouse | TextInteractionFlag.LinksAccessibleByKeyboard)
-            self.formLayout.addRow(createSpaces(k).upper(), valueLabel)
+            self.formLayout.addRow(DefaultLabel(createSpaces(k).upper()), valueLabel)
+
+class DefaultLabel(QtWidgets.QLabel):
+    def __init__(self, text = ''):
+        super().__init__(text)
+        self.setTextInteractionFlags(TextInteractionFlag.TextSelectableByMouse | TextInteractionFlag.LinksAccessibleByMouse | TextInteractionFlag.LinksAccessibleByKeyboard)
 
 class ResizingLabel(QtWidgets.QLabel):
     def __init__(self, pixmap):

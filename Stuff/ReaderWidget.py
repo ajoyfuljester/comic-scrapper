@@ -1,6 +1,6 @@
 from PySide6 import QtWidgets, QtGui
 from . import ConfigUtils
-from .GenericWidgets import ResizingLabel
+from .GenericWidgets import ResizingLabel, DefaultLabel
 from . import LibraryUtils
 from .QtUtils import *
 
@@ -46,7 +46,7 @@ class ReaderTab(QtWidgets.QWidget):
         self.pageNumberInput = QtWidgets.QLineEdit()
         self.pageNumberInput.setPlaceholderText('Page number')
         self.pageNumberInput.textEdited.connect(self.handlePageNumberInput)
-        self.numberOfPagesLabel = QtWidgets.QLabel()
+        self.numberOfPagesLabel = DefaultLabel()
         self.numberOfPagesLabel.setText('/' + str(self.numberOfPages))
         self.bottomLayout.addWidget(self.pageNumberInput, 0)
         self.bottomLayout.addWidget(self.numberOfPagesLabel, 0)

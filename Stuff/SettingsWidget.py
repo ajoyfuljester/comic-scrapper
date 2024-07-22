@@ -1,6 +1,7 @@
 from PySide6 import QtWidgets
 from .QtUtils import *
 from . import ConfigUtils
+from .GenericWidgets import DefaultLabel
 
 
 widgetInputMap = {
@@ -68,7 +69,7 @@ class SettingsWidget(QtWidgets.QWidget):
                     raise Exception('Widget type not found!')
 
 
-            keyWidget = QtWidgets.QLabel(key)
+            keyWidget = DefaultLabel(key)
             keyWidget.setStyleSheet(self.defaultKeyStylesheet)
             valueWidget.setStyleSheet(self.defaultValueStylesheet)
 

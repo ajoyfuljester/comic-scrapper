@@ -1,6 +1,7 @@
 from PySide6 import QtWidgets
 from .QtUtils import *
 from . import ConfigUtils
+from .GenericWidgets import DefaultLabel
 
 
 class HelpWidget(QtWidgets.QWidget):
@@ -19,17 +20,17 @@ class HelpWidget(QtWidgets.QWidget):
             self.formLayout.removeRow(i)
         self.config = ConfigUtils.loadConfig()
 
-        _ = QtWidgets.QLabel()
+        _ = DefaultLabel()
         color = self.config['COLOR_BOOK_ALREADY_IN_LIBRARY']
         _.setStyleSheet(f'background-color: {color}')
-        self.formLayout.addRow('color of a comic book already in library', _)
+        self.formLayout.addRow(DefaultLabel('color of a comic book already in library'), _)
 
-        _ = QtWidgets.QLabel()
+        _ = DefaultLabel()
         color = self.config['COLOR_ISSUE_ALREADY_DOWNLOADED']
         _.setStyleSheet(f'background-color: {color}')
-        self.formLayout.addRow('color of an issue already downloaded', _)
+        self.formLayout.addRow(DefaultLabel('color of an issue already downloaded'), _)
 
-        _ = QtWidgets.QLabel()
+        _ = DefaultLabel()
         color = self.config['COLOR_ISSUE_ALREADY_READ']
         _.setStyleSheet(f'background-color: {color}')
-        self.formLayout.addRow('color of an issue already read', _)
+        self.formLayout.addRow(DefaultLabel('color of an issue already read'), _)

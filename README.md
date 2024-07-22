@@ -13,4 +13,3 @@ i hope you have a nice life
 - add more stuff in Help tab
 - add allowing more search results
 - add tutorial to the README file
-- possibly create QLabel subclass with all the good flags set, but then i have to change all occurences of QLabel to my label soooo i'm going to do this later
