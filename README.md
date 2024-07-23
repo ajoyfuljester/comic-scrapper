@@ -13,3 +13,4 @@ i hope you have a nice life
 - add more stuff in Help tab
 - add allowing more search results
 - add tutorial to the README file
+- add showing alternate image(s)
