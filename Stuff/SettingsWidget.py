@@ -12,7 +12,7 @@ widgetInputMap = {
         'COLOR_ISSUE_ALREADY_DOWNLOADED': 'text',
         'USE_SESSION': 'checkbox',
         'COLOR_ISSUE_ALREADY_READ': 'text',
-        'MARK_AS_AFTER_LAST_PAGE': 'checkbox',
+        'MARK_AS_READ_AFTER_LAST_PAGE': 'checkbox',
         'COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ': 'text',
 }
 

@@ -20,8 +20,6 @@ class ReaderWidget(QtWidgets.QTabWidget):
         self.addTab(tab, issue)
 
 class ReaderTab(QtWidgets.QWidget):
-    bigFont = QtGui.QFont()
-    bigFont.setPixelSize(12 * 2)
     def __init__(self, title, issue):
         super().__init__()
 
@@ -75,7 +73,7 @@ class ReaderTab(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.currentPage, 0, 0)
         self.pageNumberInput.setText(str(number + 1))
 
-        if config['MARK_AS_AFTER_LAST_PAGE'] and self.currentPageNumber == self.numberOfPages - 1:
+        if config['MARK_AS_READ_AFTER_LAST_PAGE'] and self.currentPageNumber == self.numberOfPages - 1:
             LibraryUtils.markIssueReadingProgress(self.title, self.issue)
 
         return self.currentPageNumber
