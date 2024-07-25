@@ -33,6 +33,7 @@ class ReaderTab(QtWidgets.QWidget):
 
         self.previousPageButton = QtWidgets.QPushButton()
         self.previousPageButton.setText('Previous page')
+        self.previousPageButton.setToolTip('Show previous page')
         self.previousPageButton.clicked.connect(self.previousPage)
         self.previousPageButton.setShortcut(Key.Key_Left)
         self.bottomLayout.addWidget(self.previousPageButton, 1)
@@ -43,6 +44,7 @@ class ReaderTab(QtWidgets.QWidget):
 
         self.pageNumberInput = QtWidgets.QLineEdit()
         self.pageNumberInput.setPlaceholderText('Page number')
+        self.pageNumberInput.setToolTip('Set page number')
         self.pageNumberInput.textEdited.connect(self.handlePageNumberInput)
         self.numberOfPagesLabel = DefaultLabel()
         self.numberOfPagesLabel.setText('/' + str(self.numberOfPages))
@@ -51,6 +53,7 @@ class ReaderTab(QtWidgets.QWidget):
 
         self.nextPageButton = QtWidgets.QPushButton()
         self.nextPageButton.setText('Next page')
+        self.nextPageButton.setToolTip('Show next page')
         self.nextPageButton.clicked.connect(self.nextPage)
         self.nextPageButton.setShortcut(Key.Key_Right)
         self.bottomLayout.addWidget(self.nextPageButton, 1)
