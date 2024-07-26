@@ -1,11 +1,12 @@
 from PySide6 import QtWidgets
-from Stuff import ConfigUtils, MainWidget, SessionUtils
+from Stuff import ConfigUtils, SessionUtils
+from Stuff.MainWidget import MainWidget
 
 config = ConfigUtils.loadConfig()
 
 app = QtWidgets.QApplication()
 
-mainWidget = MainWidget.MainWidget()
+mainWidget = MainWidget()
 mainWidget.resize(800, 600)
 
 if config['MAXIMIZE_WINDOW_ON_LAUNCH']:

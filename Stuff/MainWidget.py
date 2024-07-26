@@ -27,6 +27,8 @@ class MainWidget(QtWidgets.QTabWidget):
         self.addTab(self.helpWidget, 'Help')
         self.currentChanged.connect(self.handleTabChange)
 
+        self.setWindowTitle('Comic Scraper')
+
 
     def handleTabChange(self, i):
         text = self.tabText(i)
