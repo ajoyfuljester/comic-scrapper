@@ -8,8 +8,16 @@ First time using pyside6 and beautiful soup
 i hope you have a nice life
 
 # Table of contents
-- [Tutorial](#Tutorial)
 - [TODO](#TODO)
+- [Tutorial](#Tutorial)
+
+# TODO:
+- rename repository
+- add tooltips (Library, Browser, Settings, Generic)
+- add more stuff in Help tab
+- add allowing more search results
+- add tutorial to the README file
+- add showing alternate image(s)
 
 # Tutorial
 1. Start the program, go to ***Browser*** tab (starting tab) ![Step 1](tutorial/1.png "Step 1")
@@ -22,11 +30,3 @@ i hope you have a nice life
 8. Wait for the issue(s) to download ![Step 8](tutorial/8.png "Step 8")
 9. Select issue(s) and click button **Read** ![Step 9](tutorial/9.png "Step 9")
 10. Go to the ***Reader*** tab and read, use the buttons to change pages (or use arrow keys)![Step 10](tutorial/10.png "Step 10")
-
-# TODO:
-- rename repository
-- add tooltips (Library, Browser, Settings, Generic)
-- add more stuff in Help tab
-- add allowing more search results
-- add tutorial to the README file
-- add showing alternate image(s)
