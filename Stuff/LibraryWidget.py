@@ -35,6 +35,7 @@ class LibraryWidget(QtWidgets.QWidget):
         
         self.searchInput = QtWidgets.QLineEdit()
         self.searchInput.setPlaceholderText('Type here to search')
+        self.searchInput.setToolTip('Type here to search, press Enter to confirm')
         self.searchInput.returnPressed.connect(lambda: self.searchComicBooks(self.searchInput.text(), criteriaMap[self.searchCriteriaInput.currentText()]))
         self.gridLayout.addWidget(self.searchInput, 0, 0)
 
@@ -51,11 +52,13 @@ class LibraryWidget(QtWidgets.QWidget):
 
         self.refreshButton = QtWidgets.QPushButton()
         self.refreshButton.setText('Refresh books')
+        self.refreshButton.setToolTip('Refresh books in the library')
         self.refreshButton.clicked.connect(self.refreshBooks)
         self.buttonLayout.addWidget(self.refreshButton)
 
         self.deleteButton = QtWidgets.QPushButton()
         self.deleteButton.setText('Delete books')
+        self.deleteButton.setToolTip('Delete selected books from the library (including issues and reading progress)')
         self.deleteButton.clicked.connect(self.deleteSelected)
         self.buttonLayout.addWidget(self.deleteButton)
         
@@ -148,26 +151,31 @@ class IssueLibraryWidget(QtWidgets.QWidget):
 
         self.downloadButton = QtWidgets.QPushButton()
         self.downloadButton.setText('Download')
+        self.downloadButton.setToolTip('Download selected issues')
         self.downloadButton.clicked.connect(self.downloadSelected)
         self.buttonLayout.addWidget(self.downloadButton)
 
         self.readButton = QtWidgets.QPushButton()
         self.readButton.setText('Read')
+        self.readButton.setToolTip('Read selected issues')
         self.readButton.clicked.connect(self.readSelected)
         self.buttonLayout.addWidget(self.readButton)
 
         self.markAsReadButton = QtWidgets.QPushButton()
         self.markAsReadButton.setText('Mark as read')
+        self.markAsReadButton.setToolTip('Mark selected issues as read')
         self.markAsReadButton.clicked.connect(lambda: self.markSelected(True))
         self.buttonLayout.addWidget(self.markAsReadButton)
 
         self.markAsUnreadButton = QtWidgets.QPushButton()
         self.markAsUnreadButton.setText('Mark as unread')
+        self.markAsUnreadButton.setToolTip('Mark selected issues as unread')
         self.markAsUnreadButton.clicked.connect(lambda: self.markSelected(False))
         self.buttonLayout.addWidget(self.markAsUnreadButton)
 
         self.deleteButton = QtWidgets.QPushButton()
         self.deleteButton.setText('Delete')
+        self.deleteButton.setToolTip('Delete selected issues (does not mark issues as unread)')
         self.deleteButton.clicked.connect(self.deleteSelected)
         self.buttonLayout.addWidget(self.deleteButton)
 

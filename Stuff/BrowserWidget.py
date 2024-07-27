@@ -11,6 +11,7 @@ class BrowserWidget(QtWidgets.QWidget):
         
         self.searchInput = QtWidgets.QLineEdit()
         self.searchInput.setPlaceholderText('Type here to search')
+        self.searchInput.setToolTip('Type here to search, press Enter to confirm')
         self.searchInput.returnPressed.connect(self.searchComics)
 
         self.searchResultContainer = QtWidgets.QTableWidget()
@@ -37,6 +38,7 @@ class BrowserWidget(QtWidgets.QWidget):
 
         self.addToLibraryButton = QtWidgets.QPushButton()
         self.addToLibraryButton.setText('Add to library')
+        self.addToLibraryButton.setToolTip('Add selected books to the library')
         self.addToLibraryButton.clicked.connect(self.addSelectedToLibrary)
         self.gridLayout.addWidget(self.addToLibraryButton, 0, 1)
 
