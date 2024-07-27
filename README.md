@@ -30,4 +30,4 @@ i hope you have a nice life
 8. Wait for the issue(s) to download ![Step 8](tutorial/8.png "Step 8")
 9. Select issue(s) and click button **Read** ![Step 9](tutorial/9.png "Step 9")
 10. Go to the ***Reader*** tab and read, use the buttons to change pages (or use arrow keys)![Step 10](tutorial/10.png "Step 10")
-Tutorial created somewhere before version v2.0
+Tutorial created somewhere before version v2.0, resolution 800*600
