@@ -118,10 +118,10 @@ def getAlternateImageURL(url, n = 1, m = 0):
     return getSources(getIssues(url)[-n]['URL'], m + 1)[m]
 
 
-def search(keyword='The Sandman', getAlternateImageURLs = False, getImages = False):
+def search(keyword='The Sandman', page = 1, getAlternateImageURLs = False, getImages = False):
     url = 'https://comixextra.com/search'
     keyword = keyword.replace(' ', '+')
-    searchURL = url + '?keyword=' + keyword
+    searchURL = url + '?keyword=' + keyword + '&page=' + str(page)
     response = requests.get(searchURL)
 
     html = BeautifulSoup(response.text, 'html.parser')

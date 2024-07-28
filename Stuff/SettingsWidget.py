@@ -14,6 +14,7 @@ widgetInputMap = {
         'COLOR_ISSUE_ALREADY_READ': ['text', 'Color of an issue that is already read'],
         'MARK_AS_READ_AFTER_LAST_PAGE': ['checkbox', 'If issues should be marked as read after showing the last page'],
         'COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ': ['text', 'Color of an issue that is already downloaded and read'],
+        'NUMBER_OF_PAGES_TO_SCAN': ['number', 'Number of pages to scan, when searching in Browser (usually 25 book/page)']
 }
 
 
@@ -67,6 +68,10 @@ class SettingsWidget(QtWidgets.QWidget):
                     valueWidget = QtWidgets.QCheckBox()
                     valueWidget.setChecked(value)
                     valueWidget.checkStateChanged.connect(self.highlightChangedRows)
+                case 'number':
+                    valueWidget = QtWidgets.QSpinBox()
+                    valueWidget.setValue(value)
+                    valueWidget.valueChanged.connect(self.highlightChangedRows)
                 case _:
                     raise Exception('Widget type not found!')
 
@@ -128,6 +133,10 @@ class SettingsWidget(QtWidgets.QWidget):
                 value = valueWidget.text()
             case 'checkbox':
                 value = valueWidget.isChecked()
+            case 'number':
+                value = valueWidget.value()
+            case _:
+                raise Exception('Widget type not found!')
         
         return value
 

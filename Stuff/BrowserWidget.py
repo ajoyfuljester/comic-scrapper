@@ -4,15 +4,18 @@ from . import ScrapingUtils
 from .QtUtils import *
 from .GenericWidgets import ComicPreviewWidget
 from . import ConfigUtils
+from Stuff import GenericWidgets
 
 class BrowserWidget(QtWidgets.QWidget):
+    defaultStylesheet = 'color: black;'
+    highlightStylesheet = 'color: green;'
     def __init__(self):
         super().__init__()
         
         self.searchInput = QtWidgets.QLineEdit()
         self.searchInput.setPlaceholderText('Type here to search')
         self.searchInput.setToolTip('Type here to search, press Enter to confirm')
-        self.searchInput.returnPressed.connect(self.searchComics)
+        self.searchInput.returnPressed.connect(self.searchBooks)
 
         self.searchResultContainer = QtWidgets.QTableWidget()
         self.searchResultContainer.setColumnCount(4)
@@ -36,17 +39,58 @@ class BrowserWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.searchInput, 0, 0)
         self.gridLayout.addWidget(self.searchResultContainer, 1, 0)
 
+        self.buttonLayout = QtWidgets.QHBoxLayout()
+        self.gridLayout.addLayout(self.buttonLayout, 0, 1)
+
+        self.lastSearch = ''
+        self.numberOfScannedPages = 0
+        self.searchButton = QtWidgets.QPushButton()
+        self.searchButton.setText('Search')
+        self.searchButton.setToolTip('Search for books using inputted query')
+        self.searchButton.clicked.connect(self.searchBooks)
+        self.buttonLayout.addWidget(self.searchButton)
+
+        self.getMoreBooksPageCountInput = QtWidgets.QSpinBox()
+        self.getMoreBooksPageCountInput.setMinimum(1)
+        self.getMoreBooksPageCountInput.setValue(1)
+        self.getMoreBooksPageCountInput.setSuffix(' pages')
+        self.getMoreBooksPageCountInput.setToolTip('Number of pages to scan for more books (usually 25 books/page)')
+        self.buttonLayout.addWidget(self.getMoreBooksPageCountInput)
+
+        self.getMoreBooksButton = QtWidgets.QPushButton()
+        self.getMoreBooksButton.setText('Get more books')
+        self.getMoreBooksButton.setToolTip('Scan more pages for more books (usually 25 books/page)')
+        self.getMoreBooksButton.clicked.connect(self.getMoreBooks)
+        self.buttonLayout.addWidget(self.getMoreBooksButton)
+
+        self.numberOfScannedPagesLabel = GenericWidgets.DefaultLabel()
+        self.numberOfScannedPagesLabel.setStyleSheet(self.defaultStylesheet)
+        self.numberOfScannedPagesLabel.setText(f'Scanned {str(self.numberOfScannedPages)} pages')
+        self.numberOfScannedPagesLabel.setToolTip('Number of scanned pages for books')
+        self.buttonLayout.addWidget(self.numberOfScannedPagesLabel)
+
         self.addToLibraryButton = QtWidgets.QPushButton()
         self.addToLibraryButton.setText('Add to library')
         self.addToLibraryButton.setToolTip('Add selected books to the library')
         self.addToLibraryButton.clicked.connect(self.addSelectedToLibrary)
-        self.gridLayout.addWidget(self.addToLibraryButton, 0, 1)
+        self.buttonLayout.addWidget(self.addToLibraryButton)
 
 
-    def searchComics(self):
-        query = self.searchInput.text()
+    def searchBooks(self):
+        self.lastSearch = self.searchInput.text()
+        self.moreBooksAvailable = True
 
-        self.bookData = ScrapingUtils.search(query)
+        self.config = ConfigUtils.loadConfig()
+
+        n = self.config['NUMBER_OF_PAGES_TO_SCAN']
+
+        if n > 0:
+            self.bookData = ScrapingUtils.search(self.lastSearch)
+
+        self.numberOfScannedPages = 1
+        self.numberOfScannedPagesLabel.setStyleSheet(self.defaultStylesheet)
+        self.numberOfScannedPagesLabel.setText(f'Scanned {str(self.numberOfScannedPages)} pages')
+        n -= 1
 
         rowWidgets = [ComicTableWidgetItemSet(entry) for entry in self.bookData]
         self.searchResultContainer.setRowCount(0)
@@ -54,6 +98,37 @@ class BrowserWidget(QtWidgets.QWidget):
         for rowWidget in rowWidgets:
             rowWidget.appendSelf(self.searchResultContainer)
 
+        if n > 0:
+            self.getMoreBooks(n)
+    
+    def getMoreBooks(self, n = None):
+        numberOfPages = n or self.getMoreBooksPageCountInput.value()
+        books = []
+
+        for _ in range(numberOfPages):
+            if self.moreBooksAvailable:
+                _ = ScrapingUtils.search(self.lastSearch, self.numberOfScannedPages + 1)
+                l = len(_)
+                books.extend(_)
+                if l < 25:
+                    if l > 0:
+                        self.numberOfScannedPages += 1
+                    self.numberOfScannedPagesLabel.setText(f'Scanned {str(self.numberOfScannedPages)} pages')
+                    self.moreBooksAvailable = False
+                    self.numberOfScannedPagesLabel.setStyleSheet(self.highlightStylesheet)
+                    break
+                self.numberOfScannedPages += 1
+                self.numberOfScannedPagesLabel.setText(f'Scanned {str(self.numberOfScannedPages)} pages')
+
+
+        self.bookData.extend(books)
+
+        rowWidgets = [ComicTableWidgetItemSet(entry) for entry in books]
+
+        for rowWidget in rowWidgets:
+            rowWidget.appendSelf(self.searchResultContainer)
+
+    
     def showPreview(self, data):
         self.preview = ComicPreviewWidget(data)
         last = self.gridLayout.itemAtPosition(1, 1)
@@ -79,6 +154,7 @@ class BrowserWidget(QtWidgets.QWidget):
         for cb in selectedComicBooks:
             LibraryUtils.addToLibrary(cb['URL'])
         
+
         
 class ComicTableWidgetItemSet():
     defaultBackground = 'white'

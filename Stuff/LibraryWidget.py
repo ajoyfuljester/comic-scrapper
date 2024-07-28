@@ -174,7 +174,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.buttonLayout.addWidget(self.markAsUnreadButton)
 
         self.deleteButton = QtWidgets.QPushButton()
-        self.deleteButton.setText('Delete')
+        self.deleteButton.setText('Delete issues')
         self.deleteButton.setToolTip('Delete selected issues (does not mark issues as unread)')
         self.deleteButton.clicked.connect(self.deleteSelected)
         self.buttonLayout.addWidget(self.deleteButton)
