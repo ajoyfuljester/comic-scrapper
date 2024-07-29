@@ -30,6 +30,9 @@ class HelpWidget(QtWidgets.QWidget):
         _ = DefaultLabel("How to use: go to Browser, search for a book, select a book, click button add to library, go to Library, select a book, select an issue, click button download, select an issue, click button read, go to Reader, click button next page if you want to see the next page")
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
 
+        _ = DefaultLabel("Books don't work after updating? Try deleting data.json file in each book directory and add them again to library (you will most likely loose your reading progress). Doing this does not ensure that the app will work")
+        self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
+
         _ = DefaultLabel()
         color = self.config['COLOR_BOOK_ALREADY_IN_LIBRARY']
         _.setStyleSheet(f'background-color: {color}')

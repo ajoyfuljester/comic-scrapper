@@ -14,7 +14,6 @@ i hope you have a nice life
 # TODO:
 - rename repository
 - add more stuff in Help tab
-- add allowing more search results
 - add showing alternate image(s)
 
 # Tutorial
