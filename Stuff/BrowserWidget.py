@@ -43,7 +43,7 @@ class BrowserWidget(QtWidgets.QWidget):
         self.gridLayout.addLayout(self.buttonLayout, 0, 1)
 
         self.lastSearch = ''
-        self.numberOfScannedPages = 0
+        self.numberOfScrapedPages = 0
         self.searchButton = QtWidgets.QPushButton()
         self.searchButton.setText('Search')
         self.searchButton.setToolTip('Search for books using inputted query')
@@ -54,20 +54,20 @@ class BrowserWidget(QtWidgets.QWidget):
         self.getMoreBooksPageCountInput.setMinimum(1)
         self.getMoreBooksPageCountInput.setValue(1)
         self.getMoreBooksPageCountInput.setSuffix(' pages')
-        self.getMoreBooksPageCountInput.setToolTip('Number of pages to scan for more books (usually 25 books/page)')
+        self.getMoreBooksPageCountInput.setToolTip('Number of pages to scrape for more books (usually 25 books/page)')
         self.buttonLayout.addWidget(self.getMoreBooksPageCountInput)
 
         self.getMoreBooksButton = QtWidgets.QPushButton()
         self.getMoreBooksButton.setText('Get more books')
-        self.getMoreBooksButton.setToolTip('Scan more pages for more books (usually 25 books/page)')
+        self.getMoreBooksButton.setToolTip('Scrape more pages for more books (usually 25 books/page)')
         self.getMoreBooksButton.clicked.connect(self.getMoreBooks)
         self.buttonLayout.addWidget(self.getMoreBooksButton)
 
-        self.numberOfScannedPagesLabel = GenericWidgets.DefaultLabel()
-        self.numberOfScannedPagesLabel.setStyleSheet(self.defaultStylesheet)
-        self.numberOfScannedPagesLabel.setText(f'Scanned {str(self.numberOfScannedPages)} pages')
-        self.numberOfScannedPagesLabel.setToolTip('Number of scanned pages for books')
-        self.buttonLayout.addWidget(self.numberOfScannedPagesLabel)
+        self.numberOfScrapedPagesLabel = GenericWidgets.DefaultLabel()
+        self.numberOfScrapedPagesLabel.setStyleSheet(self.defaultStylesheet)
+        self.numberOfScrapedPagesLabel.setText(f'Scraped {str(self.numberOfScrapedPages)} pages')
+        self.numberOfScrapedPagesLabel.setToolTip('Number of scraped pages for books')
+        self.buttonLayout.addWidget(self.numberOfScrapedPagesLabel)
 
         self.addToLibraryButton = QtWidgets.QPushButton()
         self.addToLibraryButton.setText('Add to library')
@@ -82,14 +82,14 @@ class BrowserWidget(QtWidgets.QWidget):
 
         self.config = ConfigUtils.loadConfig()
 
-        n = self.config['NUMBER_OF_PAGES_TO_SCAN']
+        n = self.config['NUMBER_OF_PAGES_TO_SCRAPE']
 
         if n > 0:
             self.bookData = ScrapingUtils.search(self.lastSearch)
 
-        self.numberOfScannedPages = 1
-        self.numberOfScannedPagesLabel.setStyleSheet(self.defaultStylesheet)
-        self.numberOfScannedPagesLabel.setText(f'Scanned {str(self.numberOfScannedPages)} pages')
+        self.numberOfScrapedPages = 1
+        self.numberOfScrapedPagesLabel.setStyleSheet(self.defaultStylesheet)
+        self.numberOfScrapedPagesLabel.setText(f'Scraped {str(self.numberOfScrapedPages)} pages')
         n -= 1
 
         rowWidgets = [ComicTableWidgetItemSet(entry) for entry in self.bookData]
@@ -107,18 +107,18 @@ class BrowserWidget(QtWidgets.QWidget):
 
         for _ in range(numberOfPages):
             if self.moreBooksAvailable:
-                _ = ScrapingUtils.search(self.lastSearch, self.numberOfScannedPages + 1)
+                _ = ScrapingUtils.search(self.lastSearch, self.numberOfScrapedPages + 1)
                 l = len(_)
                 books.extend(_)
                 if l < 25:
                     if l > 0:
-                        self.numberOfScannedPages += 1
-                    self.numberOfScannedPagesLabel.setText(f'Scanned {str(self.numberOfScannedPages)} pages')
+                        self.numberOfScrapedPages += 1
+                    self.numberOfScrapedPagesLabel.setText(f'Scraped {str(self.numberOfScrapedPages)} pages')
                     self.moreBooksAvailable = False
-                    self.numberOfScannedPagesLabel.setStyleSheet(self.highlightStylesheet)
+                    self.numberOfScrapedPagesLabel.setStyleSheet(self.highlightStylesheet)
                     break
-                self.numberOfScannedPages += 1
-                self.numberOfScannedPagesLabel.setText(f'Scanned {str(self.numberOfScannedPages)} pages')
+                self.numberOfScrapedPages += 1
+                self.numberOfScrapedPagesLabel.setText(f'Scraped {str(self.numberOfScrapedPages)} pages')
 
 
         self.bookData.extend(books)
