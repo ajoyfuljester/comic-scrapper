@@ -20,13 +20,19 @@ class LibraryWidget(QtWidgets.QWidget):
         self.buttonLayout = QtWidgets.QHBoxLayout()
         self.gridLayout.addLayout(self.buttonLayout, 0, 1)
 
+        self.searchButton = QtWidgets.QPushButton()
+        self.searchButton.setText('Search')
+        self.searchButton.setToolTip('Search for books using inputted query')
+        self.searchButton.clicked.connect(self.defaultSearch)
+        self.buttonLayout.addWidget(self.searchButton)
+
         self.searchCriteriaInput = QtWidgets.QComboBox()
         self.searchCriteriaInput.addItem('Title')
         self.searchCriteriaInput.addItem('Status')
         self.searchCriteriaInput.addItem('Release Year')
         self.searchCriteriaInput.addItem('Latest Issue')
         self.buttonLayout.addWidget(self.searchCriteriaInput)
-        criteriaMap = {
+        self.criteriaMap = {
             'Title': 'title',
             'Status': 'status',
             'Release Year': 'releaseYear',
@@ -36,7 +42,7 @@ class LibraryWidget(QtWidgets.QWidget):
         self.searchInput = QtWidgets.QLineEdit()
         self.searchInput.setPlaceholderText('Type here to search')
         self.searchInput.setToolTip('Type here to search, press Enter to confirm')
-        self.searchInput.returnPressed.connect(lambda: self.searchComicBooks(self.searchInput.text(), criteriaMap[self.searchCriteriaInput.currentText()]))
+        self.searchInput.returnPressed.connect(self.defaultSearch)
         self.gridLayout.addWidget(self.searchInput, 0, 0)
 
         self.bookContainer = QtWidgets.QTableWidget()
@@ -73,7 +79,7 @@ class LibraryWidget(QtWidgets.QWidget):
             cell.setFlags(ItemFlag.ItemIsSelectable | ItemFlag.ItemIsEnabled)
             self.bookContainer.setItem(rowCount, i, cell)
     
-    def searchComicBooks(self, query, criteria): # maybe this function should be in LibraryUtils
+    def searchBooks(self, query, criteria): # maybe this function should be in LibraryUtils
         self.bookContainer.setRowCount(0)
         l = len(query)
         sortedComicBooks = [[-1, cb] for cb in self.books]
@@ -89,6 +95,8 @@ class LibraryWidget(QtWidgets.QWidget):
             info = cb['info']
             self.insertComicBook([info['title'], info['status'], info['releaseYear'], info['latest']])
 
+    def defaultSearch(self):
+        return self.searchBooks(self.searchInput.text(), self.criteriaMap[self.searchCriteriaInput.currentText()])
 
     def refreshBooks(self):
         self.hidePreview()
