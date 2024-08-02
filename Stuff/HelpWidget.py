@@ -48,5 +48,10 @@ class HelpWidget(QtWidgets.QWidget):
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow(DefaultLabel('color of an issue already read'), _)
 
-        _ = DefaultLabel("version v2.0")
+        _ = DefaultLabel()
+        color = self.config['COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ']
+        _.setStyleSheet(f'background-color: {color}')
+        self.formLayout.addRow(DefaultLabel('color of an issue already downloaded and read'), _)
+
+        _ = DefaultLabel("version v2.1")
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
