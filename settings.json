@@ -2,7 +2,7 @@
     "PATH_TO_LIBRARY": "./books/",
     "MAXIMIZE_WINDOW_ON_LAUNCH": true,
     "INVERT_ISSUE_ORDER": true,
-    "COLOR_BOOK_ALREADY_IN_LIBRARY": "#aaffaa",
+    "COLOR_BOOK_ALREADY_IN_LIBRARY": "#aaaaff",
     "COLOR_ISSUE_ALREADY_DOWNLOADED": "#aaffaa",
     "COLOR_ISSUE_ALREADY_READ": "#aaaaff",
     "COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ": "#aaffff",

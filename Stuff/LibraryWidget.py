@@ -6,6 +6,7 @@ from .QtUtils import *
 
 
 class LibraryWidget(QtWidgets.QWidget):
+    defaultBackground = 'white'
     def __init__(self, readingTarget):
         super().__init__()
         self.readingTarget = readingTarget
@@ -70,13 +71,25 @@ class LibraryWidget(QtWidgets.QWidget):
         
         self.refreshBooks()
 
-    def insertComicBook(self, data):
+    def insertBook(self, data):
         rowCount = self.bookContainer.rowCount()
 
+        readingProgress = LibraryUtils.getReadingProgress(data[0])
+        isRead = all(issue['isRead'] for issue in readingProgress)
+        isDownloaded = sorted([LibraryUtils.forceFilename(issue['name']) for issue in readingProgress]) == sorted(LibraryUtils.getDownloadedIssues(data[0]))
+
+        background = QtGui.QBrush(self.defaultBackground)
+        if isRead:
+            background = QtGui.QBrush(self.config['COLOR_ISSUE_ALREADY_READ'])
+        if isDownloaded:
+            background = QtGui.QBrush(self.config['COLOR_ISSUE_ALREADY_DOWNLOADED'])
+        if isRead and isDownloaded:
+            background = QtGui.QBrush(self.config['COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ'])
         self.bookContainer.setRowCount(rowCount + 1)
         for i, value in enumerate(data):
             cell = QtWidgets.QTableWidgetItem(value)
             cell.setFlags(ItemFlag.ItemIsSelectable | ItemFlag.ItemIsEnabled)
+            cell.setBackground(background)
             self.bookContainer.setItem(rowCount, i, cell)
     
     def searchBooks(self, query, criteria): # maybe this function should be in LibraryUtils
@@ -93,7 +106,7 @@ class LibraryWidget(QtWidgets.QWidget):
 
         for _, cb in sortedComicBooks:
             info = cb['info']
-            self.insertComicBook([info['title'], info['status'], info['releaseYear'], info['latest']])
+            self.insertBook([info['title'], info['status'], info['releaseYear'], info['latest']])
 
     def defaultSearch(self):
         return self.searchBooks(self.searchInput.text(), self.criteriaMap[self.searchCriteriaInput.currentText()])
@@ -101,11 +114,12 @@ class LibraryWidget(QtWidgets.QWidget):
     def refreshBooks(self):
         self.hidePreview()
         self.bookContainer.setRowCount(0)
+        self.config = ConfigUtils.loadConfig()
         self.books = [LibraryUtils.getBookInfo(book) for book in LibraryUtils.getBooks()]
 
         for cb in self.books:
             info = cb['info']
-            self.insertComicBook([info['title'], info['status'], info['releaseYear'], info['latest']])
+            self.insertBook([info['title'], info['status'], info['releaseYear'], info['latest']])
 
     def hidePreview(self):
         last = self.gridLayout.itemAtPosition(1, 1)
@@ -219,7 +233,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
             self.issueContainer.setItem(rowCount, i, cell)
 
     def refresh(self):
-        self.downloadedIssues = LibraryUtils.getDownloadedComicBookIssues(self.title)
+        self.downloadedIssues = LibraryUtils.getDownloadedIssues(self.title)
         self.readingProgress = LibraryUtils.getReadingProgress(self.title)
         self.details = LibraryUtils.getBookInfo(self.title)
         self.details['info']['numberOfDownloadedIssues'] = len(self.downloadedIssues)

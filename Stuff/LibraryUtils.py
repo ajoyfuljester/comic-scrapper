@@ -42,7 +42,7 @@ def truncateData(data, blacklist = blackListedKeys):
 
     return importantData
 
-def constructDataJSON(data):
+def constructJSON(data):
     return json.dumps(data, indent=4)
 
 
@@ -57,14 +57,14 @@ def addToLibrary(url):
     if not os.path.exists(path):
         os.mkdir(path)
     with open(os.path.join(path, 'data.json'), 'w') as file:
-        file.write(constructDataJSON(info))
+        file.write(constructJSON(info))
     with open(os.path.join(path, 'progress.json'), 'w') as file:
         for i in info['issues']:
             i['isRead'] = False
-        file.write(constructDataJSON(info['issues']))
+        file.write(constructJSON(info['issues']))
 
 
-def getDownloadedComicBookIssues(name):
+def getDownloadedIssues(name):
     config = ConfigUtils.loadConfig()
 
     path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(name))
@@ -79,7 +79,10 @@ def downloadIssue(title, info, imageNames = None, after = lambda: None, afterArg
         url += '/full'
     sources = ScrapingUtils.getSources(url)
     ScrapingUtils.saveSources(sources, os.path.join(config['PATH_TO_LIBRARY'], forceFilename(title), forceFilename(info['name'])), imageNames)
-    after(*afterArgs)
+    try:
+        after(*afterArgs)
+    except RuntimeError as _:
+        pass
 
 def downloadIssueAsThread(title, info, imageNames = None, after = lambda: None, afterArgs = []):
     thread = Thread(target=downloadIssue, args=(title, info, imageNames, after, afterArgs))
@@ -107,7 +110,7 @@ def markIssueReadingProgress(bookName, issueName, isRead = True):
     index = [i['name'] for i in progress].index(issueName)
     progress[index]['isRead'] = isRead
     with open(path, 'w') as file:
-        file.write(json.dumps(progress))
+        file.write(constructJSON(progress))
 
 def deleteIssue(bookName, issueName):
     config = ConfigUtils.loadConfig()
