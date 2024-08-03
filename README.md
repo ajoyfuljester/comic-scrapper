@@ -15,7 +15,6 @@ i hope you have a nice life
 - rename repository
 - add more stuff in Help tab
 - add showing alternate image(s)
-- add highlighting on issues with pending downloads
 
 # Tutorial
 1. Start the program, go to ***Browser*** tab (starting tab) ![Step 1](tutorial/1.png "Step 1")
