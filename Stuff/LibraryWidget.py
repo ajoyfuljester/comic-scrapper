@@ -238,11 +238,11 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.details = LibraryUtils.getBookInfo(self.title)
         self.details['info']['numberOfDownloadedIssues'] = len(self.downloadedIssues)
         self.details['info']['numberOfReadIssues'] = len(list(filter(lambda p: p['isRead'], self.readingProgress)))
-        config = ConfigUtils.loadConfig()
+        self.config = ConfigUtils.loadConfig()
         self.issueContainer.setRowCount(0)
         issues = self.details['issues']
         
-        if config['INVERT_ISSUE_ORDER']:
+        if self.config['INVERT_ISSUE_ORDER']:
             issues.reverse()
         for issue in issues:
             self.insertIssue(issue.values())
@@ -255,9 +255,15 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.preview.show()
 
     def downloadSelected(self):
+        self.config = ConfigUtils.loadConfig()
         rows = set([i.row() for i in self.issueContainer.selectedIndexes()])
         issuesDetails = [self.details['issues'][row] for row in rows]
 
+        columnCount = self.issueContainer.columnCount()
+        highlightBackground = QtGui.QBrush(self.config['COLOR_ISSUE_DOWNLOAD_PENDING'])
+        for y in rows:
+            for x in range(columnCount):
+                self.issueContainer.item(y, x).setBackground(highlightBackground)
         for issue in issuesDetails:
             LibraryUtils.downloadIssueAsThread(self.title, issue, None, self.needsRefresh.emit)
 
