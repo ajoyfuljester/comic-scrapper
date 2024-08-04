@@ -9,6 +9,7 @@ class HelpWidget(QtWidgets.QWidget):
         super().__init__()
 
         self.formLayout = QtWidgets.QFormLayout(self)
+        self.formLayout.setVerticalSpacing(12)
 
         self.refresh()
 
@@ -31,6 +32,9 @@ class HelpWidget(QtWidgets.QWidget):
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
 
         _ = DefaultLabel("Books don't work after updating? Try deleting data.json file in each book directory and add them again to library (you will most likely loose your reading progress). Doing this does not ensure that the app will work")
+        self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
+
+        _ = DefaultLabel("Resizing doesn't work/acts weird while window is not maximized? Try changing tabs (not Reader tabs) and resizing again. It sometimes works, i don't know what's going on or how to fix it, good luck")
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
 
         _ = DefaultLabel()
