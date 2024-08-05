@@ -1,6 +1,6 @@
 # Comic Scraper from comixextra.com, but also a reader or something
 ## APPARENTLY comixextra.com DID SOMETHING AND IT LOOKS LIKE IT'S A WRAPPER FOR readcomicsonline.ru, I DON'T KNOW IF IT WAS LIKE THIS BEFORE BUT AFTER FEW SEARCHES I FOUND OUT THAT THERE ARE A LOT LESS RESULTS, BOOKS ARE MISSING, INCLUDING THE BOOK IN THE TUTORIAL **WHICH I WAS READING!!!** >:(
-## i think i'm getting too angry, after all they are "free", yeah i shouldn't complain so much, sorry, i'm very grateful
+## i think i'm getting too angry, after all they are "free", yeah i shouldn't complain so much, sorry, i'm very grateful, please don't arrest me
 
 First time using pyside6 and beautiful soup
 
