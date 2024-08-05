@@ -1,4 +1,5 @@
-# Comic Scraper from comicextra.co, but also a reader or something
+# Comic Scraper from comicextra.com, but also a reader or something
+# APPARENTLY comicextra.com DID SOMETHING AND IT LOOKS LIKE IT'S A WRAPPER FOR readcomicsonline.ru, I DON'T KNOW IF IT WAS LIKE THIS BEFORE BUT AFTER FEW SEARCHES I FOUND OUT THAT THERE ARE A LOT LESS RESULTS, BOOKS ARE MISSING, INCLUDING THE BOOK IN THE TUTORIAL **WHICH I WAS READING!!!** I DON'T KNOW WHAT TO DO, RIGHT NOW I WILL CHECK IF THIS APP EVEN WORKS
 
 First time using pyside6 and beautiful soup
 
