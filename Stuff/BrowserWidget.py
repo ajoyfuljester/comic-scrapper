@@ -8,7 +8,7 @@ from Stuff import GenericWidgets
 
 class BrowserWidget(QtWidgets.QWidget):
     defaultStylesheet = 'color: black;'
-    highlightStylesheet = 'color: green;'
+    highlightStylesheet = 'color: blue;'
     def __init__(self):
         super().__init__()
         
@@ -66,7 +66,7 @@ class BrowserWidget(QtWidgets.QWidget):
         self.numberOfScrapedPagesLabel = GenericWidgets.DefaultLabel()
         self.numberOfScrapedPagesLabel.setStyleSheet(self.defaultStylesheet)
         self.numberOfScrapedPagesLabel.setText(f'Scraped {str(self.numberOfScrapedPages)} pages')
-        self.numberOfScrapedPagesLabel.setToolTip('Number of scraped pages for books')
+        self.numberOfScrapedPagesLabel.setToolTip('Number of scraped pages for books (if blue then no more pages)')
         self.buttonLayout.addWidget(self.numberOfScrapedPagesLabel)
 
         self.addToLibraryButton = QtWidgets.QPushButton()

@@ -68,6 +68,7 @@ class LibraryWidget(QtWidgets.QWidget):
         self.deleteButton.setToolTip('Delete selected books from the library (including issues and reading progress)')
         self.deleteButton.clicked.connect(self.deleteSelected)
         self.buttonLayout.addWidget(self.deleteButton)
+
         
         self.refreshBooks()
 
@@ -204,6 +205,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.gridLayout.addLayout(self.buttonLayout, 2, 0)
 
         self.needsRefresh.connect(self.refresh)
+
 
         self.refresh()
 

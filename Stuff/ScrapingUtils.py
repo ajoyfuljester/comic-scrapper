@@ -27,6 +27,7 @@ def getMultipleSources(urls):
 
 
 def getImageBytes(source):
+    source = source.strip()
     response = requests.get(source)
     imageBytes = response.content
     return imageBytes
@@ -114,8 +115,8 @@ def getFullComicBookInfo(url):
     return info
     
 
-def getAlternateImageURL(url, n = 1, m = 0):
-    return getSources(getIssues(url)[-n]['URL'], m + 1)[m]
+def getAlternativeImageURL(url, n = 1, m = 0):
+    return getSources(getIssues(url)[-n]['URL'] + '/full', m + 1)[m]
 
 
 def search(keyword='The Sandman', page = 1, getAlternateImageURLs = False, getImages = False):
@@ -138,7 +139,7 @@ def search(keyword='The Sandman', page = 1, getAlternateImageURLs = False, getIm
 
             'status': details[1].string.split(': ')[1],
             'releaseYear': details[2].string.split(': ')[1],
-            'latest': details[0].a.string,
+            'latest': details[0].a.string if details[0].a != None else '',
 
             'URL': rawEntry.h3.a['href'],
             'imageURL': rawEntry.img['src'],
@@ -146,7 +147,7 @@ def search(keyword='The Sandman', page = 1, getAlternateImageURLs = False, getIm
 
 
         if getAlternateImageURLs and entry['imageURL'] == 'https://comixextra.com/images/sites/default.jpg':
-            entry['imageURL'] = getAlternateImageURL(entry['URL'])
+            entry['imageURL'] = getAlternativeImageURL(entry['URL'])
 
 
         entries.append(entry)

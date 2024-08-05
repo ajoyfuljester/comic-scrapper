@@ -8,15 +8,17 @@ class ComicPreviewWidget(QtWidgets.QWidget):
     def __init__(self, info, verticalLayout = True):
         super().__init__()
 
+        self.info = info
+
 
         
-        keys = list(info.keys())
+        keys = list(self.info.keys())
 
 
         if 'imageURL' in keys or 'image' in keys:
-            info['image'] = info.get('image') or ScrapingUtils.getImageBytes(info['imageURL'])
+            self.info['image'] = self.info.get('image') or ScrapingUtils.getImageBytes(self.info['imageURL'])
             pixmap = QtGui.QPixmap()
-            pixmap.loadFromData(info['image'])
+            pixmap.loadFromData(self.info['image'])
             self.coverLabel = ResizingLabel(pixmap)
             self.coverLabel.setAlignment(Alignment.AlignCenter)
 
@@ -35,6 +37,8 @@ class ComicPreviewWidget(QtWidgets.QWidget):
             self.childLayout = QtWidgets.QHBoxLayout(self)
 
         self.childLayout.addWidget(self.coverLabel)
+        self.sideLayout = QtWidgets.QVBoxLayout()
+        self.childLayout.addLayout(self.sideLayout)
 
 
         d = {}
@@ -44,13 +48,31 @@ class ComicPreviewWidget(QtWidgets.QWidget):
             keys.remove('genres')
 
         for key in keys:
-            d[key] = str(info[key])
+            d[key] = str(self.info[key])
 
         if hasGenres:
-            d['genres'] = ", ".join(['<a href="' + genre['URL'] + '">' + genre['name'] + '</a>' for genre in info['genres']])
+            d['genres'] = ", ".join(['<a href="' + genre['URL'] + '">' + genre['name'] + '</a>' for genre in self.info['genres']])
 
         self.description = DescriptionWidget(d)
-        self.childLayout.addWidget(self.description)
+        self.sideLayout.addWidget(self.description)
+
+
+        self.alternativeImageNumber = -1
+        self.getAlternativeImageButton = QtWidgets.QPushButton()
+        self.getAlternativeImageButton.setText('Get alternative image')
+        self.getAlternativeImageButton.setToolTip('Get first page of an issue')
+        self.getAlternativeImageButton.clicked.connect(self.getAlternativeImage)
+        self.sideLayout.addWidget(self.getAlternativeImageButton)
+
+
+    def getAlternativeImage(self):
+        self.alternativeImageNumber += 1
+        url = ScrapingUtils.getAlternativeImageURL(self.info['URL'], 1, self.alternativeImageNumber)
+        img = ScrapingUtils.getImageBytes(url)
+        pixmap = QtGui.QPixmap()
+        pixmap.loadFromData(img)
+        self.coverLabel._pixmap = pixmap
+        self.coverLabel.resizeEvent({})
 
 
         
