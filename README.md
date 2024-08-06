@@ -16,6 +16,9 @@ i hope you have a nice life
 # TODO:
 - rename repository
 - add more stuff in Help tab
+- add some kind of error messages
+- add setting for auto refresh books in Library
+- add disk space occupancy(?) for each book
 
 # Tutorial
 1. Start the program, go to ***Browser*** tab (starting tab) ![Step 1](tutorial/1.png "Step 1")
