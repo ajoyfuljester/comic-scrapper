@@ -252,7 +252,10 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         lastPreview = self.gridLayout.itemAtPosition(1, 0)
         if lastPreview:
             lastPreview.widget().deleteLater()
-        self.preview = GenericWidgets.ComicPreviewWidget(self.details['info'], False)
+
+        data = self.details['info']
+        data['size'] = LibraryUtils.parseSize(LibraryUtils.getBookSize(self.title))
+        self.preview = GenericWidgets.ComicPreviewWidget(data, False)
         self.gridLayout.addWidget(self.preview, 1, 0)
         self.preview.show()
 

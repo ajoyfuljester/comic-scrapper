@@ -124,3 +124,24 @@ def deleteBook(bookName):
     config = ConfigUtils.loadConfig()
     path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(bookName))
     shutil.rmtree(path)
+
+def getBookSize(bookName):
+    config = ConfigUtils.loadConfig()
+    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(bookName))
+    size = 0
+    for dirpath, _, files in os.walk(path):
+        for file in files:
+            filepath = os.path.join(dirpath, file)
+            size += os.path.getsize(filepath)
+
+    return size
+
+
+prefixes = ['', 'k', 'M', 'G', 'T']
+def parseSize(n):
+    prefix = 0
+    while n >= 1000:
+        n = int(n)
+        n /= 1000
+        prefix += 1
+    return f"{n}{prefixes[prefix]}B"
