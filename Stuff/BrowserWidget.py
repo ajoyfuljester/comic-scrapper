@@ -3,7 +3,7 @@ from . import LibraryUtils
 from . import ScrapingUtils
 from .QtUtils import *
 from .GenericWidgets import ComicPreviewWidget
-from . import ConfigUtils
+from . import SettingsUtils
 from Stuff import GenericWidgets
 
 class BrowserWidget(QtWidgets.QWidget):
@@ -80,9 +80,9 @@ class BrowserWidget(QtWidgets.QWidget):
         self.lastSearch = self.searchInput.text()
         self.moreBooksAvailable = True
 
-        self.config = ConfigUtils.loadConfig()
+        self.settings = SettingsUtils.loadSettings()
 
-        n = self.config['NUMBER_OF_PAGES_TO_SCRAPE']
+        n = self.settings['NUMBER_OF_PAGES_TO_SCRAPE']
 
         if n > 0:
             self.bookData = ScrapingUtils.search(self.lastSearch)
@@ -159,7 +159,7 @@ class BrowserWidget(QtWidgets.QWidget):
 class ComicTableWidgetItemSet():
     defaultBackground = 'white'
     def __init__(self, details):
-        self.highlightBackground = ConfigUtils.loadConfig()['COLOR_BOOK_ALREADY_IN_LIBRARY']
+        self.highlightBackground = SettingsUtils.loadSettings()['COLOR_BOOK_ALREADY_IN_LIBRARY']
 
         self.cellData = [
             details['title'],

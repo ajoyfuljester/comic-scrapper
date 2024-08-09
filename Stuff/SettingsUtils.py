@@ -1,13 +1,13 @@
 import json
 
-def loadConfig():
+def loadSettings():
     with open('settings.json') as file:
-        config = json.loads(file.read())
+        settings = json.loads(file.read())
 
-    return config
+    return settings
 
 
-def writeConfig(obj):
+def writeSettings(obj):
     s = json.dumps(obj, indent=4)
     with open('settings.json', 'w') as file:
         file.write(s)

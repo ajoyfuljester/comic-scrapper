@@ -1,6 +1,6 @@
 from PySide6 import QtWidgets
 from .QtUtils import *
-from . import ConfigUtils
+from . import SettingsUtils
 from .GenericWidgets import DefaultLabel
 
 
@@ -16,6 +16,7 @@ widgetInputMap = {
         'COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ': ['text', 'Color of an issue that is already downloaded and read'],
         'NUMBER_OF_PAGES_TO_SCRAPE': ['number', 'Number of pages to scan, when searching in Browser (usually 25 book/page)'],
         'COLOR_ISSUE_DOWNLOAD_PENDING': ['text', 'Color of an issue that is being downloaded in the background'],
+        'AUTO_REFRESH_LIBRARY': ['checkbox', 'If Library should be refreshed every time its tab is selected'],
 }
 
 
@@ -34,7 +35,7 @@ class SettingsWidget(QtWidgets.QWidget):
         self.mainLayout.addLayout(self.buttonLayout)
 
         
-        self.config = ConfigUtils.loadConfig()
+        self.settings = SettingsUtils.loadSettings()
 
         
         self.resetButton = QtWidgets.QPushButton('Reset')
@@ -46,7 +47,7 @@ class SettingsWidget(QtWidgets.QWidget):
         self.saveButton = QtWidgets.QPushButton()
         self.saveButton.setText('Save')
         self.saveButton.setToolTip('Save changed settings')
-        self.saveButton.clicked.connect(lambda _: (self.saveConfig(), self.generateEditor())) # This is cursed i hate this thing, but i don't want 2 lines 
+        self.saveButton.clicked.connect(lambda _: (self.saveSettings(), self.generateEditor())) # This is cursed i hate this thing, but i don't want 2 lines 
         self.buttonLayout.addWidget(self.saveButton)
 
 
@@ -56,7 +57,7 @@ class SettingsWidget(QtWidgets.QWidget):
             self.formLayout.itemAt(i, ItemRole.LabelRole).widget().deleteLater()
             self.formLayout.itemAt(i, ItemRole.FieldRole).widget().deleteLater()
             self.formLayout.removeRow(i)
-        for key, value in self.config.items():
+        for key, value in self.settings.items():
             inputInfo = widgetInputMap[key]
             valueWidget = None
             match inputInfo[0]:
@@ -89,7 +90,7 @@ class SettingsWidget(QtWidgets.QWidget):
         self.highlightChangedRows()
 
 
-    def saveConfig(self):
+    def saveSettings(self):
         rowCount = self.formLayout.rowCount()
         for i in range(rowCount):
             key = self.formLayout.itemAt(i, ItemRole.LabelRole).widget().text()
@@ -98,10 +99,10 @@ class SettingsWidget(QtWidgets.QWidget):
             value = self.getWidgetValue(valueWidget, key)
 
 
-            self.config[key] = value
+            self.settings[key] = value
 
 
-        ConfigUtils.writeConfig(self.config)
+        SettingsUtils.writeSettings(self.settings)
         self.highlightChangedRows()
     
 
@@ -117,7 +118,7 @@ class SettingsWidget(QtWidgets.QWidget):
             value = self.getWidgetValue(valueWidget, key)
             
 
-            if self.config[key] == value:
+            if self.settings[key] == value:
                 keyWidget.setStyleSheet(self.defaultKeyStylesheet)
                 valueWidget.setStyleSheet(self.defaultValueStylesheet)
             else:

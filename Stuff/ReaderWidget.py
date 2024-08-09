@@ -1,5 +1,5 @@
 from PySide6 import QtWidgets, QtGui
-from . import ConfigUtils
+from . import SettingsUtils
 from .GenericWidgets import ResizingLabel, DefaultLabel
 from . import LibraryUtils
 from .QtUtils import *
@@ -62,7 +62,7 @@ class ReaderTab(QtWidgets.QWidget):
         self.setPage(self.currentPageNumber)
 
     def setPage(self, number):
-        config = ConfigUtils.loadConfig()
+        settings = SettingsUtils.loadSettings()
         if number >= self.numberOfPages or number < 0:
             return self.currentPageNumber
         last = self.gridLayout.itemAtPosition(0, 0)
@@ -76,7 +76,7 @@ class ReaderTab(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.currentPage, 0, 0)
         self.pageNumberInput.setText(str(number + 1))
 
-        if config['MARK_AS_READ_AFTER_LAST_PAGE'] and self.currentPageNumber == self.numberOfPages - 1:
+        if settings['MARK_AS_READ_AFTER_LAST_PAGE'] and self.currentPageNumber == self.numberOfPages - 1:
             LibraryUtils.markIssueReadingProgress(self.title, self.issue)
 
         return self.currentPageNumber

@@ -1,6 +1,6 @@
 from PySide6 import QtWidgets
 from .QtUtils import *
-from . import ConfigUtils
+from . import SettingsUtils
 from .GenericWidgets import DefaultLabel
 
 
@@ -26,7 +26,7 @@ class HelpWidget(QtWidgets.QWidget):
             if _:
                 _.widget().deleteLater()
             self.formLayout.removeRow(i)
-        self.config = ConfigUtils.loadConfig()
+        self.settings = SettingsUtils.loadSettings()
 
         _ = DefaultLabel("How to use: go to Browser, search for a book, select a book, click button add to library, go to Library, select a book, select an issue, click button download, select an issue, click button read, go to Reader, click button next page if you want to see the next page")
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
@@ -38,27 +38,27 @@ class HelpWidget(QtWidgets.QWidget):
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
 
         _ = DefaultLabel()
-        color = self.config['COLOR_BOOK_ALREADY_IN_LIBRARY']
+        color = self.settings['COLOR_BOOK_ALREADY_IN_LIBRARY']
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow(DefaultLabel('color of a comic book already in library'), _)
 
         _ = DefaultLabel()
-        color = self.config['COLOR_ISSUE_ALREADY_DOWNLOADED']
+        color = self.settings['COLOR_ISSUE_ALREADY_DOWNLOADED']
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow(DefaultLabel('color of an issue already downloaded'), _)
 
         _ = DefaultLabel()
-        color = self.config['COLOR_ISSUE_ALREADY_READ']
+        color = self.settings['COLOR_ISSUE_ALREADY_READ']
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow(DefaultLabel('color of an issue already read'), _)
 
         _ = DefaultLabel()
-        color = self.config['COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ']
+        color = self.settings['COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ']
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow(DefaultLabel('color of an issue already downloaded and read'), _)
 
         _ = DefaultLabel()
-        color = self.config['COLOR_ISSUE_DOWNLOAD_PENDING']
+        color = self.settings['COLOR_ISSUE_DOWNLOAD_PENDING']
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow(DefaultLabel('color of an issue that is being downloaded in the background (highlighting disappears when issues are refreshed)'), _)
 

@@ -1,5 +1,5 @@
 from PySide6 import QtWidgets, QtGui
-from . import ConfigUtils
+from . import SettingsUtils
 from . import GenericWidgets
 from . import LibraryUtils
 from .QtUtils import *
@@ -81,11 +81,11 @@ class LibraryWidget(QtWidgets.QWidget):
 
         background = QtGui.QBrush(self.defaultBackground)
         if isRead:
-            background = QtGui.QBrush(self.config['COLOR_ISSUE_ALREADY_READ'])
+            background = QtGui.QBrush(self.settings['COLOR_ISSUE_ALREADY_READ'])
         if isDownloaded:
-            background = QtGui.QBrush(self.config['COLOR_ISSUE_ALREADY_DOWNLOADED'])
+            background = QtGui.QBrush(self.settings['COLOR_ISSUE_ALREADY_DOWNLOADED'])
         if isRead and isDownloaded:
-            background = QtGui.QBrush(self.config['COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ'])
+            background = QtGui.QBrush(self.settings['COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ'])
         self.bookContainer.setRowCount(rowCount + 1)
         for i, value in enumerate(data):
             cell = QtWidgets.QTableWidgetItem(value)
@@ -115,7 +115,7 @@ class LibraryWidget(QtWidgets.QWidget):
     def refreshBooks(self):
         self.hidePreview()
         self.bookContainer.setRowCount(0)
-        self.config = ConfigUtils.loadConfig()
+        self.settings = SettingsUtils.loadSettings()
         self.books = [LibraryUtils.getBookInfo(book) for book in LibraryUtils.getBooks()]
 
         for cb in self.books:
@@ -217,10 +217,10 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         isDownloaded = LibraryUtils.forceFilename(data[0]) in self.downloadedIssues
         index = [p['name'] for p in self.readingProgress].index(data[0])
         isRead = self.readingProgress[index]['isRead']
-        config = ConfigUtils.loadConfig()
-        self.highlightDownloadedBackground = config['COLOR_ISSUE_ALREADY_DOWNLOADED']
-        self.highlightReadBackground = config['COLOR_ISSUE_ALREADY_READ']
-        self.highlightDownloadedAndReadBackground = config['COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ']
+        settings = SettingsUtils.loadSettings()
+        self.highlightDownloadedBackground = settings['COLOR_ISSUE_ALREADY_DOWNLOADED']
+        self.highlightReadBackground = settings['COLOR_ISSUE_ALREADY_READ']
+        self.highlightDownloadedAndReadBackground = settings['COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ']
         brush = QtGui.QBrush(self.defaultBackground)
         if isDownloaded:
             brush = QtGui.QBrush(self.highlightDownloadedBackground)
@@ -240,11 +240,11 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.details = LibraryUtils.getBookInfo(self.title)
         self.details['info']['numberOfDownloadedIssues'] = len(self.downloadedIssues)
         self.details['info']['numberOfReadIssues'] = len(list(filter(lambda p: p['isRead'], self.readingProgress)))
-        self.config = ConfigUtils.loadConfig()
+        self.settings = SettingsUtils.loadSettings()
         self.issueContainer.setRowCount(0)
         issues = self.details['issues']
         
-        if self.config['INVERT_ISSUE_ORDER']:
+        if self.settings['INVERT_ISSUE_ORDER']:
             issues.reverse()
         for issue in issues:
             self.insertIssue(issue.values())
@@ -260,12 +260,12 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.preview.show()
 
     def downloadSelected(self):
-        self.config = ConfigUtils.loadConfig()
+        self.settings = SettingsUtils.loadSettings()
         rows = set([i.row() for i in self.issueContainer.selectedIndexes()])
         issuesDetails = [self.details['issues'][row] for row in rows]
 
         columnCount = self.issueContainer.columnCount()
-        highlightBackground = QtGui.QBrush(self.config['COLOR_ISSUE_DOWNLOAD_PENDING'])
+        highlightBackground = QtGui.QBrush(self.settings['COLOR_ISSUE_DOWNLOAD_PENDING'])
         for y in rows:
             for x in range(columnCount):
                 self.issueContainer.item(y, x).setBackground(highlightBackground)

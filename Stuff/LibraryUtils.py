@@ -1,4 +1,4 @@
-from . import ConfigUtils
+from . import SettingsUtils
 import os
 import shutil
 import json
@@ -9,22 +9,22 @@ def forceFilename(name):
     return "".join([c if c not in r':?\/"*<>|' else "_" for c in name])
 
 def createLibraryIfDoesNotExist():
-    config = ConfigUtils.loadConfig()
+    settings = SettingsUtils.loadSettings()
 
-    pathToLibrary = config['PATH_TO_LIBRARY']
+    pathToLibrary = settings['PATH_TO_LIBRARY']
     if not os.path.exists(pathToLibrary):
         os.mkdir(pathToLibrary)
 
 
 def getBooks():
-    config = ConfigUtils.loadConfig()
-    books = next(os.walk(config['PATH_TO_LIBRARY']), [None, []])[1]
-    return list(filter(lambda book: os.path.exists(os.path.join(config['PATH_TO_LIBRARY'], book, 'data.json')), books))
+    settings = SettingsUtils.loadSettings()
+    books = next(os.walk(settings['PATH_TO_LIBRARY']), [None, []])[1]
+    return list(filter(lambda book: os.path.exists(os.path.join(settings['PATH_TO_LIBRARY'], book, 'data.json')), books))
 
 
 def getBookInfo(name):
-    config = ConfigUtils.loadConfig()
-    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(name), 'data.json')
+    settings = SettingsUtils.loadSettings()
+    path = os.path.join(settings['PATH_TO_LIBRARY'], forceFilename(name), 'data.json')
 
     with open(path, 'r') as file:
         data = json.loads(file.read())
@@ -48,9 +48,9 @@ def constructJSON(data):
 
 
 def addToLibrary(url):
-    config = ConfigUtils.loadConfig()
+    settings = SettingsUtils.loadSettings()
 
-    pathToLibrary = config['PATH_TO_LIBRARY']
+    pathToLibrary = settings['PATH_TO_LIBRARY']
     info = ScrapingUtils.getFullComicBookInfo(url)
 
     path = os.path.join(pathToLibrary, forceFilename(info['info']['title']))
@@ -65,20 +65,20 @@ def addToLibrary(url):
 
 
 def getDownloadedIssues(name):
-    config = ConfigUtils.loadConfig()
+    settings = SettingsUtils.loadSettings()
 
-    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(name))
+    path = os.path.join(settings['PATH_TO_LIBRARY'], forceFilename(name))
 
     return next(os.walk(path), [None, []])[1]
 
 
 def downloadIssue(title, info, imageNames = None, after = lambda: None, afterArgs = []):
-    config = ConfigUtils.loadConfig()
+    settings = SettingsUtils.loadSettings()
     url = info['URL']
     if url[-5:] != '/full':
         url += '/full'
     sources = ScrapingUtils.getSources(url)
-    ScrapingUtils.saveSources(sources, os.path.join(config['PATH_TO_LIBRARY'], forceFilename(title), forceFilename(info['name'])), imageNames)
+    ScrapingUtils.saveSources(sources, os.path.join(settings['PATH_TO_LIBRARY'], forceFilename(title), forceFilename(info['name'])), imageNames)
     try:
         after(*afterArgs)
     except RuntimeError as _:
@@ -90,22 +90,22 @@ def downloadIssueAsThread(title, info, imageNames = None, after = lambda: None, 
 
 
 def getIssuePagesPaths(title, issue):
-    config = ConfigUtils.loadConfig()
+    settings = SettingsUtils.loadSettings()
 
-    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(title), forceFilename(issue))
+    path = os.path.join(settings['PATH_TO_LIBRARY'], forceFilename(title), forceFilename(issue))
 
     return [os.path.join(path, p) for p in sorted(next(os.walk(path), [None, None, []])[2], key=lambda x: int(x[:-4]))]
 
 def getReadingProgress(bookName):
-    config = ConfigUtils.loadConfig()
-    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(bookName), 'progress.json')
+    settings = SettingsUtils.loadSettings()
+    path = os.path.join(settings['PATH_TO_LIBRARY'], forceFilename(bookName), 'progress.json')
     with open(path, 'r') as file:
         return json.loads(file.read())
 
 
 def markIssueReadingProgress(bookName, issueName, isRead = True):
-    config = ConfigUtils.loadConfig()
-    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(bookName), 'progress.json')
+    settings = SettingsUtils.loadSettings()
+    path = os.path.join(settings['PATH_TO_LIBRARY'], forceFilename(bookName), 'progress.json')
     progress = getReadingProgress(bookName)
     index = [i['name'] for i in progress].index(issueName)
     progress[index]['isRead'] = isRead
@@ -113,21 +113,21 @@ def markIssueReadingProgress(bookName, issueName, isRead = True):
         file.write(constructJSON(progress))
 
 def deleteIssue(bookName, issueName):
-    config = ConfigUtils.loadConfig()
-    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(bookName), forceFilename(issueName))
+    settings = SettingsUtils.loadSettings()
+    path = os.path.join(settings['PATH_TO_LIBRARY'], forceFilename(bookName), forceFilename(issueName))
     if not os.path.exists(path):
         return
     shutil.rmtree(path)
 
 
 def deleteBook(bookName):
-    config = ConfigUtils.loadConfig()
-    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(bookName))
+    settings = SettingsUtils.loadSettings()
+    path = os.path.join(settings['PATH_TO_LIBRARY'], forceFilename(bookName))
     shutil.rmtree(path)
 
 def getBookSize(bookName):
-    config = ConfigUtils.loadConfig()
-    path = os.path.join(config['PATH_TO_LIBRARY'], forceFilename(bookName))
+    settings = SettingsUtils.loadSettings()
+    path = os.path.join(settings['PATH_TO_LIBRARY'], forceFilename(bookName))
     size = 0
     for dirpath, _, files in os.walk(path):
         for file in files:

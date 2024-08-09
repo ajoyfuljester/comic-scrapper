@@ -1,31 +1,31 @@
 from PySide6 import QtWidgets
-from Stuff import ConfigUtils, SessionUtils
+from Stuff import SettingsUtils, SessionUtils
 from Stuff.MainWidget import MainWidget
 
 if __name__ == '__main__':
 
-    config = ConfigUtils.loadConfig()
+    settings = SettingsUtils.loadSettings()
 
     app = QtWidgets.QApplication()
 
     mainWidget = MainWidget()
     mainWidget.resize(800, 600)
 
-    if config['MAXIMIZE_WINDOW_ON_LAUNCH']:
+    if settings['MAXIMIZE_WINDOW_ON_LAUNCH']:
         mainWidget.showMaximized()
     else:
         mainWidget.show()
 
-    if config['USE_SESSION']:
+    if settings['USE_SESSION']:
         data = SessionUtils.loadSession()
         for reading in data['reading']:
             mainWidget.readerWidget.addReaderTab(reading['title'], reading['issue'], reading['pageNumber'])
 
     app.exec()
 
-    config = ConfigUtils.loadConfig()
+    settings = SettingsUtils.loadSettings()
 
-    if config['USE_SESSION']:
+    if settings['USE_SESSION']:
         numberOfTabs = mainWidget.readerWidget.count()
         data = {'reading': []}
         for i in range(numberOfTabs):
