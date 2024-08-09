@@ -60,7 +60,7 @@ class LibraryWidget(QtWidgets.QWidget):
         self.refreshButton = QtWidgets.QPushButton()
         self.refreshButton.setText('Refresh books')
         self.refreshButton.setToolTip('Refresh books in the library')
-        self.refreshButton.clicked.connect(self.refreshBooks)
+        self.refreshButton.clicked.connect(self.refresh)
         self.buttonLayout.addWidget(self.refreshButton)
 
         self.deleteButton = QtWidgets.QPushButton()
@@ -70,7 +70,7 @@ class LibraryWidget(QtWidgets.QWidget):
         self.buttonLayout.addWidget(self.deleteButton)
 
         
-        self.refreshBooks()
+        self.refresh()
 
     def insertBook(self, data):
         rowCount = self.bookContainer.rowCount()
@@ -93,7 +93,7 @@ class LibraryWidget(QtWidgets.QWidget):
             cell.setBackground(background)
             self.bookContainer.setItem(rowCount, i, cell)
     
-    def searchBooks(self, query, criteria): # maybe this function should be in LibraryUtils
+    def search(self, query, criteria): # maybe this function should be in LibraryUtils
         self.bookContainer.setRowCount(0)
         l = len(query)
         sortedComicBooks = [[-1, cb] for cb in self.books]
@@ -110,9 +110,9 @@ class LibraryWidget(QtWidgets.QWidget):
             self.insertBook([info['title'], info['status'], info['releaseYear'], info['latest']])
 
     def defaultSearch(self):
-        return self.searchBooks(self.searchInput.text(), self.criteriaMap[self.searchCriteriaInput.currentText()])
+        return self.search(self.searchInput.text(), self.criteriaMap[self.searchCriteriaInput.currentText()])
 
-    def refreshBooks(self):
+    def refresh(self):
         self.hidePreview()
         self.bookContainer.setRowCount(0)
         self.settings = SettingsUtils.loadSettings()
@@ -145,7 +145,7 @@ class LibraryWidget(QtWidgets.QWidget):
         bookDetails = [self.books[row] for row in rows]
         for book in bookDetails:
             LibraryUtils.deleteBook(book['info']['title'])
-            self.refreshBooks()
+            self.refresh()
 
 class IssueLibraryWidget(QtWidgets.QWidget):
     defaultBackground = 'white'
