@@ -6,7 +6,6 @@ from .QtUtils import *
 
 
 class LibraryWidget(QtWidgets.QWidget):
-    defaultBackground = 'white'
     def __init__(self, readingTarget):
         super().__init__()
         self.readingTarget = readingTarget
@@ -79,7 +78,7 @@ class LibraryWidget(QtWidgets.QWidget):
         isRead = all(issue['isRead'] for issue in readingProgress)
         isDownloaded = sorted([LibraryUtils.forceFilename(issue['name']) for issue in readingProgress]) == sorted(LibraryUtils.getDownloadedIssues(data[0]))
 
-        background = QtGui.QBrush(self.defaultBackground)
+        background = QtGui.QBrush(self.settings['COLOR_CELL'])
         if isRead:
             background = QtGui.QBrush(self.settings['COLOR_ISSUE_ALREADY_READ'])
         if isDownloaded:
@@ -148,9 +147,8 @@ class LibraryWidget(QtWidgets.QWidget):
             self.refresh()
 
 class IssueLibraryWidget(QtWidgets.QWidget):
-    defaultBackground = 'white'
-
     needsRefresh = QtCore.Signal()
+
     def __init__(self, title, readingTarget):
         super().__init__()
         self.title = title
@@ -221,7 +219,7 @@ class IssueLibraryWidget(QtWidgets.QWidget):
         self.highlightDownloadedBackground = settings['COLOR_ISSUE_ALREADY_DOWNLOADED']
         self.highlightReadBackground = settings['COLOR_ISSUE_ALREADY_READ']
         self.highlightDownloadedAndReadBackground = settings['COLOR_ISSUE_ALREADY_DOWNLOADED_AND_READ']
-        brush = QtGui.QBrush(self.defaultBackground)
+        brush = QtGui.QBrush(self.settings['COLOR_CELL'])
         if isDownloaded:
             brush = QtGui.QBrush(self.highlightDownloadedBackground)
         if isRead:

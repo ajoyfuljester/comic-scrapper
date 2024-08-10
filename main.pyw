@@ -8,6 +8,10 @@ if __name__ == '__main__':
 
     app = QtWidgets.QApplication()
 
+
+    if settings['FUSION_THEME']:
+        app.setStyle('fusion')
+
     mainWidget = MainWidget()
     mainWidget.resize(800, 600)
 

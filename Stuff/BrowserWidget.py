@@ -7,10 +7,11 @@ from . import SettingsUtils
 from Stuff import GenericWidgets
 
 class BrowserWidget(QtWidgets.QWidget):
-    defaultStylesheet = 'color: black;'
-    highlightStylesheet = 'color: blue;'
     def __init__(self):
         super().__init__()
+
+        self.settings = SettingsUtils.loadSettings()
+        self.highlightStylesheet = f"color: {self.settings['COLOR_ACCENT']};"
         
         self.searchInput = QtWidgets.QLineEdit()
         self.searchInput.setPlaceholderText('Type here to search')
@@ -64,9 +65,8 @@ class BrowserWidget(QtWidgets.QWidget):
         self.buttonLayout.addWidget(self.getMoreBooksButton)
 
         self.numberOfScrapedPagesLabel = GenericWidgets.DefaultLabel()
-        self.numberOfScrapedPagesLabel.setStyleSheet(self.defaultStylesheet)
         self.numberOfScrapedPagesLabel.setText(f'Scraped {str(self.numberOfScrapedPages)} pages')
-        self.numberOfScrapedPagesLabel.setToolTip('Number of scraped pages for books (if blue then no more pages)')
+        self.numberOfScrapedPagesLabel.setToolTip('Number of scraped pages for books (if highlighted then no more pages)')
         self.buttonLayout.addWidget(self.numberOfScrapedPagesLabel)
 
         self.addToLibraryButton = QtWidgets.QPushButton()
@@ -88,7 +88,7 @@ class BrowserWidget(QtWidgets.QWidget):
             self.bookData = ScrapingUtils.search(self.lastSearch)
 
         self.numberOfScrapedPages = 1
-        self.numberOfScrapedPagesLabel.setStyleSheet(self.defaultStylesheet)
+        self.numberOfScrapedPagesLabel.setStyleSheet('')
         self.numberOfScrapedPagesLabel.setText(f'Scraped {str(self.numberOfScrapedPages)} pages')
         n -= 1
 
@@ -157,9 +157,9 @@ class BrowserWidget(QtWidgets.QWidget):
 
         
 class ComicTableWidgetItemSet():
-    defaultBackground = 'white'
     def __init__(self, details):
-        self.highlightBackground = SettingsUtils.loadSettings()['COLOR_BOOK_ALREADY_IN_LIBRARY']
+        self.settings = SettingsUtils.loadSettings()
+        self.highlightBackground = self.settings['COLOR_BOOK_ALREADY_IN_LIBRARY']
 
         self.cellData = [
             details['title'],
@@ -171,7 +171,7 @@ class ComicTableWidgetItemSet():
 
         self.cellWidgets = [QtWidgets.QTableWidgetItem(cell) for cell in self.cellData]
         highlight = LibraryUtils.forceFilename(self.cellData[0]) in LibraryUtils.getBooks()
-        brush = QtGui.QBrush(self.highlightBackground if highlight else self.defaultBackground)
+        brush = QtGui.QBrush(self.highlightBackground if highlight else self.settings['COLOR_CELL'])
         for cell in self.cellWidgets:
             cell.setFlags(ItemFlag.ItemIsSelectable | ItemFlag.ItemIsEnabled)
             cell.setBackground(brush)

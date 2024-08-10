@@ -62,5 +62,15 @@ class HelpWidget(QtWidgets.QWidget):
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow(DefaultLabel('color of an issue that is being downloaded in the background (highlighting disappears when issues are refreshed)'), _)
 
-        _ = DefaultLabel("version v2.1")
+        _ = DefaultLabel()
+        color = self.settings['COLOR_ACCENT']
+        _.setStyleSheet(f'background-color: {color}')
+        self.formLayout.addRow(DefaultLabel('color of a few highlights, accents'), _)
+
+        _ = DefaultLabel()
+        color = self.settings['COLOR_CELL']
+        _.setStyleSheet(f'background-color: {color}')
+        self.formLayout.addRow(DefaultLabel('color of a cell in a table'), _)
+
+        _ = DefaultLabel("version v2.2")
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)

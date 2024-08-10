@@ -17,14 +17,13 @@ widgetInputMap = {
         'NUMBER_OF_PAGES_TO_SCRAPE': ['number', 'Number of pages to scan, when searching in Browser (usually 25 book/page)'],
         'COLOR_ISSUE_DOWNLOAD_PENDING': ['text', 'Color of an issue that is being downloaded in the background'],
         'AUTO_REFRESH_LIBRARY': ['checkbox', 'If Library should be refreshed every time its tab is selected'],
+        'FUSION_THEME': ['checkbox', 'If the app should use the fusion theme, it might be a dark theme'],
+        'COLOR_ACCENT': ['text', 'Color of a few highlights, accents'],
+        'COLOR_CELL': ['text', 'Color of a table cell, it is easier than programming dark theme'],
 }
 
 
 class SettingsWidget(QtWidgets.QWidget):
-    defaultKeyStylesheet = 'color: black;'
-    defaultValueStylesheet = 'color: black; placeholder-text-color: green;'
-    changedKeyStylesheet = defaultKeyStylesheet + 'color: blue;'
-    changedValueStylesheet = defaultValueStylesheet + 'color: blue;'
     def __init__(self):
         super().__init__()
 
@@ -82,8 +81,6 @@ class SettingsWidget(QtWidgets.QWidget):
 
             keyWidget = DefaultLabel(key)
             keyWidget.setToolTip(inputInfo[1])
-            keyWidget.setStyleSheet(self.defaultKeyStylesheet)
-            valueWidget.setStyleSheet(self.defaultValueStylesheet)
 
             self.formLayout.addRow(keyWidget, valueWidget)
 
@@ -109,6 +106,9 @@ class SettingsWidget(QtWidgets.QWidget):
         
 
     def highlightChangedRows(self):
+        self.settings = SettingsUtils.loadSettings()
+        changedKeyStylesheet = f"color: {self.settings['COLOR_ACCENT']};"
+        changedValueStylesheet = changedKeyStylesheet
         rowCount = self.formLayout.rowCount()
 
         for i in range(rowCount):
@@ -119,11 +119,11 @@ class SettingsWidget(QtWidgets.QWidget):
             
 
             if self.settings[key] == value:
-                keyWidget.setStyleSheet(self.defaultKeyStylesheet)
-                valueWidget.setStyleSheet(self.defaultValueStylesheet)
+                keyWidget.setStyleSheet('')
+                valueWidget.setStyleSheet('')
             else:
-                keyWidget.setStyleSheet(self.changedKeyStylesheet)
-                valueWidget.setStyleSheet(self.changedValueStylesheet)
+                keyWidget.setStyleSheet(changedKeyStylesheet)
+                valueWidget.setStyleSheet(changedValueStylesheet)
 
 
             
