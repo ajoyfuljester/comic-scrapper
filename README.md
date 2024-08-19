@@ -1,6 +1,7 @@
 # Comic Scraper from comixextra.com, but also a reader or something
-## APPARENTLY comixextra.com DID SOMETHING AND IT LOOKS LIKE IT'S A WRAPPER FOR readcomicsonline.ru, I DON'T KNOW IF IT WAS LIKE THIS BEFORE BUT AFTER FEW SEARCHES I FOUND OUT THAT THERE ARE A LOT LESS RESULTS, BOOKS ARE MISSING, INCLUDING THE BOOK IN THE TUTORIAL **WHICH I WAS READING!!!** >:(
-## i think i'm getting too angry, after all they are "free", yeah i shouldn't complain so much, sorry, i'm very grateful, please don't arrest me
+## yeah, well, i don't know what to do with this, i think it is pretty good
+## i probably will not create any commits any time soon
+### if you want something then create an [issue](https://github.com/ajoyfuljester/comic-scrapper/issues) on github or something, i have not used it so i don't know. if it is a bug, i might fix it, if it is a feature, then i will add it if i think it is cool or easy enough
 
 First time using pyside6 and beautiful soup
 
@@ -13,7 +14,7 @@ i hope you have a nice life
 - [TODO](#TODO)
 - [Tutorial](#Tutorial)
 
-# TODO:
+# TODO (i do not want to do):
 - rename repository
 - add more stuff in Help tab
 - add some kind of error messages
