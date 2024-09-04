@@ -13,5 +13,6 @@
     "AUTO_REFRESH_LIBRARY": false,
     "FUSION_THEME": true,
     "COLOR_ACCENT": "#55aa55",
-    "COLOR_CELL": "#cccccc"
+    "COLOR_CELL": "#cccccc",
+    "PATH_TO_LOCAL": "./books/"
 }

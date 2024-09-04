@@ -20,6 +20,7 @@ widgetInputMap = {
         'FUSION_THEME': ['checkbox', 'If the app should use the fusion theme, it might be a dark theme'],
         'COLOR_ACCENT': ['text', 'Color of a few highlights, accents'],
         'COLOR_CELL': ['text', 'Color of a table cell, it is easier than programming dark theme'],
+        'PATH_TO_LOCAL': ['text', 'Path to a directory in the file system, where books will be stored that do not have data.json file - usually books that were not downloaded using this app']
 }
 
 
@@ -56,7 +57,9 @@ class SettingsWidget(QtWidgets.QWidget):
             self.formLayout.itemAt(i, ItemRole.LabelRole).widget().deleteLater()
             self.formLayout.itemAt(i, ItemRole.FieldRole).widget().deleteLater()
             self.formLayout.removeRow(i)
-        for key, value in self.settings.items():
+
+        sortedSettings = sorted(self.settings.items(), key=lambda item: item[0])
+        for key, value in sortedSettings:
             inputInfo = widgetInputMap[key]
             valueWidget = None
             match inputInfo[0]:
