@@ -1,5 +1,7 @@
+from shutil import Error
 from . import SettingsUtils
 import os
+import json
 
 def getBooks():
     settings = SettingsUtils.loadSettings()
@@ -12,3 +14,14 @@ def getIssues(name):
     path = os.path.join(settings['PATH_TO_LOCAL'], name)
 
     return next(os.walk(path), [None, []])[1]
+
+def _getReadingProgress(bookName): # i'm not sure about this, this would mean, that Local widget would be invasive
+    settings = SettingsUtils.loadSettings()
+    path = os.path.join(settings['PATH_TO_LOCAL'], bookName, 'progress.json')
+    with open(path, 'r') as file:
+        return json.loads(file.read())
+
+def _getBookInfo(bookName):
+    info = {}
+    raise Error('DO THIS LATER (AFTER I DO OTHER FUNCTIONS) (REMEMBER TO DELETE UNDERSCORE FROM THE NAME)')
+    
