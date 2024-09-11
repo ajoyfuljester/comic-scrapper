@@ -29,5 +29,16 @@ def _getBookInfo(bookName):
 
 def deleteBook(bookName):
     settings = SettingsUtils.loadSettings()
-    path = os.path.join(settings['PATH_TO_LIBRARY'], bookName)
+    path = os.path.join(settings['PATH_TO_LOCAL'], bookName)
     shutil.rmtree(path)
+
+def getBookSize(bookName):
+    settings = SettingsUtils.loadSettings()
+    path = os.path.join(settings['PATH_TO_LOCAL'], bookName)
+    size = 0
+    for dirpath, _, files in os.walk(path):
+        for file in files:
+            filepath = os.path.join(dirpath, file)
+            size += os.path.getsize(filepath)
+
+    return size
