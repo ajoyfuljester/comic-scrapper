@@ -1,7 +1,5 @@
-from shutil import Error
 from . import SettingsUtils
 import os
-import json
 import shutil
 
 def getBooks():
@@ -16,20 +14,30 @@ def getIssues(name):
 
     return next(os.walk(path), [None, []])[1]
 
-def _getReadingProgress(bookName): # i'm not sure about this, this would mean, that Local widget would be invasive
-    settings = SettingsUtils.loadSettings()
-    path = os.path.join(settings['PATH_TO_LOCAL'], bookName, 'progress.json')
-    with open(path, 'r') as file:
-        return json.loads(file.read())
+def getBookInfo(bookName):
+    data = {
+        'info': {
+            'title': bookName,
+        },
+        'issues': [{'name': issue} for issue in getIssues(bookName)],
+    }
 
-def _getBookInfo(bookName):
-    info = {}
-    raise Error('DO THIS LATER (AFTER I DO OTHER FUNCTIONS) (REMEMBER TO DELETE UNDERSCORE FROM THE NAME)')
+    data['info']['numberOfIssues'] = len(data['issues'])
+
+    return data
+    
     
 
 def deleteBook(bookName):
     settings = SettingsUtils.loadSettings()
     path = os.path.join(settings['PATH_TO_LOCAL'], bookName)
+    shutil.rmtree(path)
+
+def deleteIssue(bookName, issueName):
+    settings = SettingsUtils.loadSettings()
+    path = os.path.join(settings['PATH_TO_LOCAL'], bookName, issueName)
+    if not os.path.exists(path):
+        return
     shutil.rmtree(path)
 
 def getBookSize(bookName):
@@ -42,3 +50,12 @@ def getBookSize(bookName):
             size += os.path.getsize(filepath)
 
     return size
+
+prefixes = ['', 'k', 'M', 'G', 'T']
+def parseSize(n):
+    prefix = 0
+    while n >= 1000:
+        n = int(n)
+        n /= 1000
+        prefix += 1
+    return f"{n}{prefixes[prefix]}B"
