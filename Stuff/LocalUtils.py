@@ -12,7 +12,7 @@ def getIssues(name):
 
     path = os.path.join(settings['PATH_TO_LOCAL'], name)
 
-    return next(os.walk(path), [None, []])[1]
+    return sorted(next(os.walk(path), [None, []])[1], reverse=True)
 
 def getBookInfo(bookName):
     data = {
@@ -21,7 +21,7 @@ def getBookInfo(bookName):
         },
         'issues': [{'name': issue} for issue in getIssues(bookName)],
     }
-
+    
     data['info']['numberOfIssues'] = len(data['issues'])
 
     return data

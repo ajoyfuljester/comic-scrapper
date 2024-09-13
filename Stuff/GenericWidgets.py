@@ -11,9 +11,13 @@ class ComicPreviewWidget(QtWidgets.QWidget):
         self.info = info
 
 
+        if verticalLayout:
+            self.childLayout = QtWidgets.QVBoxLayout(self)
+        else:
+            self.childLayout = QtWidgets.QHBoxLayout(self)
         
-        keys = list(self.info.keys())
 
+        keys = list(self.info.keys())
 
         if 'imageURL' in keys or 'image' in keys:
             self.info['image'] = self.info.get('image') or ScrapingUtils.getImageBytes(self.info['imageURL'])
@@ -29,14 +33,10 @@ class ComicPreviewWidget(QtWidgets.QWidget):
             if 'image' in keys:
                 keys.remove('image')
 
+            self.childLayout.addWidget(self.coverLabel)
 
 
-        if verticalLayout:
-            self.childLayout = QtWidgets.QVBoxLayout(self)
-        else:
-            self.childLayout = QtWidgets.QHBoxLayout(self)
 
-        self.childLayout.addWidget(self.coverLabel)
         self.sideLayout = QtWidgets.QVBoxLayout()
         self.childLayout.addLayout(self.sideLayout)
 
@@ -62,7 +62,8 @@ class ComicPreviewWidget(QtWidgets.QWidget):
         self.getAlternativeImageButton.setText('Get alternative image')
         self.getAlternativeImageButton.setToolTip('Get first page of an issue')
         self.getAlternativeImageButton.clicked.connect(self.getAlternativeImage)
-        self.sideLayout.addWidget(self.getAlternativeImageButton)
+        if hasattr(self, 'coverLabel'):
+            self.sideLayout.addWidget(self.getAlternativeImageButton)
 
 
     def getAlternativeImage(self):

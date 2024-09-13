@@ -26,15 +26,11 @@ class LocalWidget(QtWidgets.QWidget):
 
         self.searchCriteriaInput = QtWidgets.QComboBox()
         self.searchCriteriaInput.addItem('Title')
-        self.searchCriteriaInput.addItem('Status')
-        self.searchCriteriaInput.addItem('Release Year')
-        self.searchCriteriaInput.addItem('Latest Issue')
+        self.searchCriteriaInput.addItem('Number of issues')
         self.buttonLayout.addWidget(self.searchCriteriaInput)
         self.criteriaMap = {
             'Title': 'title',
-            'Status': 'status',
-            'Release Year': 'releaseYear',
-            'Latest Issue': 'latest'
+            'Number of issues': 'numberOfIssues',
         }
         
         self.searchInput = QtWidgets.QLineEdit()
@@ -44,13 +40,11 @@ class LocalWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.searchInput, 0, 0)
 
         self.bookContainer = QtWidgets.QTableWidget()
-        self.bookContainer.setColumnCount(4)
-        self.bookContainer.setHorizontalHeaderLabels(['Title', 'Status', 'Release Year', 'Latest Issue'])
+        self.bookContainer.setColumnCount(2)
+        self.bookContainer.setHorizontalHeaderLabels(['Title', 'Number of issues'])
         tableHeaders = self.bookContainer.horizontalHeader()
-        tableHeaders.setSectionResizeMode(0, ResizeMode.ResizeToContents)
+        tableHeaders.setSectionResizeMode(0, ResizeMode.Stretch)
         tableHeaders.setSectionResizeMode(1, ResizeMode.ResizeToContents)
-        tableHeaders.setSectionResizeMode(2, ResizeMode.ResizeToContents)
-        tableHeaders.setSectionResizeMode(3, ResizeMode.Stretch)
         self.bookContainer.itemSelectionChanged.connect(self.handleSelectionChanged)
         self.gridLayout.addWidget(self.bookContainer, 1, 0)
 
@@ -94,7 +88,7 @@ class LocalWidget(QtWidgets.QWidget):
 
         for _, cb in sortedComicBooks:
             info = cb['info']
-            self.insertBook([info['title'], info['status'], info['releaseYear'], info['latest']])
+            self.insertBook([info['title'], info['numberOfIssues']])
 
     def defaultSearch(self):
         return self.search(self.searchInput.text(), self.criteriaMap[self.searchCriteriaInput.currentText()])
@@ -107,7 +101,7 @@ class LocalWidget(QtWidgets.QWidget):
 
         for cb in self.books:
             info = cb['info']
-            self.insertBook([info['title']])
+            self.insertBook([info['title'], str(info['numberOfIssues'])])
 
     def hidePreview(self):
         last = self.gridLayout.itemAtPosition(1, 1)
@@ -148,11 +142,10 @@ class IssueLocalWidget(QtWidgets.QWidget):
 
 
         self.issueContainer = QtWidgets.QTableWidget()
-        self.issueContainer.setColumnCount(2)
-        self.issueContainer.setHorizontalHeaderLabels(['Title', 'URL'])
+        self.issueContainer.setColumnCount(1)
+        self.issueContainer.setHorizontalHeaderLabels(['Title'])
         tableHeaders = self.issueContainer.horizontalHeader()
-        tableHeaders.setSectionResizeMode(0, ResizeMode.ResizeToContents)
-        tableHeaders.setSectionResizeMode(1, ResizeMode.Stretch)
+        tableHeaders.setSectionResizeMode(0, ResizeMode.Stretch)
         self.gridLayout.addWidget(self.issueContainer, 0, 0)
 
 
@@ -212,7 +205,7 @@ class IssueLocalWidget(QtWidgets.QWidget):
         self.preview = GenericWidgets.ComicPreviewWidget(data, False)
         self.gridLayout.addWidget(self.preview, 1, 0)
         self.preview.show()
-
+        
 
     def readSelected(self):
         rows = set([i.row() for i in self.issueContainer.selectedIndexes()])

@@ -18,7 +18,6 @@ i hope you have a nice life
 - rename repository (i do not want to do)
 - add more stuff in Help tab (i do not want to do)
 - add some kind of error messages (i do not want to do)
-- add local mode
 - add update button to Library
 
 # Tutorial

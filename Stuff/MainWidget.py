@@ -2,6 +2,7 @@ from PySide6 import QtWidgets
 from .BrowserWidget import BrowserWidget
 from .SettingsWidget import SettingsWidget
 from .LibraryWidget import LibraryWidget
+from .LocalWidget import LocalWidget
 from .HelpWidget import HelpWidget
 from .ReaderWidget import ReaderWidget
 from . import SettingsUtils
@@ -20,6 +21,9 @@ class MainWidget(QtWidgets.QTabWidget):
 
         self.libraryWidget = LibraryWidget(self.readerWidget)
         self.addTab(self.libraryWidget, 'Library')
+
+        self.localWidget = LocalWidget(self.readerWidget)
+        self.addTab(self.localWidget, 'Local')
 
         self.addTab(self.readerWidget, 'Reader')
 
