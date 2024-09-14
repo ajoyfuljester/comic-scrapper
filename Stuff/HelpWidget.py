@@ -76,5 +76,5 @@ class HelpWidget(QtWidgets.QWidget):
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow(DefaultLabel('color of a cell in a table'), _)
 
-        _ = DefaultLabel("version v2.3")
+        _ = DefaultLabel("version v2.4")
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)

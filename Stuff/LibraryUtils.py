@@ -63,6 +63,29 @@ def addToLibrary(url):
             i['isRead'] = False
         file.write(constructJSON(info['issues']))
 
+def updateBook(url):
+    settings = SettingsUtils.loadSettings()
+
+    pathToLibrary = settings['PATH_TO_LIBRARY']
+    data = ScrapingUtils.getFullComicBookInfo(url)
+
+    path = os.path.join(pathToLibrary, forceFilename(data['info']['title']))
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+    with open(os.path.join(path, 'data.json'), 'r') as file:
+        old = json.loads(file.read())
+
+    with open(os.path.join(path, 'data.json'), 'w') as file:
+        file.write(constructJSON(old | data))
+
+    old = getReadingProgress(data['info']['title'])
+    with open(os.path.join(path, 'progress.json'), 'w') as file:
+        read = [issue['name'] for issue in old if issue['isRead']]
+        for i in data['issues']:
+            i['isRead'] = i['name'] in read
+        file.write(constructJSON(data['issues']))
+
 
 def getDownloadedIssues(name):
     settings = SettingsUtils.loadSettings()

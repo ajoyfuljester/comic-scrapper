@@ -62,6 +62,12 @@ class LibraryWidget(QtWidgets.QWidget):
         self.refreshButton.clicked.connect(self.refresh)
         self.buttonLayout.addWidget(self.refreshButton)
 
+        self.updateButton = QtWidgets.QPushButton()
+        self.updateButton.setText('Update books')
+        self.updateButton.setToolTip('Update selected books in the library - pull data from the website')
+        self.updateButton.clicked.connect(self.updateSelected)
+        self.buttonLayout.addWidget(self.updateButton)
+
         self.deleteButton = QtWidgets.QPushButton()
         self.deleteButton.setText('Delete books')
         self.deleteButton.setToolTip('Delete selected books from the library (including issues and reading progress)')
@@ -144,6 +150,13 @@ class LibraryWidget(QtWidgets.QWidget):
         bookDetails = [self.books[row] for row in rows]
         for book in bookDetails:
             LibraryUtils.deleteBook(book['info']['title'])
+            self.refresh()
+
+    def updateSelected(self):
+        rows = set([i.row() for i in self.bookContainer.selectedIndexes()])
+        bookDetails = [self.books[row] for row in rows]
+        for book in bookDetails:
+            LibraryUtils.updateBook(book['info']['URL'])
             self.refresh()
 
 class IssueLibraryWidget(QtWidgets.QWidget):
