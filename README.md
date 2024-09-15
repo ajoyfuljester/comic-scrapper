@@ -1,6 +1,5 @@
-# Comic Scraper from comixextra.com, but also a reader or something
+# Comic Scrap(p)er from comixextra.com, but also a reader or something
 ## yeah, well, i don't know what to do with this, i think it is pretty good
-## i probably will not create any commits any time soon
 ### if you want something then create an [issue](https://github.com/ajoyfuljester/comic-scrapper/issues) on github or something, i have not used it so i don't know. if it is a bug, i might fix it, if it is a feature, then i will add it if i think it is cool or easy enough
 
 First time using pyside6 and beautiful soup
