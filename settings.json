@@ -14,5 +14,7 @@
     "FUSION_THEME": true,
     "COLOR_ACCENT": "#55aa55",
     "COLOR_CELL": "#cccccc",
-    "PATH_TO_LOCAL": "./books/"
+    "PATH_TO_LOCAL": "./books/",
+	"SORT_TRIM_LEFT": 0,
+	"SORT_TRIM_RIGHT": 0
 }
