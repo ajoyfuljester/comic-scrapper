@@ -59,3 +59,15 @@ def parseSize(n):
         n /= 1000
         prefix += 1
     return f"{n}{prefixes[prefix]}B"
+
+def trimName(name):
+    settings = SettingsUtils.loadSettings()
+    right = settings['SORT_TRIM_RIGHT']
+    if right == 0:
+        right = -1 * (len(name) + 1)
+    trimmed = name[settings['SORT_TRIM_LEFT']: -1 * right]
+    try:
+        n = int(trimmed)
+        return n
+    except ValueError:
+        return trimmed
