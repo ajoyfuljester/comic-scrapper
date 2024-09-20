@@ -12,7 +12,7 @@ def getIssues(name):
 
     path = os.path.join(settings['PATH_TO_LOCAL'], name)
 
-    return sorted(next(os.walk(path), [None, []])[1], reverse=True)
+    return sorted(next(os.walk(path), [None, []])[1], reverse=True, key=trimName)
 
 def getBookInfo(bookName):
     data = {
