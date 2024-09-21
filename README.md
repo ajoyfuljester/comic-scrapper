@@ -14,8 +14,8 @@ i hope you have a nice life
 - [Tutorial](#Tutorial)
 
 # TODO:
-- rename repository (i do not want to do)
-- add some kind of error messages (i do not want to do)
+- rename repository (i do not want to do - i am afraid it will cause problems)
+- add some kind of error messages (i do not want to do - too complicated)
 - add more stuff in Help tab (i do not know what to add)
 
 # Tutorial
