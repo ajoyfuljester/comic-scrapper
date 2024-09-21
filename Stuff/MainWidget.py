@@ -49,3 +49,6 @@ class MainWidget(QtWidgets.QTabWidget):
             case 'Library':
                 if self.settings['AUTO_REFRESH_LIBRARY']:
                     self.widget(i).refresh()
+            case 'Local':
+                if self.settings['AUTO_REFRESH_LOCAL']:
+                    self.widget(i).refresh()

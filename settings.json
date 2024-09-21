@@ -11,6 +11,7 @@
     "MARK_AS_READ_AFTER_LAST_PAGE": true,
     "NUMBER_OF_PAGES_TO_SCRAPE": 1,
     "AUTO_REFRESH_LIBRARY": true,
+    "AUTO_REFRESH_LOCAL": true,
     "FUSION_THEME": true,
     "COLOR_ACCENT": "#55aa55",
     "COLOR_CELL": "#cccccc",

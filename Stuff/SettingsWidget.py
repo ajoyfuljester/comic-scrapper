@@ -17,6 +17,7 @@ widgetInputMap = {
         'NUMBER_OF_PAGES_TO_SCRAPE': ['number', 'Number of pages to scan, when searching in Browser (usually 25 book/page)'],
         'COLOR_ISSUE_DOWNLOAD_PENDING': ['text', 'Color of an issue that is being downloaded in the background'],
         'AUTO_REFRESH_LIBRARY': ['checkbox', 'If Library should be refreshed every time its tab is selected'],
+        'AUTO_REFRESH_LOCAL': ['checkbox', 'If Local should be refreshed every time its tab is selected'],
         'FUSION_THEME': ['checkbox', 'If the app should use the fusion theme, it might be a dark theme'],
         'COLOR_ACCENT': ['text', 'Color of a few highlights, accents'],
         'COLOR_CELL': ['text', 'Color of a table cell, it is easier than programming dark theme'],
