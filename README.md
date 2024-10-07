@@ -17,6 +17,7 @@ i hope you have a nice life
 - rename repository (i do not want to do - i am afraid it will cause problems)
 - add some kind of error messages (i do not want to do - too complicated)
 - add more stuff in Help tab (i do not know what to add)
+- add Features section in README
 
 # Tutorial
 1. Start the program, go to ***Browser*** tab (starting tab) ![Step 1](tutorial/1.png "Step 1")
