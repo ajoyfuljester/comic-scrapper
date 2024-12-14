@@ -1,3 +1,4 @@
+# DOES NOT WORK
 # Comic Scrap(p)er from comixextra.com, but also a reader or something, idk if it's legal (probably not), but remember to support the creators when you can
 ## yeah, well, i don't know what to do with this, i think it is pretty good
 ### if you want something then create an [issue](https://github.com/ajoyfuljester/comic-scrapper/issues) on github or something, i have not used it so i don't know. if it is a bug, i might fix it, if it is a feature, then i will add it if i think it is cool or easy enough
@@ -14,16 +15,19 @@ i hope you have a nice life
 - [Tutorial](#Tutorial)
 - [Features](#Features)
 
+
 # Features
 - download comic books from [comixextra.com][https://comixextra.com]
 - read downloaded comic books
 - compatibility mode to work with comic books that were obtained in another way (Local mode)
 apparently that's it, there are some settings though
 
+
 # TODO:
 - rename repository (i do not want to do - i am afraid it will cause problems)
 - add some kind of error messages (i do not want to do - too complicated)
 - add more stuff in Help tab (i do not know what to add)
+
 
 # Tutorial
 1. Start the program, go to ***Browser*** tab (starting tab) ![Step 1](tutorial/1.png "Step 1")
