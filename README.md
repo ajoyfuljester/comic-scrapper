@@ -16,7 +16,7 @@ i hope you have a nice life
 
 
 # Features
-- download comic books from [comixextra.com][https://comixextra.com]
+- download comic books from [comixextra.com](https://comixextra.com)
 - read downloaded comic books
 - compatibility mode to work with comic books that were obtained in another way (Local mode)
 apparently that's it, there are some settings though
