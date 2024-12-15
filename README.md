@@ -1,5 +1,4 @@
-# DOES NOT WORK
-# Comic Scrap(p)er from comixextra.com, but also a reader or something, idk if it's legal (probably not), but remember to support the creators when you can
+# Comic Scrap(p)er from azcomix.me (previously comixextra.com), but also a reader or something, idk if it's legal (probably not), but remember to support the creators when you can
 ## yeah, well, i don't know what to do with this, i think it is pretty good
 ### if you want something then create an [issue](https://github.com/ajoyfuljester/comic-scrapper/issues) on github or something, i have not used it so i don't know. if it is a bug, i might fix it, if it is a feature, then i will add it if i think it is cool or easy enough
 

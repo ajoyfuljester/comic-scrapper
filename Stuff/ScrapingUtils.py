@@ -59,17 +59,7 @@ def saveSources(sources, path='./', names=None):
 def getIssues(url, max = None):
     html = BeautifulSoup(requests.get(url).text, 'html.parser')
 
-    rows = html.select('.episode-list tr')
-    rowsLen = len(rows)
-    max = max or rowsLen
-
-    issues = []
-    i = 0
-    while i < max and i < rowsLen:
-        issues.append({'name': rows[i].a.string, 'URL': rows[i].a['href']})
-        i += 1
-
-    return issues
+    return getIssuesBS(html, max)
 
 def getIssuesBS(html, max = None):
     rows = html.select('.basic-list li')

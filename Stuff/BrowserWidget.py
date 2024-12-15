@@ -52,16 +52,17 @@ class BrowserWidget(QtWidgets.QWidget):
         self.buttonLayout.addWidget(self.searchButton)
 
         self.getMoreBooksPageCountInput = QtWidgets.QSpinBox()
+        self.getMoreBooksPageCountInput.setDisabled(True)
         self.getMoreBooksPageCountInput.setMinimum(1)
         self.getMoreBooksPageCountInput.setValue(1)
         self.getMoreBooksPageCountInput.setSuffix(' pages')
-        self.getMoreBooksPageCountInput.setToolTip('Number of pages to scrape for more books (usually 25 books/page)')
+        self.getMoreBooksPageCountInput.setToolTip('Number of pages to scrape for more books (usually 25 books/page)\n[UNAVAILABLE]')
         self.buttonLayout.addWidget(self.getMoreBooksPageCountInput)
 
         self.getMoreBooksButton = QtWidgets.QPushButton()
         self.getMoreBooksButton.setDisabled(True)
         self.getMoreBooksButton.setText('Get more books')
-        self.getMoreBooksButton.setToolTip('Scrape more pages for more books (usually 25 books/page)')
+        self.getMoreBooksButton.setToolTip('Scrape more pages for more books (usually 25 books/page)\n[UNAVAILABLE]')
         self.getMoreBooksButton.clicked.connect(self.getMoreBooks)
         self.buttonLayout.addWidget(self.getMoreBooksButton)
 
