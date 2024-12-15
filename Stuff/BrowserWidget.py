@@ -19,13 +19,13 @@ class BrowserWidget(QtWidgets.QWidget):
         self.searchInput.returnPressed.connect(self.searchBooks)
 
         self.searchResultContainer = QtWidgets.QTableWidget()
-        self.searchResultContainer.setColumnCount(4)
-        self.searchResultContainer.setHorizontalHeaderLabels(['Title', 'Status', 'Release Year', 'Latest Issue'])
+        self.searchResultContainer.setColumnCount(1)
+        self.searchResultContainer.setHorizontalHeaderLabels(['Title'])
         tableHeader = self.searchResultContainer.horizontalHeader()
-        tableHeader.setSectionResizeMode(0, ResizeMode.ResizeToContents)
-        tableHeader.setSectionResizeMode(1, ResizeMode.ResizeToContents)
-        tableHeader.setSectionResizeMode(2, ResizeMode.ResizeToContents)
-        tableHeader.setSectionResizeMode(3, ResizeMode.Stretch)
+        tableHeader.setSectionResizeMode(0, ResizeMode.Stretch)
+#         tableHeader.setSectionResizeMode(1, ResizeMode.ResizeToContents)
+#         tableHeader.setSectionResizeMode(2, ResizeMode.ResizeToContents)
+#         tableHeader.setSectionResizeMode(3, ResizeMode.Stretch)
 
 
         self.searchResultContainer.itemSelectionChanged.connect(self.handleSelectionChange)
@@ -59,6 +59,7 @@ class BrowserWidget(QtWidgets.QWidget):
         self.buttonLayout.addWidget(self.getMoreBooksPageCountInput)
 
         self.getMoreBooksButton = QtWidgets.QPushButton()
+        self.getMoreBooksButton.setDisabled(True)
         self.getMoreBooksButton.setText('Get more books')
         self.getMoreBooksButton.setToolTip('Scrape more pages for more books (usually 25 books/page)')
         self.getMoreBooksButton.clicked.connect(self.getMoreBooks)
@@ -163,9 +164,6 @@ class ComicTableWidgetItemSet():
 
         self.cellData = [
             details['title'],
-            details['status'],
-            details['releaseYear'],
-            details['latest'],
         ]
 
 

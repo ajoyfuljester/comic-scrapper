@@ -19,7 +19,7 @@ class ComicPreviewWidget(QtWidgets.QWidget):
 
         keys = list(self.info.keys())
 
-        if 'imageURL' in keys or 'image' in keys:
+        if (('imageURL' in keys) and (self.info['imageURL'] != None)) or ('image' in keys):
             self.info['image'] = self.info.get('image') or ScrapingUtils.getImageBytes(self.info['imageURL'])
             pixmap = QtGui.QPixmap()
             pixmap.loadFromData(self.info['image'])
@@ -59,6 +59,7 @@ class ComicPreviewWidget(QtWidgets.QWidget):
 
         self.alternativeImageNumber = -1
         self.getAlternativeImageButton = QtWidgets.QPushButton()
+        self.getAlternativeImageButton.setDisabled(True)
         self.getAlternativeImageButton.setText('Get alternative image')
         self.getAlternativeImageButton.setToolTip('Get first page of an issue')
         self.getAlternativeImageButton.clicked.connect(self.getAlternativeImage)

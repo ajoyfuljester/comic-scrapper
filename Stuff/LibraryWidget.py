@@ -28,13 +28,13 @@ class LibraryWidget(QtWidgets.QWidget):
 
         self.searchCriteriaInput = QtWidgets.QComboBox()
         self.searchCriteriaInput.addItem('Title')
-        self.searchCriteriaInput.addItem('Status')
-        self.searchCriteriaInput.addItem('Release Year')
-        self.searchCriteriaInput.addItem('Latest Issue')
+#         self.searchCriteriaInput.addItem('Status')
+#         self.searchCriteriaInput.addItem('Release Year')
+#         self.searchCriteriaInput.addItem('Latest Issue')
         self.buttonLayout.addWidget(self.searchCriteriaInput)
         self.criteriaMap = {
             'Title': 'title',
-            'Status': 'status',
+#             'Status': 'status',
             'Release Year': 'releaseYear',
             'Latest Issue': 'latest'
         }
@@ -46,13 +46,13 @@ class LibraryWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.searchInput, 0, 0)
 
         self.bookContainer = QtWidgets.QTableWidget()
-        self.bookContainer.setColumnCount(4)
-        self.bookContainer.setHorizontalHeaderLabels(['Title', 'Status', 'Release Year', 'Latest Issue'])
+        self.bookContainer.setColumnCount(len(self.criteriaMap))
+        self.bookContainer.setHorizontalHeaderLabels(self.criteriaMap.keys())
         tableHeaders = self.bookContainer.horizontalHeader()
         tableHeaders.setSectionResizeMode(0, ResizeMode.ResizeToContents)
         tableHeaders.setSectionResizeMode(1, ResizeMode.ResizeToContents)
-        tableHeaders.setSectionResizeMode(2, ResizeMode.ResizeToContents)
-        tableHeaders.setSectionResizeMode(3, ResizeMode.Stretch)
+        tableHeaders.setSectionResizeMode(2, ResizeMode.Stretch)
+#         tableHeaders.setSectionResizeMode(3, ResizeMode.Stretch)
         self.bookContainer.itemSelectionChanged.connect(self.handleSelectionChanged)
         self.gridLayout.addWidget(self.bookContainer, 1, 0)
 
@@ -112,7 +112,7 @@ class LibraryWidget(QtWidgets.QWidget):
 
         for _, cb in sortedComicBooks:
             info = cb['info']
-            self.insertBook([info['title'], info['status'], info['releaseYear'], info['latest']])
+            self.insertBook([info['title'], info['releaseYear'], info['latest']])
 
     def defaultSearch(self):
         return self.search(self.searchInput.text(), self.criteriaMap[self.searchCriteriaInput.currentText()])
@@ -125,7 +125,7 @@ class LibraryWidget(QtWidgets.QWidget):
 
         for cb in self.books:
             info = cb['info']
-            self.insertBook([info['title'], info['status'], info['releaseYear'], info['latest']])
+            self.insertBook([info['title'], info['releaseYear'], info['latest']])
 
     def hidePreview(self):
         last = self.gridLayout.itemAtPosition(1, 1)
