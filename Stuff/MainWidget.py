@@ -5,6 +5,7 @@ from .LibraryWidget import LibraryWidget
 from .LocalWidget import LocalWidget
 from .HelpWidget import HelpWidget
 from .ReaderWidget import ReaderWidget
+from .RawWidget import RawWidget
 from . import SettingsUtils
 
 class MainWidget(QtWidgets.QTabWidget):
@@ -16,6 +17,9 @@ class MainWidget(QtWidgets.QTabWidget):
         self.browserWidget = BrowserWidget()
         self.addTab(self.browserWidget, 'Browser')
         self.browserWidget.searchInput.setFocus()
+
+        self.rawWidget = RawWidget()
+        self.addTab(self.rawWidget, 'Raw')
 
         self.readerWidget = ReaderWidget()
 

@@ -47,11 +47,11 @@ def constructJSON(data):
 
 
 
-def addToLibrary(url):
+def addToLibrary(url, selector = None):
     settings = SettingsUtils.loadSettings()
 
     pathToLibrary = settings['PATH_TO_LIBRARY']
-    info = ScrapingUtils.getFullComicBookInfo(url)
+    info = ScrapingUtils.getFullComicBookInfo(url, selector)
 
     path = os.path.join(pathToLibrary, forceFilename(info['info']['title']))
     if not os.path.exists(path):
@@ -62,6 +62,8 @@ def addToLibrary(url):
         for i in info['issues']:
             i['isRead'] = False
         file.write(constructJSON(info['issues']))
+
+    return True
 
 def updateBook(url):
     settings = SettingsUtils.loadSettings()

@@ -56,20 +56,20 @@ def saveSources(sources, path='./', names=None):
     for i, source in enumerate(sources):
         saveSource(source, path, names[i])
 
-def getIssues(url, max = None):
+def getIssues(url, max = None, customSelector = '.basic-list li > a'):
     html = BeautifulSoup(requests.get(url).text, 'html.parser')
 
-    return getIssuesBS(html, max)
+    return getIssuesBS(html, max, customSelector)
 
-def getIssuesBS(html, max = None):
-    rows = html.select('.basic-list li')
+def getIssuesBS(html, max = None, customSelector = '.basic-list li > a'):
+    rows = html.select(customSelector)
     rowsLen = len(rows)
     max = max or rowsLen
 
     issues = []
     i = 0
     while i < max and i < rowsLen:
-        issues.append({'name': rows[i].a.string, 'URL': rows[i].a['href']})
+        issues.append({'name': rows[i].string, 'URL': rows[i]['href']})
         i += 1
 
     return issues
@@ -104,30 +104,43 @@ def getIssuesBS(html, max = None):
 # 
 #     return info
 
-def getFullComicBookInfo(url):
+def getFullComicBookInfo(url, customSelector = None):
     response = requests.get(url)
     html = BeautifulSoup(response.text, 'html.parser')
-    details = html.select_one('.anime-details')
-    table = details.select('.full-table tr td:nth-child(2)')
-    issues = getIssuesBS(html)
+    if customSelector == None:
+        details = html.select_one('.anime-details')
+        table = details.select('.full-table tr td:nth-child(2)')
+        issues = getIssuesBS(html)
 
-    
-    imageURL = html.select_one('.anime-image').img['src']
-    info = {
-        'info': {
-            'title': details.select_one('.title').text.strip(),
-            'author': table[3].text.strip(),
-            'releaseYear': table[2].text.strip(),
-            'latest': issues[-1]['name'],
-            'URL': url,
-            'imageURL': imageURL,
-            'image': str(getImageBytes(imageURL).hex()),
-            'numberOfIssues': len(issues),
-            'genres': [{'name': el.text, 'URL': el['href']} for el in details.select('.anime-genres li > a')],
+        
+        imageURL = html.select_one('.anime-image').img['src']
+        info = {
+            'info': {
+                'title': details.select_one('.title').text.strip(),
+                'author': table[3].text.strip(),
+                'releaseYear': table[2].text.strip(),
+                'latest': issues[-1]['name'],
+                'URL': url,
+                'imageURL': imageURL,
+                'image': str(getImageBytes(imageURL).hex()),
+                'numberOfIssues': len(issues),
+                'genres': [{'name': el.text, 'URL': el['href']} for el in details.select('.anime-genres li > a')],
 
-        },
-        'issues': issues,
-    }
+            },
+            'issues': issues,
+        }
+    else:
+        issues = getIssuesBS(html, None, customSelector)
+        info = {
+            'info': {
+                'title': url.removeprefix('http://').removeprefix('https://'),
+                'releaseYear': '0',
+                'latest': issues[-1]['name'],
+                'URL': url,
+                'numberOfIssues': len(issues),
+            },
+            'issues': issues,
+        }
 
 
 
