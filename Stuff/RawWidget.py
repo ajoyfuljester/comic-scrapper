@@ -24,28 +24,33 @@ class RawWidget(QtWidgets.QWidget):
         self.addToLibraryURL.setPlaceholderText('URL of the site with the issues')
         self.addToLibraryURL.setToolTip('For example https://azcomix.me/comic/the-sandman-1989')
         
+        self.addToLibraryURLSuffix = QtWidgets.QLineEdit()
+        self.addToLibraryLayout.setWidget(1, ItemRole.SpanningRole, self.addToLibraryURLSuffix)
+        self.addToLibraryURLSuffix.setPlaceholderText('URL suffix to add to each issue to make sure every image is on one page')
+        self.addToLibraryURLSuffix.setToolTip('For example /full')
+        
         self.addToLibrarySelector = QtWidgets.QLineEdit()
-        self.addToLibraryLayout.setWidget(1, ItemRole.SpanningRole, self.addToLibrarySelector)
+        self.addToLibraryLayout.setWidget(2, ItemRole.SpanningRole, self.addToLibrarySelector)
         self.addToLibrarySelector.setPlaceholderText('CSS selector that grabs the issues that have `href` attribute')
         self.addToLibrarySelector.setToolTip('If you do not know how to get this, you should check out the Help tab')
         
         self.addToLibraryInnerSelector = QtWidgets.QLineEdit()
-        self.addToLibraryLayout.setWidget(2, ItemRole.SpanningRole, self.addToLibraryInnerSelector)
+        self.addToLibraryLayout.setWidget(3, ItemRole.SpanningRole, self.addToLibraryInnerSelector)
         self.addToLibraryInnerSelector.setPlaceholderText('CSS selector that grabs the images with `src` attribute in each issue')
         self.addToLibraryInnerSelector.setToolTip('If you do not know how to get this, you should check out the Help tab')
 
         self.addToLibraryConfirm = QtWidgets.QPushButton()
-        self.addToLibraryLayout.setWidget(3, ItemRole.SpanningRole, self.addToLibraryConfirm)
+        self.addToLibraryLayout.setWidget(4, ItemRole.SpanningRole, self.addToLibraryConfirm)
         self.addToLibraryConfirm.setText('Attempt to add to Library')
         self.addToLibraryConfirm.setToolTip('i hope the program will not crash if you typed something wrong')
         self.addToLibraryConfirm.clicked.connect(self.addToLibrary)
         
         self.addToLibraryOutputLabel = DefaultLabel('Output:')
-        self.addToLibraryLayout.setWidget(4, ItemRole.LabelRole, self.addToLibraryOutputLabel)
+        self.addToLibraryLayout.setWidget(5, ItemRole.LabelRole, self.addToLibraryOutputLabel)
         self.addToLibraryOutputLabel.setToolTip('Output of the performed action')
         
         self.addToLibraryOutput = DefaultLabel()
-        self.addToLibraryLayout.setWidget(4, ItemRole.FieldRole, self.addToLibraryOutput)
+        self.addToLibraryLayout.setWidget(5, ItemRole.FieldRole, self.addToLibraryOutput)
         self.addToLibraryOutput.setToolTip('Output of the performed action')
 
 
@@ -91,7 +96,9 @@ class RawWidget(QtWidgets.QWidget):
         if innerSelector == '':
             innerSelector = None
 
-        success = LibraryUtils.addToLibrary(url, selector, innerSelector)
+        urlSuffix = self.addToLibraryURLSuffix.text()
+
+        success = LibraryUtils.addToLibrary(url, selector, innerSelector, urlSuffix)
 
         out = 'Success?' if success else 'FAILURE'
 

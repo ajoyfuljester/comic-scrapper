@@ -48,12 +48,15 @@ def constructJSON(data):
 
 
 
-def addToLibrary(url, selector = None, innerSelector = None):
+def addToLibrary(url, selector = None, innerSelector = None, urlSuffix = ''):
     settings = SettingsUtils.loadSettings()
 
     pathToLibrary = settings['PATH_TO_LIBRARY']
     info = ScrapingUtils.getFullComicBookInfo(url, selector)
     info['info']['innerSelector'] = innerSelector
+
+    for issue in info['issues']:
+        issue['URL'] += urlSuffix
 
     path = os.path.join(pathToLibrary, forceFilename(info['info']['title']))
     if not os.path.exists(path):

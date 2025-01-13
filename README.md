@@ -23,7 +23,7 @@ i hope you have a nice life
 
 
 # TODO:
-- raw mode, where you just put in url, because the site's search is broken or go to A-Z list and scrap all the comic books... both seem useful. additional url suffix in Raw/addToLibrary
+- raw mode, where you just put in url, go to A-Z list and scrap all the comic books
 - rename repository (i do not want to do - i am afraid it will cause problems)
 - add some kind of error messages (i do not want to do - too complicated)
 - add more stuff in Help tab (i do not know what to add)

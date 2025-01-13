@@ -37,11 +37,15 @@ class HelpWidget(QtWidgets.QWidget):
         _ = DefaultLabel("Resizing doesn't work/acts weird while window is not maximized? Try changing tabs (not Reader tabs) and resizing again. It sometimes works, i don't know what's going on or how to fix it, good luck")
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
 
-
         _ = DefaultLabel("if you want something then create an <a href=\"https://github.com/ajoyfuljester/comic-scrapper/issues\">issue</a> on github or something, i have not used it so i don't know. if it is a bug, i might fix it, if it is a feature, then i will add it if i think it is cool or easy enough")
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
 
-        # TODO: add mdn reference
+        _ = DefaultLabel("CSS Selectors wiki or guide or something idk here you go: <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors\">full guide</a> but all you will probably need is <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors\">type selectors</a>, <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors\">class selectors</a>, <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors\">id selectors</a> and <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator\">descendant combinator</a>... Good luck! i believe you can do it if you really try")
+        self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
+
+        _ = DefaultLabel("if you write the wrong selector the program probably will not work, surprisingly though this program rarely crashes i suppose that's thanks to Pyside6")
+        self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
+
 
         _ = DefaultLabel()
         color = self.settings['COLOR_BOOK_ALREADY_IN_LIBRARY']
