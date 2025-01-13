@@ -4,12 +4,13 @@ import os
 
 
 
-
-def getSources(url, max = None):
+def getSources(url, max = None, selector = None):
+    if selector == None:
+        selector = '.chapter-container img'
     response = requests.get(url)
 
     html = BeautifulSoup(response.text, 'html.parser')
-    images = html.select('.chapter-container img')
+    images = html.select(selector)
     imagesLen = len(images)
     max = max or imagesLen
 

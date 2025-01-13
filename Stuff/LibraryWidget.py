@@ -281,7 +281,8 @@ class IssueLibraryWidget(QtWidgets.QWidget):
             for x in range(columnCount):
                 self.issueContainer.item(y, x).setBackground(highlightBackground)
         for issue in issuesDetails:
-            LibraryUtils.downloadIssueAsThread(self.title, issue, None, self.needsRefresh.emit)
+            innerSelector = self.details['info'].get('innerSelector', None)
+            LibraryUtils.downloadIssueAsThread(self.title, issue, innerSelector, None, self.needsRefresh.emit)
 
 
     def readSelected(self):

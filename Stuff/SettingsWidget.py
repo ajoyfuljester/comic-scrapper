@@ -24,6 +24,7 @@ widgetInputMap = {
         'PATH_TO_LOCAL': ['text', 'Path to a directory in the file system, where books will be stored that do not have data.json file - usually books that were not downloaded using this app'],
         'SORT_TRIM_LEFT': ['number', 'Number of characters to trim from issue name from the left side to obtain its number (used for sorting) for example "book-121" would require the value of 5 to work properly'],
         'SORT_TRIM_RIGHT': ['number', 'Number of characters to trim from issue name from the right side to obtain its number (used for sorting) for example "13-issue" would require the value of 6 to work properly'],
+        'PATH_TO_SCRAPS': ['text', 'Path to a directory in the file system, where books will be stored that were downloaded using Direct download feature in Raw tab'],
 }
 
 

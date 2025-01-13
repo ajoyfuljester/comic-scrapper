@@ -17,5 +17,6 @@
     "COLOR_CELL": "#cccccc",
     "PATH_TO_LOCAL": "./books/",
 	"SORT_TRIM_LEFT": 0,
-	"SORT_TRIM_RIGHT": 0
+	"SORT_TRIM_RIGHT": 0,
+    "PATH_TO_SCRAPS": "./books/scraps"
 }

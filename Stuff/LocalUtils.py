@@ -1,3 +1,5 @@
+from Stuff import ScrapingUtils
+from Stuff.LibraryUtils import forceFilename
 from . import SettingsUtils
 import os
 import shutil
@@ -71,3 +73,12 @@ def trimName(name):
         return n
     except ValueError:
         return trimmed
+
+
+def directDownload(url, selector = None):
+    settings = SettingsUtils.loadSettings()
+    path = os.path.join(settings['PATH_TO_SCRAPS'], forceFilename(url))
+    sources = ScrapingUtils.getSources(url, None, selector)
+    ScrapingUtils.saveSources(sources, path)
+    return not not sources
+

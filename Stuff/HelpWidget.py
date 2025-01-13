@@ -41,6 +41,8 @@ class HelpWidget(QtWidgets.QWidget):
         _ = DefaultLabel("if you want something then create an <a href=\"https://github.com/ajoyfuljester/comic-scrapper/issues\">issue</a> on github or something, i have not used it so i don't know. if it is a bug, i might fix it, if it is a feature, then i will add it if i think it is cool or easy enough")
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
 
+        # TODO: add mdn reference
+
         _ = DefaultLabel()
         color = self.settings['COLOR_BOOK_ALREADY_IN_LIBRARY']
         _.setStyleSheet(f'background-color: {color}')
@@ -76,5 +78,5 @@ class HelpWidget(QtWidgets.QWidget):
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow(DefaultLabel('color of a cell in a table'), _)
 
-        _ = DefaultLabel("version v3.1")
+        _ = DefaultLabel("version v4.0")
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)

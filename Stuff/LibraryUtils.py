@@ -28,7 +28,8 @@ def getBookInfo(name):
 
     with open(path, 'r') as file:
         data = json.loads(file.read())
-        data['info']['image'] = bytes.fromhex(data['info']['image'])
+        if data['info'].get('image') != None:
+            data['info']['image'] = bytes.fromhex(data['info']['image'])
         return data
 
 
@@ -47,11 +48,12 @@ def constructJSON(data):
 
 
 
-def addToLibrary(url, selector = None):
+def addToLibrary(url, selector = None, innerSelector = None):
     settings = SettingsUtils.loadSettings()
 
     pathToLibrary = settings['PATH_TO_LIBRARY']
     info = ScrapingUtils.getFullComicBookInfo(url, selector)
+    info['info']['innerSelector'] = innerSelector
 
     path = os.path.join(pathToLibrary, forceFilename(info['info']['title']))
     if not os.path.exists(path):
@@ -97,20 +99,21 @@ def getDownloadedIssues(name):
     return next(os.walk(path), [None, []])[1]
 
 
-def downloadIssue(title, info, imageNames = None, after = lambda: None, afterArgs = []):
+def downloadIssue(title, info, innerSelector = None, imageNames = None, after = lambda: None, afterArgs = []):
     settings = SettingsUtils.loadSettings()
     url = info['URL']
-    if url[-5:] != '/full':
+    if url[-5:] != '/full' and innerSelector == None:
         url += '/full'
-    sources = ScrapingUtils.getSources(url)
+
+    sources = ScrapingUtils.getSources(url, None, innerSelector)
     ScrapingUtils.saveSources(sources, os.path.join(settings['PATH_TO_LIBRARY'], forceFilename(title), forceFilename(info['name'])), imageNames)
     try:
         after(*afterArgs)
     except RuntimeError as _:
         pass
 
-def downloadIssueAsThread(title, info, imageNames = None, after = lambda: None, afterArgs = []):
-    thread = Thread(target=downloadIssue, args=(title, info, imageNames, after, afterArgs))
+def downloadIssueAsThread(title, info, innerSelector = None, imageNames = None, after = lambda: None, afterArgs = []):
+    thread = Thread(target=downloadIssue, args=(title, info, innerSelector, imageNames, after, afterArgs))
     thread.start()
 
 

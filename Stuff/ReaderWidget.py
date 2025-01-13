@@ -77,7 +77,10 @@ class ReaderTab(QtWidgets.QWidget):
         self.pageNumberInput.setText(str(number + 1))
 
         if settings['MARK_AS_READ_AFTER_LAST_PAGE'] and self.currentPageNumber == self.numberOfPages - 1:
-            LibraryUtils.markIssueReadingProgress(self.title, self.issue)
+            try:
+                LibraryUtils.markIssueReadingProgress(self.title, self.issue)
+            except FileNotFoundError:
+                pass
 
         return self.currentPageNumber
 
