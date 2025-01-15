@@ -82,5 +82,8 @@ class HelpWidget(QtWidgets.QWidget):
         _.setStyleSheet(f'background-color: {color}')
         self.formLayout.addRow(DefaultLabel('color of a cell in a table'), _)
 
+        _ = DefaultLabel("try hovering over buttons, most of them if not all have tooltips")
+        self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
+
         _ = DefaultLabel("version v4.0")
         self.formLayout.setWidget(self.formLayout.rowCount(), ItemRole.SpanningRole, _)
