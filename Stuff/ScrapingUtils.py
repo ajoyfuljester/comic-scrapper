@@ -217,3 +217,13 @@ def search(keyword='The Sandman', getImages = False):
             entry['image'] = getImageBytes(entry['imageURL'])
 
     return entries
+
+
+def getBooks(url, outerSelector):
+    response = requests.get(url)
+
+    html = BeautifulSoup(response.text, 'html.parser')
+
+    books = [{"title": el.string, "URL": el["href"]} for el in html.select(outerSelector)]
+
+    return books

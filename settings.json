@@ -16,7 +16,10 @@
     "COLOR_ACCENT": "#55aa55",
     "COLOR_CELL": "#cccccc",
     "PATH_TO_LOCAL": "./books/",
-	"SORT_TRIM_LEFT": 0,
-	"SORT_TRIM_RIGHT": 0,
-    "PATH_TO_SCRAPS": "./books/scraps"
+    "SORT_TRIM_LEFT": 0,
+    "SORT_TRIM_RIGHT": 0,
+    "PATH_TO_SCRAPS": "./books/scraps",
+    "PATHNAME_TO_LIST": "./list.json",
+    "USE_LIST": true,
+    "LIST_MAX_MATCHES": 250
 }

@@ -19,11 +19,12 @@ i hope you have a nice life
 - download comic books from [azcomix.me](https://azcomix.me)
 - read downloaded comic books
 - compatibility mode to work with comic books that were obtained in another way (Local mode)
+- create and use custom search lists for when the site is not working properly or if you want to use another website
 - apparently that's it, there are some settings though
 
 
 # TODO:
-- coming in v4.1 whenever it will happen: custom search lists, implementing the creation process will be fairly easy, but actually loading them... depends how good was the code written a few months ago
+- update the tutorial, because it's fairly outdated
 - rename repository (i do not want to do - i am afraid it will cause problems)
 - add some kind of error messages (i do not want to do - too complicated)
 - add more stuff in Help tab (i do not know what to add)

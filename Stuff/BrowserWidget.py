@@ -87,7 +87,10 @@ class BrowserWidget(QtWidgets.QWidget):
         n = self.settings['NUMBER_OF_PAGES_TO_SCRAPE']
 
         if n > 0:
-            self.bookData = ScrapingUtils.search(self.lastSearch)
+            if self.settings["USE_LIST"]:
+                self.bookData = LibraryUtils.searchList(self.lastSearch, self.settings["LIST_MAX_MATCHES"])
+            else:
+                self.bookData = ScrapingUtils.search(self.lastSearch)
 
         self.numberOfScrapedPages = 1
         self.numberOfScrapedPagesLabel.setStyleSheet('')
@@ -153,8 +156,13 @@ class BrowserWidget(QtWidgets.QWidget):
         selectedComicBooks = [self.bookData[i] for i in selectedIndexes]
 
         
-        for cb in selectedComicBooks:
-            LibraryUtils.addToLibrary(cb['URL'])
+        if self.settings["USE_LIST"]:
+            l = LibraryUtils.loadList()
+            for cb in selectedComicBooks:
+                LibraryUtils.addToLibrary(cb['URL'], l['selector'], l['innerSelector'], l['urlSuffix'])
+        else:
+            for cb in selectedComicBooks:
+                LibraryUtils.addToLibrary(cb['URL'])
         
 
         

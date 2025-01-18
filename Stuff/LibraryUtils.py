@@ -1,9 +1,11 @@
+from sys import settrace
 from . import SettingsUtils
 import os
 import shutil
 import json
 from . import ScrapingUtils
 from threading import Thread
+import rapidfuzz
 
 def forceFilename(name):
     return "".join([c if c not in r':?\/"*<>|' else "_" for c in name])
@@ -168,7 +170,7 @@ def getBookSize(bookName):
     return size
 
 
-prefixes = ['', 'k', 'M', 'G', 'T']
+prefixes = ['', 'k', 'M', 'G', 'T', 'P', 'Y', 'Z']
 def parseSize(n):
     prefix = 0
     while n >= 1000:
@@ -176,3 +178,55 @@ def parseSize(n):
         n /= 1000
         prefix += 1
     return f"{n}{prefixes[prefix]}B"
+
+
+
+def createList(url, outerSelector, selector, innerSelector, urlSuffix):
+    books = ScrapingUtils.getBooks(url, outerSelector)
+    l = {
+        "selector": selector,
+        "innerSelector": innerSelector,
+        "urlSuffix": urlSuffix,
+        "books": books,
+    }
+
+    j = constructJSON(l)
+
+
+    settings = SettingsUtils.loadSettings()
+
+    path = settings["PATHNAME_TO_LIST"]
+
+    with open(path, 'w') as file:
+        file.write(j)
+
+    return True
+
+    
+def loadList():
+    settings = SettingsUtils.loadSettings()
+    path = settings["PATHNAME_TO_LIST"]
+
+    j = ''
+
+    with open(path, 'r') as file:
+        j = file.read()
+
+    l = json.loads(j)
+
+    return l
+
+def searchList(query, limit):
+    l = loadList()
+    books = l["books"]
+    if limit <= 0:
+        limit = len(books)
+
+    titles = {i: book['title'] for i, book in enumerate(books)}
+
+    results = rapidfuzz.process.extract(query, titles, scorer=rapidfuzz.fuzz.partial_ratio, limit=limit)
+
+    sortedBooks = [books[r[2]] for r in results]
+
+    return sortedBooks
+

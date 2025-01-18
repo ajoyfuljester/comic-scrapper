@@ -1,6 +1,6 @@
 from PySide6 import QtWidgets
 
-from Stuff import LocalUtils
+from Stuff import LocalUtils, ScrapingUtils, SettingsUtils
 from .GenericWidgets import DefaultLabel
 from .QtUtils import *
 from . import LibraryUtils
@@ -86,7 +86,7 @@ class RawWidget(QtWidgets.QWidget):
 
 
         self.createListWidget = QtWidgets.QGroupBox()
-        self.gridLayout.addWidget(self.createListWidget, 2, 1, 1, 2)
+        self.gridLayout.addWidget(self.createListWidget, 2, 1)
         self.createListWidget.setTitle('Create a search list')
 
         self.createListLayout = QtWidgets.QFormLayout(self.createListWidget)
@@ -131,6 +131,29 @@ class RawWidget(QtWidgets.QWidget):
         self.createListOutput.setToolTip('Output of the performed action')
 
 
+        self.defaultListWidget = QtWidgets.QGroupBox()
+        self.gridLayout.addWidget(self.defaultListWidget, 2, 2)
+        self.defaultListWidget.setTitle('Default list')
+
+        self.defaultListLayout = QtWidgets.QFormLayout(self.defaultListWidget)
+
+        self.defaultListConfirm = QtWidgets.QPushButton()
+        self.defaultListLayout.setWidget(1, ItemRole.SpanningRole, self.defaultListConfirm)
+        self.defaultListConfirm.setText('Attempt create the whole list from azcomix.me, this might take a while')
+        self.defaultListConfirm.setToolTip('i hope the program will not crash if you typed something wrong')
+        self.defaultListConfirm.clicked.connect(self.defaultList)
+        
+        self.defaultListOutputLabel = DefaultLabel('Output:')
+        self.defaultListLayout.setWidget(2, ItemRole.LabelRole, self.defaultListOutputLabel)
+        self.defaultListOutputLabel.setToolTip('Output of the performed action')
+        
+        self.defaultListOutput = DefaultLabel()
+        self.defaultListLayout.setWidget(2, ItemRole.FieldRole, self.defaultListOutput)
+        self.defaultListOutput.setToolTip('Output of the performed action')
+
+
+
+
     def addToLibrary(self):
         url = self.addToLibraryURL.text()
 
@@ -164,7 +187,58 @@ class RawWidget(QtWidgets.QWidget):
         out = 'Success?' if success else 'FAILURE?'
 
         self.directDownloadOutput.setText(out)
-        pass
 
     def createList(self):
-        pass
+        url = self.createListURL.text()
+
+        outerSelector = self.createListOuterSelector.text()
+        if outerSelector == '':
+            outerSelector = None
+
+        selector = self.createListSelector.text()
+        if selector == '':
+            selector = None
+
+        innerSelector = self.createListInnerSelector.text()
+        if innerSelector == '':
+            innerSelector = None
+
+        urlSuffix = self.createListURLSuffix.text()
+
+        success = LibraryUtils.createList(url, outerSelector, selector, innerSelector, urlSuffix)
+
+        out = 'Success?' if success else 'FAILURE'
+
+        self.createListOutput.setText(out)
+
+    
+    def defaultList(self):
+        alphabet = '0abcdefghijklmnopqrstuvwxyz'
+        self.defaultListOutput.setText("LOADING")
+
+        books = []
+        for c in alphabet:
+            self.defaultListOutput.setText(f"LOADING: {c}")
+            url = f'https://azcomix.me/comic-list?c={c}'
+            books.extend(ScrapingUtils.getBooks(url, '.line-list > li > a'))
+
+        l = {
+            "selector": '.basic-list > li > a',
+            "innerSelector": '.chapter-container > img',
+            "urlSuffix": '/full',
+            "books": books,
+        }
+
+        self.defaultListOutput.setText("STILL LOADING")
+
+        j = LibraryUtils.constructJSON(l)
+
+
+        settings = SettingsUtils.loadSettings()
+
+        path = settings["PATHNAME_TO_LIST"]
+
+        with open(path, 'w') as file:
+            file.write(j)
+
+        self.defaultListOutput.setText("SUCCESS?")

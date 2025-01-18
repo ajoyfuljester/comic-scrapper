@@ -25,6 +25,9 @@ widgetInputMap = {
         'SORT_TRIM_LEFT': ['number', 'Number of characters to trim from issue name from the left side to obtain its number (used for sorting) for example "book-121" would require the value of 5 to work properly'],
         'SORT_TRIM_RIGHT': ['number', 'Number of characters to trim from issue name from the right side to obtain its number (used for sorting) for example "13-issue" would require the value of 6 to work properly'],
         'PATH_TO_SCRAPS': ['text', 'Path to a directory in the file system, where books will be stored that were downloaded using Direct download feature in Raw tab'],
+        'PATHNAME_TO_LIST': ['text', 'Pathname - filename - of the custom list from Raw tab'],
+        'USE_LIST': ['checkbox', 'If custom list specified by `PATHNAME_TO_LIST` should be used in Browser tab'],
+        'LIST_MAX_MATCHES': ['number', 'Maximum number of matches, when using custom lists, if not positive then no limit. Increase at your own risk and bear the responsibility'],
 }
 
 
@@ -79,6 +82,7 @@ class SettingsWidget(QtWidgets.QWidget):
                 case 'number':
                     valueWidget = QtWidgets.QSpinBox()
                     valueWidget.setValue(value)
+                    valueWidget.setRange(-32768, 32767)
                     valueWidget.valueChanged.connect(self.highlightChangedRows)
                 case _:
                     raise Exception('Widget type not found!')
